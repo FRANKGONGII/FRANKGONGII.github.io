@@ -69,6 +69,52 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-TypeScript的一些常用语法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2024-05-18T12:40:55.000Z" itemprop="datePublished">2024-05-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>►<a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/">TypeScript的一些常用语法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="遍历Map"><a href="#遍历Map" class="headerlink" title="遍历Map"></a>遍历Map</h4><ul>
+<li>最简单的遍历方式，需要注意的是参数格式value在前key在后<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">map.<span class="title function_">forEach</span>(<span class="function">(<span class="params">value , key</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+<li>用keys()遍历<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">of</span> <span class="title class_">Object</span>.<span class="title function_">keys</span>(res.<span class="property">data</span>))&#123;</span><br><span class="line">     <span class="variable language_">console</span>.<span class="title function_">log</span>(key,res.<span class="property">data</span>[key]);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="title class_">Object</span>.<span class="title function_">keys</span>(obj).<span class="title function_">forEach</span>( <span class="function"><span class="params">key</span> =&gt;</span>&#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(key,obj[key])</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" data-id="clwc4g9la0000gkvcdrei3nz1" data-title="TypeScript的一些常用语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-redis基础" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/18/redis%E5%9F%BA%E7%A1%80/" class="article-date">
@@ -95,12 +141,21 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>zbsd</p>
+        <h4 id="什么是redis？"><a href="#什么是redis？" class="headerlink" title="什么是redis？"></a>什么是redis？</h4><ul>
+<li>redis是一个key-value结构的Nosql数据库，value可以是各种redis的数据类型，比如字符串，集合</li>
+<li>Nosql vs Sql<ul>
+<li>Sql是结构化的（表结构），关联的（外键），用sql查询 ，满足ACID（原子性，一致性，隔离性，持久性）</li>
+<li>Nosql是非结构化的（kv，图，文档数据库），无关联的，用非sql查询（不同的非关系数据库是不同的查询方法，例如mogodb是类似类的方法，el类似restful请求），BASE（不能完全满足ACID）</li>
+<li>Sql只能垂直拓展，分库分表比较难，但是Nosql天然支持水平拓展</li>
+</ul>
+</li>
+<li></li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/" data-id="clwbo0r1700021kvccy0s8it7" data-title="redis基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/" data-id="clwc4g9lj0003gkvc7bz21j7l" data-title="redis基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -143,7 +198,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" data-id="clwbo0r1b00051kvc8djf4yyu" data-title="分治的讨论" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" data-id="clwc4g9ll0005gkvc64d2fkqd" data-title="分治的讨论" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -196,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" data-id="clwbo0r1c00061kvc8fdn9gfs" data-title="简单01背包问题的一个通用思路" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" data-id="clwc4g9lm0007gkvc2f2n1a9c" data-title="简单01背包问题的一个通用思路" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -235,7 +290,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/first/" data-id="clwbo0r1100001kvchx3r09y2" data-title="first" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/first/" data-id="clwc4g9lg0001gkvc8y5n553v" data-title="first" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -286,7 +341,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/hello-world/" data-id="clwbo0r1500011kvcb8cqe7p6" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/hello-world/" data-id="clwc4g9lk0004gkvc3u4mcct5" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -308,7 +363,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -336,6 +391,10 @@
       <ul>
         
           <li>
+            <a href="/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/">TypeScript的一些常用语法</a>
+          </li>
+        
+          <li>
             <a href="/2024/05/18/redis%E5%9F%BA%E7%A1%80/">redis基础</a>
           </li>
         
@@ -349,10 +408,6 @@
         
           <li>
             <a href="/2024/05/18/first/">first</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/18/hello-world/">Hello World</a>
           </li>
         
       </ul>
