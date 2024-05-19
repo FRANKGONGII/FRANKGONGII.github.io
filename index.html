@@ -152,7 +152,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/19/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/" data-id="clwd73mq70008xcvc3j5sgsu6" data-title="常见的布局方法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/19/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/" data-id="clwdabeud0008ywvcg49sf2cw" data-title="常见的布局方法" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -190,12 +190,24 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>zbsd</p>
+        <h3 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h3><h4 id="animation属性"><a href="#animation属性" class="headerlink" title="animation属性"></a>animation属性</h4><ul>
+<li>animation-name：指定要绑定到选择器的关键帧的名称。</li>
+<li>animation-duration：定义动画完成一个周期需要多少秒或毫秒</li>
+<li>ananimation-timing-function：指定动画将如何完成一个周期。<img src="/2024/05/19/CSS%E5%8A%A8%E7%94%BB/image.png"></li>
+<li>animation-delay：属性定义动画什么时候开始。注意如果是负值，就是跳过前x秒直接执行后面的动画</li>
+<li>animation-iteration-count ：定义动画应该播放多少次。</li>
+<li>animation-direction：定义是否循环交替反向播放动画。<img src="/2024/05/19/CSS%E5%8A%A8%E7%94%BB/image2.png"></li>
+</ul>
+<h4 id="key"><a href="#key" class="headerlink" title="key"></a>key</h4><ul>
+<li>用百分比来规定变化发生的时间，或用关键词 “from” 和 “to”，等同于 0% 和 100%。0% 是动画的开始，100% 是动画的完成。在每个百分比后面用css声明对应的样式<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@keyframes</span> myfirst&#123;</span><br><span class="line">    <span class="number">0%</span>   &#123;<span class="attribute">background</span>: red;&#125;</span><br><span class="line">    <span class="number">25%</span>  &#123;<span class="attribute">background</span>: yellow;&#125;</span><br><span class="line">    <span class="number">50%</span>  &#123;<span class="attribute">background</span>: blue;&#125;</span><br><span class="line">    <span class="number">100%</span> &#123;<span class="attribute">background</span>: green;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><h5 id="场景：缓慢出现"><a href="#场景：缓慢出现" class="headerlink" title="场景：缓慢出现"></a>场景：缓慢出现</h5><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.defaultChoices</span>&#123;</span><br><span class="line"><span class="attribute">animation-name</span>: defaultChoices;</span><br><span class="line"><span class="attribute">animation-duration</span>: <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@keyframes</span> defaultChoices&#123;</span><br><span class="line"><span class="number">0%</span>&#123;<span class="attribute">opacity</span>: <span class="number">0</span>;&#125;</span><br><span class="line"><span class="number">100%</span>&#123;<span class="attribute">opacity</span>: <span class="number">1</span>;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;showDefaultChoice&quot;</span> <span class="attr">class</span>=<span class="string">&quot;defaultChoices&quot;</span> <span class="attr">style</span>=<span class="string">&quot;position: absolute;bottom: 70px;width: 100%;height:200px;background-color: #EDF2F7;display: none;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/19/CSS%E5%8A%A8%E7%94%BB/" data-id="clwd73mpv0000xcvcauy4eqqp" data-title="CSS动画" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/19/CSS%E5%8A%A8%E7%94%BB/" data-id="clwdabeu00000ywvc1luc04w0" data-title="CSS动画" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -241,7 +253,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" data-id="clwd73mq00001xcvcaz49a21f" data-title="TypeScript的一些常用语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" data-id="clwdabeu80003ywvc41l577bv" data-title="TypeScript的一些常用语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -293,7 +305,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/" data-id="clwd73mq50005xcvcgaxf0pnw" data-title="redis基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/" data-id="clwdabeua0005ywvc7clk4ajr" data-title="redis基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -336,7 +348,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" data-id="clwd73mq60007xcvch8ar47qu" data-title="分治的讨论" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" data-id="clwdabeuc0007ywvc6oozgrof" data-title="分治的讨论" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -389,7 +401,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" data-id="clwd73mqc000oxcvcf9dig18u" data-title="简单01背包问题的一个通用思路" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" data-id="clwdabeue000aywvc8717dpoq" data-title="简单01背包问题的一个通用思路" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -428,7 +440,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/first/" data-id="clwd73mq40004xcvc30sb2i65" data-title="first" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/first/" data-id="clwdabeu50001ywvc2mzj0029" data-title="first" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -479,7 +491,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/hello-world/" data-id="clwd73mq30003xcvcgv8ibzi6" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/hello-world/" data-id="clwdabeu90004ywvc1nbwdsxt" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
