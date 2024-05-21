@@ -69,6 +69,44 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-再看动态规划" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="article-date">
+  <time class="dt-published" datetime="2024-05-21T06:53:02.000Z" itemprop="datePublished">2024-05-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">再看动态规划</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" data-id="clwghb35j0008wcvcamor80a2" data-title="再看动态规划" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-SQL" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/21/SQL/" class="article-date">
@@ -109,7 +147,7 @@
 <h4 id="OVER-子句"><a href="#OVER-子句" class="headerlink" title="OVER 子句"></a>OVER 子句</h4><p>OVER 子句用于定义窗口函数的工作范围。OVER 子句可以包含 PARTITION BY 子句和 ORDER BY 子句，分别用于分区和排序。</p>
 <h4 id="PARTITION-BY-子句"><a href="#PARTITION-BY-子句" class="headerlink" title="PARTITION BY 子句"></a>PARTITION BY 子句</h4><p>例如<code>PARTITION BY customer_id</code> 将数据按 customer_id 进行分区。分区的意思是将查询结果集划分成一个个小组，每个小组包含相同 customer_id 的所有行。在每个分区内，行号的计数从1开始，并在每个新分区重置。</p>
 <h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4>   <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ROW_NUMBER</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> customer_id <span class="keyword">ORDER</span> <span class="keyword">BY</span> order_date <span class="keyword">DESC</span>) <span class="keyword">AS</span> rank_tag</span><br></pre></td></tr></table></figure>
-<p>   <img src="/2024/05/21/SQL/image.png" alt="alt text"></p>
+<p>   <img src="/2024/05/21/SQL/image.png"></p>
 <h3 id="题型总结"><a href="#题型总结" class="headerlink" title="题型总结"></a>题型总结</h3><h4 id="全部参与类"><a href="#全部参与类" class="headerlink" title="全部参与类"></a>全部参与类</h4><ol>
 <li>employee， project(eno,pno)表，找出所有员工都参与的项目.<br>思路：项目的参与人数 &#x3D; 员工人数<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> pno</span><br><span class="line"><span class="keyword">FROM</span> works</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> pno</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> eno) <span class="operator">=</span> (<span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> employees);</span><br></pre></td></tr></table></figure></li>
 <li>sailor，reserve，boats表，找出预定了所有船的员工(相当于找出参与了所有项目的员工)<br>思路：通过group by找出每个人租的所有船，租船的数目 &#x3D; 船的总数(注意去重)<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> sailors.sname </span><br><span class="line"><span class="keyword">FROM</span> sailors</span><br><span class="line"><span class="keyword">JOIN</span> reserves <span class="keyword">ON</span> reserves.sid <span class="operator">=</span> sailors.sid</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> sailors.sid, sailors.sname</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> reserves.bid) <span class="operator">=</span> (<span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> boats);</span><br></pre></td></tr></table></figure></li>
@@ -118,13 +156,14 @@
 <li>sailor，reserve，boats表，找出年龄在35岁以上，并且在2020-08-01至2020-08-31期间同时预定了红色船（RED）和绿色船（GREEN）的水手，结果返回水手姓名sname。<br>思路：用sid判断这个id是不是同时满足多个要求，而不是看id对应的人是不是同时租了两种船<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> s.sname</span><br><span class="line"><span class="keyword">FROM</span> sailors s</span><br><span class="line"><span class="keyword">WHERE</span> s.age <span class="operator">&gt;</span> <span class="number">35</span></span><br><span class="line"><span class="keyword">AND</span> s.sid <span class="keyword">IN</span> (</span><br><span class="line">   <span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> r1.sid</span><br><span class="line">   <span class="keyword">FROM</span> reserves r1</span><br><span class="line">   <span class="keyword">JOIN</span> boats b1 <span class="keyword">ON</span> r1.bid <span class="operator">=</span> b1.bid</span><br><span class="line">   <span class="keyword">WHERE</span> b1.color <span class="operator">=</span> <span class="string">&#x27;GREEN&#x27;</span></span><br><span class="line">   <span class="keyword">AND</span> r1.reserve_date <span class="keyword">BETWEEN</span> <span class="string">&#x27;2020-08-01&#x27;</span> <span class="keyword">AND</span> <span class="string">&#x27;2020-08-31&#x27;</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">AND</span> s.sid <span class="keyword">IN</span> (</span><br><span class="line">   <span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> r2.sid</span><br><span class="line">   <span class="keyword">FROM</span> reserves r2</span><br><span class="line">   <span class="keyword">JOIN</span> boats b2 <span class="keyword">ON</span> r2.bid <span class="operator">=</span> b2.bid</span><br><span class="line">   <span class="keyword">WHERE</span> b2.color <span class="operator">=</span> <span class="string">&#x27;RED&#x27;</span></span><br><span class="line">   <span class="keyword">AND</span> r2.reserve_date <span class="keyword">BETWEEN</span> <span class="string">&#x27;2020-08-01&#x27;</span> <span class="keyword">AND</span> <span class="string">&#x27;2020-08-31&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="分区-1"><a href="#分区-1" class="headerlink" title="分区"></a>分区</h4><ul>
-<li>用户表，订单表，产品表，找到每个用户最近三笔订单。若用户订单少于3笔，则返回该用户的全部订单，结果返回用户名customer_name，订单编号order_id和订单日期order_date，以custromer_name升序，order_date降序排列。 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">   c.name customer_name,</span><br><span class="line">   c.customer_id, </span><br><span class="line">   t.order_id, </span><br><span class="line">   t.order_date</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">   <span class="keyword">SELECT</span>  </span><br><span class="line">      order_id,</span><br><span class="line">      order_date,</span><br><span class="line">      customer_id,</span><br><span class="line">      <span class="built_in">row_number</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> customer_id <span class="keyword">order</span> <span class="keyword">by</span> order_date <span class="keyword">DESC</span>) <span class="keyword">as</span> rank_tag</span><br><span class="line">   <span class="keyword">FROM</span> orders ) t</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> customers c  </span><br><span class="line">   <span class="keyword">ON</span> t.customer_id <span class="operator">=</span> c.customer_id    </span><br><span class="line"><span class="keyword">WHERE</span> </span><br><span class="line">   rank_tag <span class="operator">&lt;=</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> </span><br><span class="line">   name, customer_id, order_date <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure></li>
+<li>用户表，订单表，产品表，找到每个用户最近三笔订单。若用户订单少于3笔，则返回该用户的全部订单，找到每个用户的最近三笔订单。如果用户的订单少于 3 笔，则返回他的全部订单。返回的结果按照 customer_name 升序 排列。如果有相同的排名，则按照 customer_id 升序 排列。如果排名还有相同，则按照 order_date 降序 排列。 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*LEETCODE 1532*/</span></span><br><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">   c.name customer_name,</span><br><span class="line">   c.customer_id, </span><br><span class="line">   t.order_id, </span><br><span class="line">   t.order_date</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">   <span class="keyword">SELECT</span>  </span><br><span class="line">      order_id,</span><br><span class="line">      order_date,</span><br><span class="line">      customer_id,</span><br><span class="line">      <span class="built_in">row_number</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> customer_id <span class="keyword">order</span> <span class="keyword">by</span> order_date <span class="keyword">DESC</span>) <span class="keyword">as</span> rank_tag</span><br><span class="line">   <span class="keyword">FROM</span> orders ) t</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> customers c  </span><br><span class="line">   <span class="keyword">ON</span> t.customer_id <span class="operator">=</span> c.customer_id    </span><br><span class="line"><span class="keyword">WHERE</span> </span><br><span class="line">   rank_tag <span class="operator">&lt;=</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> </span><br><span class="line">   name, customer_id, order_date <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure>
+ 当然我们也可以不用分区的函数，直接手搓。。 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> name customer_name, order_id, order_date</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line">   <span class="keyword">select</span></span><br><span class="line">      o1.customer_id,</span><br><span class="line">      o1.order_id,</span><br><span class="line">      o1.order_date,</span><br><span class="line">      (</span><br><span class="line">      <span class="keyword">select</span></span><br><span class="line">         <span class="number">1</span> <span class="operator">+</span> <span class="built_in">count</span>(<span class="operator">*</span>)</span><br><span class="line">      <span class="keyword">from</span></span><br><span class="line">         orders o7</span><br><span class="line">      <span class="keyword">where</span></span><br><span class="line">         o7.customer_id <span class="operator">=</span> o1.customer_id</span><br><span class="line">         <span class="keyword">and</span> o7.order_date <span class="operator">&gt;</span> o1.order_date</span><br><span class="line">      ) <span class="keyword">as</span> rnk</span><br><span class="line">   <span class="keyword">from</span></span><br><span class="line">      orders o1</span><br><span class="line">) t</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> customers <span class="keyword">on</span> customers.customer_id <span class="operator">=</span> t.customer_id</span><br><span class="line"><span class="keyword">where</span> rnk <span class="operator">&lt;=</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> name <span class="keyword">asc</span>, order_date <span class="keyword">desc</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/21/SQL/" data-id="clwftr3nj00001svce9h42l5i" data-title="SQL" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/21/SQL/" data-id="clwghb35c0001wcvcayolf95a" data-title="SQL" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -177,7 +216,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/" data-id="clwftr3nq00021svcasaa20go" data-title="Makefile语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/" data-id="clwghb35i0005wcvc512840mn" data-title="Makefile语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -273,7 +312,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/19/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/" data-id="clwdabeud0008ywvcg49sf2cw" data-title="常见的布局方法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/19/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/" data-id="clwghb35p000owcvc4gjzfxkz" data-title="常见的布局方法" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -328,7 +367,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/19/CSS%E5%8A%A8%E7%94%BB/" data-id="clwdabeu00000ywvc1luc04w0" data-title="CSS动画" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/19/CSS%E5%8A%A8%E7%94%BB/" data-id="clwghb3580000wcvcay8bhu1b" data-title="CSS动画" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -374,7 +413,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" data-id="clwdabeu80003ywvc41l577bv" data-title="TypeScript的一些常用语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" data-id="clwghb35g0003wcvc1wm080xj" data-title="TypeScript的一些常用语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -473,7 +512,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/" data-id="clwdabeua0005ywvc7clk4ajr" data-title="redis基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/" data-id="clwghb35l000awcvc381c68r8" data-title="redis基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -516,7 +555,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" data-id="clwdabeuc0007ywvc6oozgrof" data-title="分治的讨论" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" data-id="clwghb35q000pwcvc05vuhm55" data-title="分治的讨论" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -569,7 +608,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" data-id="clwdabeue000aywvc8717dpoq" data-title="简单01背包问题的一个通用思路" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" data-id="clwghb35r000qwcvc9grta3vy" data-title="简单01背包问题的一个通用思路" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -608,58 +647,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/first/" data-id="clwdabeu50001ywvc2mzj0029" data-title="first" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/18/hello-world/" class="article-date">
-  <time class="dt-published" datetime="2024-05-17T16:11:57.991Z" itemprop="datePublished">2024-05-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/18/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/hello-world/" data-id="clwdabeu90004ywvc1nbwdsxt" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/first/" data-id="clwghb35h0004wcvc0cs152aq" data-title="first" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -672,6 +660,11 @@
 
   
 
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -709,6 +702,10 @@
       <ul>
         
           <li>
+            <a href="/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">再看动态规划</a>
+          </li>
+        
+          <li>
             <a href="/2024/05/21/SQL/">SQL</a>
           </li>
         
@@ -722,10 +719,6 @@
         
           <li>
             <a href="/2024/05/19/CSS%E5%8A%A8%E7%94%BB/">CSS动画</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/">TypeScript的一些常用语法</a>
           </li>
         
       </ul>
