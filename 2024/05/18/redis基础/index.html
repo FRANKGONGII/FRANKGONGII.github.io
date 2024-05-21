@@ -13,10 +13,12 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="什么是redis？ redis是一个key-value结构的Nosql数据库，value可以是各种redis的数据类型，比如字符串，集合 Nosql vs Sql Sql是结构化的（表结构），关联的（外键），用sql查询 ，满足ACID（原子性，一致性，隔离性，持久性） Nosql是非结构化的（kv，图，文档数据库），无关联的，用非sql查询（不同的非关系数据库是不同的查询方法，例如mogodb是">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/image.png">
 <meta property="article:published_time" content="2024-05-18T05:25:21.000Z">
-<meta property="article:modified_time" content="2024-05-18T05:42:02.048Z">
+<meta property="article:modified_time" content="2024-05-19T13:59:08.775Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/image.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -105,6 +107,53 @@
 <li>Sql只能垂直拓展，分库分表比较难，但是Nosql天然支持水平拓展</li>
 </ul>
 </li>
+<li>在非关系的，没有数据表的情况下，redis怎么区分不同的业务数据，如果id重复怎么办？<br>redis key可以允许多个单词形成层次结构（用：间隔表示），多个单词之间用:隔开，比如 <strong>项目名:业务名:类型:id</strong><br>value如果是一个对象，那么可以序列化成json字符串去存储</li>
+</ul>
+<h4 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h4><h5 id="客户端命令行"><a href="#客户端命令行" class="headerlink" title="客户端命令行"></a>客户端命令行</h5><ul>
+<li>redis-cli [options] [commands] <ul>
+<li>常见options <ul>
+<li>-h 127.0.0.1 指定要连接的redis节点的ip地址</li>
+<li>-p 6379 指定要连接的节点的端口</li>
+<li>-a 123456 指定redis访问密码</li>
+</ul>
+</li>
+<li>没有command会进入交互式命令行</li>
+<li>常见commands<ul>
+<li>AUTH [USER] [PASSWORD]</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h5><ul>
+<li>SET KEY VALUE<br>设置k-v键值对</li>
+<li>GET KEY<br>获取键值</li>
+<li>MSET KEY VALUE [KEY VALUE ..]<br>一次性设置多个键值对</li>
+<li>KEYS *<ul>
+<li>是来匹配的，比如na*，就可以匹配出name，nasa等等符合条件的key</li>
+</ul>
+</li>
+<li>DEL KEY [KEY1 ..]<br>删除键值对，如果有没有的键值对，那么不会删除</li>
+<li>EXIST KEY [KEY1 ..]<br>判断key是不是存在，需要注意的是，如果有重复key那么也会被重复计算</li>
+<li>EXPIRE KEY SECOND<br>给一个KEY设置有效期，设置的时间过期后，key 会被自动删除。带有超时时间的 key 通常被称为易失的(volatile)。已经设置过期的key，可以调用 EXPIRE 重新设置。在这种情况下 key 的生存时间被更新为新值。</li>
+<li>TTL KEY<br>查看一个Key的剩余有效时间<br>结果显示-1代表永久有效，-2就是被删除了</li>
+<li>SETNX KEY VALUE<br>真正的新增kv命令，只有不存在才会写入键值对</li>
+<li>SETNX KEY SECONDS VALUE<br>带过期时间的新增</li>
+</ul>
+<h5 id="STRING相关命令"><a href="#STRING相关命令" class="headerlink" title="STRING相关命令"></a>STRING相关命令</h5><ul>
+<li>INCR &#x2F; INCRBY &#x2F; INCRBYFLOAT KEY STEP<br>自增键值，前者自增1，后两者者step</li>
+<li></li>
+</ul>
+<h4 id="REDIS数据结构"><a href="#REDIS数据结构" class="headerlink" title="REDIS数据结构"></a>REDIS数据结构</h4><ul>
+<li><strong>REDIS是一个键值型数据库，key一般是String类型，value的类型多种多样</strong><br><img src="/2024/05/18/redis%E5%9F%BA%E7%A1%80/image.png"><br>后三者实际上是String类型的一些拓展类型</li>
+</ul>
+<h5 id="String类型"><a href="#String类型" class="headerlink" title="String类型"></a>String类型</h5><ul>
+<li>键值对的value是字符串，根据格式可以继续分为三类，最大都是512M<ol>
+<li>string：普通字符串</li>
+<li>int：整数类型，可以自增自减</li>
+<li>float：浮点数类型，可以自增自减</li>
+</ol>
+</li>
 <li></li>
 </ul>
 
@@ -150,7 +199,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -178,6 +227,14 @@
       <ul>
         
           <li>
+            <a href="/2024/05/21/SQL/">SQL</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/">Makefile语法</a>
+          </li>
+        
+          <li>
             <a href="/2024/05/19/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/">常见的布局方法</a>
           </li>
         
@@ -187,14 +244,6 @@
         
           <li>
             <a href="/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/">TypeScript的一些常用语法</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/18/redis%E5%9F%BA%E7%A1%80/">redis基础</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/">分治的讨论</a>
           </li>
         
       </ul>
