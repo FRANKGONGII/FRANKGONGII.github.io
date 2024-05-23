@@ -69,6 +69,198 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-MIT6824-Lab1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/23/MIT6824-Lab1/" class="article-date">
+  <time class="dt-published" datetime="2024-05-23T02:22:49.000Z" itemprop="datePublished">2024-05-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>►<a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/23/MIT6824-Lab1/">MIT6824-Lab1</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="Map-Reduce-Paper"><a href="#Map-Reduce-Paper" class="headerlink" title="Map Reduce Paper"></a>Map Reduce Paper</h3><ul>
+<li><p>用一种kv结构管理数据的模型（map），一个reduce函数管理相同key的value</p>
+</li>
+<li><p>以这种函数式风格编写的程序可自动并行化，并在大型计算机集群上执行。运行时系统会处理分割输入数据、调度程序在一组机器上的执行、处理机器故障以及管理所需的机器间通信等细节。这样，没有任何并行和分布式系统经验的程序员也能轻松利用大型分布式系统的资源。</p>
+</li>
+<li><p>如何工作？</p>
+<ol>
+<li>Map 由用户编写，它接收输入对并生成一组中间键&#x2F;值对。MapReuce 库将与同一中间键 I 相关的所有中间值组合在一起，并将它们传递给 Reduce 函数。 </li>
+<li>Reduce 函数也是由用户编写的，它接受一个中间键 I 和该键的一组值。它将这些值合并在一起，形成一个可能更小的值集。通常情况下，每次调用 Reduce 函数只会产生零个或一个输出值。中间值通过迭代器提供给用户的还原函数。这样，我们就能处理内存中容纳不下的数值列表 </li>
+<li><img src="/2024/05/23/MIT6824-Lab1/image.png"></li>
+</ol>
+</li>
+<li><p>用例：</p>
+<ul>
+<li>URL 访问频率计数： 映射函数处理网页请求日志并输出⟨URL,1⟩。还原函数将同一 URL 的所有值相加，输出一对 ⟨URL,total count⟩。</li>
+<li>反向网络链接图： mapfunction 会为在名为源的页面中发现的每个指向目标 URL 的链接输出⟨target,source⟩对。还原函数将所有源 URL 列表与给定的目标 URL 连接起来，并输出对：⟨target,list(source)⟩target,list(source)⟩target,list(source)</li>
+</ul>
+</li>
+<li><p><strong>实现</strong><br><img src="/2024/05/23/MIT6824-Lab1/image.png"></p>
+</li>
+</ul>
+<ol>
+<li>用户程序中的 MapReduce 库首先会将输入文件分割成 M 个片段，每个片段通常为 16 MB 至 64 MB（用户可通过可选参数进行控制）。然后，它在一组机器上启动多个程序副本。</li>
+<li>程序中的一个副本是特殊的–主程序。其余的都是由主程序分派工作的工作者。有 M 个映射任务和 R 个还原任务需要分配。主程序会挑选空闲的工作者，为每个工作者分配一个映射任务或还原任务。</li>
+<li>分配给 Map 任务的工作程序会读取相应输入分片的内容。它从输入数据中解析出键&#x2F;值对，并将每个键&#x2F;值对传递给用户定义的 Map 函数。Map 函数生成的键&#x2F;值对在内存中缓冲</li>
+<li>缓冲数据对会定期写入本地磁盘，并由分区函数分割成 R 个区域。本地磁盘上这些缓冲对的位置会传回主控器，由主控器负责将这些位置转发给还原工作者。</li>
+<li>还原工作程序会遍历已排序的中间数据，并将每个唯一的中间键和相应的中间值集传递给用户的 Reduce 函数。Reduce 函数的输出会附加到该还原分区的最终输出文件中</li>
+<li>当所有映射任务和还原任务完成后，主程序会唤醒用户程序。 此时，用户程序中的 MapReduce 调用将返回用户代码</li>
+</ol>
+<ul>
+<li><p>Map函数中调用emit的效果是在worker的本地磁盘上创建文件，这些文件包含了当前worker的Map函数生成的所有的key和value。</p>
+</li>
+<li><p>Reduce函数运算完了会调用自己的emit，这个emit与Map函数中的emit不一样，它会将输出写入到一个Google使用的共享文件服务中。</p>
+</li>
+<li><p>容错：</p>
+</li>
+</ul>
+<ol>
+<li>worker失效：主服务器会定期 ping 每个 Worker。如果在一定时间内没有收到工作者的回复，主站就会将工作者标记为失败。该 Worker 完成的任何映射任务都会被重置回初始空闲状态，从而有资格在其他 Worker 上进行调度。同样，失败 Worker 上正在进行的任何映射任务或还原任务也会被重置为空闲状态，并有资格重新安排。当一个Map任务首先被worker A执行，之后由于worker A失效了又被调度到worker B执行，这个“重新执行”的动作会被通知给所有执行Reduce任务的worker。任何还没有从worker A读取数据的Reduce任务将从worker B读取数据。</li>
+<li>master失效：master可以建立检查点并持久化，如果主任务死亡，可以从最后一个检查点状态启动新的副本。不过，由于只有一个主任务，它发生故障的可能性不大；因此，如果主任务发生故障，我们目前的实现会中止 MapReduce 计算。客户端可以检查这种情况，并根据需要重试 MapReduce 操作。</li>
+<li>失效任务处理：当用户提供的Map和Reduce 操作是输入确定性函数（即相同的输入产生相同的输出）时，我们的分布式实现在任何情况下的输出都和所有程序没有出现任何错误、顺序的执行产生的输出是一样的。我们依赖对Map和Reduce任务的输出是原子提交的来完成这个特性。每个工作中的任务把它的输出写到私有的临时文件中。每个Reduce任务生成一个这样的文件，而每个Map任务则生成R个这样的文件（一个Reduce任务对应一个文件）。当一个Map任务完成的时，worker发送一个包含R个临时文件名的完成消息给master。如果master 从一个已经完成的Map任务再次接收到到一个完成消息，master将忽略这个消息；否则，master将这R个文件的名字记录在数据结构里。</li>
+</ol>
+<ul>
+<li>备用任务<br>影响一个 MapReduce 的总执行时间最通常的因素是“落伍者”：在运算过程中，如果有一台机器花了很长的时间才完成最后几个Map或Reduce任务，导致MapReduce操作总的执行时间超过预期。出现“落伍者”的原因非常多。比如：如果一个机器的硬盘出了问题，在读取的时候要经常的进行读取纠错操作，导致读取数据的速度从30M&#x2F;s降低到1M&#x2F;s。如果cluster的调度系统在这台机器上又调度了其他的任务，由于CPU、内存、本地硬盘和网络带宽等竞争因素的存在，导致执行MapReduce代码的执行效率更加缓慢。我们最近遇到的一个问题是由于机器的初始化代码有 bug，导致关闭了的处理器的缓存：在这些机器上执行任务的性能和正常情况相差上百倍。<br>我们有一个通用的机制来减少“落伍者”出现的情况。当一个MapReduce操作接近完成的时候，master调度备用（backup）任务进程来执行剩下的、处于处理中状态（in-progress）的任务。无论是最初的执行进程、还是备用（backup）任务进程完成了任务，我们都把这个任务标记成为已经完成。我们调优了这个机制，通常只会占用比正常操作多几个百分点的计算资源。我们发现采用这样的机制对于减少超大MapReduce操作的总处理时间效果显著。例如，在5.3 节描述的排序任务，在关闭掉备用任务的情况下要多花44%的时间完成排序任务。</li>
+</ul>
+<h3 id="lecture1"><a href="#lecture1" class="headerlink" title="lecture1"></a>lecture1</h3><ul>
+<li>我们希望能找到一个抽象来描述分布式的存储或者计算，使得它们能够像非分布式系统一样有简单易懂的接口，将分布式特性隐藏在整个系统内<ul>
+<li>在讨论这些抽象时，第一个话题就是实现，常见的工具有：<ol>
+<li>RPC（Remote Procedure Call）。RPC的目标就是掩盖我们正在不可靠网络上通信的事实。</li>
+<li>线程。这是一种编程技术，使得我们可以利用多核心计算机。对于本课程而言，更重要的是，线程提供了一种结构化的并发操作方式，这样，从程序员角度来说可以简化并发操作。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="可拓展性："><a href="#可拓展性：" class="headerlink" title="可拓展性："></a>可拓展性：</h4><ul>
+<li>这是一个很强大的特性。如果你构建了一个系统，并且只要增加计算机的数量，系统就能相应提高性能或者吞吐量，这将会是一个巨大的成果，因为计算机只需要花钱就可以买到。如果不增加计算机，就需要花钱雇程序员来重构这些系统，进而使这些系统有更高的性能，更高的运行效率，或者应用一个更好的算法之类的。花钱请程序员来修补这些代码，使它们运行的更快，通常会是一个昂贵的方法。</li>
+<li>变化的瓶颈：网站的木桶原理。当你只有1-2个用户时，一台计算机就可以运行web服务器和数据，或者一台计算机运行web服务器，一台计算机运行数据库。但是有可能你的网站一夜之间就火了起来，你发现可能有一亿人要登录你的网站。你该怎么修改你的网站，使它能够在一台计算机上支持一亿个用户？你可以花费大量时间极致优化你的网站，但是很显然你没有那个时间。<br>所以，为了提升性能，你要做的第一件事情就是购买更多的web服务器，然后把不同用户分到不同服务器上。这样，一部分用户可以去访问第一台web服务器，另一部分去访问第二台web服务器。因为你正在构建的是类似于Reddit的网站，所有的用户最终都需要看到相同的数据。所以，所有的web服务器都与后端数据库通信。这样，很长一段时间你都可以通过添加web服务器来并行的提高web服务器的代码效率。只要单台web服务器没有给数据库带来太多的压力，你可以在出现问题前添加很多web服务器。<br>是这种可扩展性并不是无限的。很可能在某个时间点你有了10台，20台，甚至100台web服务器，它们都在和同一个数据库通信。现在，数据库突然成为了瓶颈，并且增加更多的web服务器都无济于事了。所以很少有可以通过无限增加计算机来获取完整的可扩展性的场景。因为在某个临界点，你在系统中添加计算机的位置将不再是瓶颈了。在我们的例子中，如果你有了很多的web服务器，那么瓶颈就会转移到了别的地方，这里是从web服务器移到了数据库。这时，你几乎是必然要做一些重构工作。但是只有一个数据库时，很难重构它。而虽然可以将一个数据库拆分成多个数据库（进而提升性能），但是这需要大量的工作。</li>
+</ul>
+<h4 id="可用性："><a href="#可用性：" class="headerlink" title="可用性："></a>可用性：</h4><ul>
+<li>大型分布式系统中有一个大问题，那就是一些很罕见的问题会被放大。例如在我们的1000台计算机的集群中，总是有故障，要么是机器故障，要么是运行出错，要么是运行缓慢，要么是执行错误的任务。一个更常见的问题是网络，在一个有1000台计算机的网络中，会有大量的网络电缆和网络交换机，所以总是会有人踩着网线导致网线从接口掉出，或者交换机风扇故障导致交换机过热而不工作。在一个大规模分布式系统中，各个地方总是有一些小问题出现。所以大规模系统会将一些几乎不可能并且你不需要考虑的问题，变成一个持续不断的问题。</li>
+<li>所以，因为错误总会发生，必须要在设计时就考虑，系统能够屏蔽错误，或者说能够在出错时继续运行。同时，因为我们需要为第三方应用开发人员提供方便的抽象接口，我们的确也需要构建这样一种基础架构，它能够尽可能多的对应用开发人员屏蔽和掩盖错误。这样，应用开发人员就不需要处理各种各样的可能发生的错误。</li>
+<li>active redundancy 主动冗余 <ul>
+<li>好处与成本：主动冗余是在数据写入时立即创建数据的多个副本，这些副本存储在不同的位置或设备上并通过心跳机制等方法保持在相同的状态并以并行的方式对请求响应。主动冗余的优点是切换时间非常短，数据和计算都是热备份的。所以一旦系统出现错误，就可以立刻切换，基本不会影响系统的正常运行。但缺点也十分明显，所有的冗余模块都处于激活状态，并指向相同的任务，即使在主系统没有故障的情况下仍需要对请求做同样的处理，从而保障所有模块的运行结果一致性，就造成了资源的成倍增加。另外这种冗余通常通过复制或镜像数据来实现，因此其成本很高，不仅需要更多的设备，还需要一套可靠的同步机制。</li>
+</ul>
+</li>
+<li>passive redundancy 被动冗余<ul>
+<li>好处与成本：被动冗余是在主数据失效后才使用冗余或修复数据的过程。例如主系统出错后启用冗余系统，并把冗余系统同步到上一次主系统的同步状态，而修复通常通过使用冗余校验和或纠错码来实现。这种实现方法下，主系统和冗余之间的同步频率较低，消耗的资源也较少，但是相应的，出错后的处理恢复时间也比主动冗余要更长，因为数据的修复需要一定时间。总的来说，被动冗余是资源和可用性的平衡。</li>
+</ul>
+</li>
+<li>spare 备件<ul>
+<li>好处与成本：备件是将数据复制到独立的存储介质中，以防止原始数据丢失或损坏，并在需要的时候通过空闲机器导入备份。备件可以是完整的、增量的或差异的。备件所需要的资源最少，几乎可以说只需要存储空间把数据隔一段时间存起来即可。备件实现的难度和资源需求是这三种策略里面最低的，但是其对可用性的保证效果也最差，通过备件恢复系统的时间最长</li>
+</ul>
+</li>
+</ul>
+<h4 id="一致性"><a href="#一致性" class="headerlink" title="一致性"></a>一致性</h4><ul>
+<li>从性能和容错的角度来说，我们通常会有多个副本。在一个非分布式系统中，你通常只有一个服务器，一个表单。虽然不是绝对，但是通常来说对于put&#x2F;get的行为不会有歧义。直观上来说，put就是更新这个表单，get就是从表单中获取当前表单中存储的数据。但是在一个分布式系统中，由于复制或者缓存，数据可能存在于多个副本当中，于是就有了多个不同版本的key-value对。<ol>
+<li>假设服务器有两个副本，那么他们都有一个key-value表单，两个表单中key 1对应的值都是20。</li>
+<li>现在某个客户端发送了一个put请求，并希望将key 1改成值21。这里或许是KV服务里面的一个计数器。这个put请求发送给了第一台服务器，</li>
+<li>之后会发送给第二台服务器，因为相同的put请求需要发送给两个副本，这样这两个副本才能保持同步。但是就在客户端准备给第二台服务器发送相同请求时，这个客户端故障了，可能是电源故障或者操作系统的bug之类的。所以，现在我们处于一个不好的状态，我们发送了一个put请求，更新了一个副本的值是21，但是另一个副本的值仍然是20。</li>
+<li>如果现在某人通过get读取key为1的值，那么他可能获得21，也可能获得20，取决于get请求发送到了哪个服务器。即使规定了总是把请求先发送给第一个服务器，那么我们在构建容错系统时，如果第一台服务器故障了，请求也会发给第二台服务器。所以不管怎么样，总有一天你会面临暴露旧数据的风险。很可能是这样，最开始许多get请求都得到了21，之后过了一周突然一些get请求得到了一周之前的旧数据（20）。所以，这里不是很一致。并且，如果我们不小心的话，这个场景是可能发生的。所以，我们需要确定put&#x2F;get操作的一些规则。</li>
+</ol>
+</li>
+<li>强一致性：比如说get请求可以得到最近一次完成的put请求写入的值。这种一般也被称为强一致（Strong Consistency）</li>
+<li>弱一致性：弱一致是指，不保证get请求可以得到最近一次完成的put请求写入的值。</li>
+</ul>
+<h4 id="MapReduce-Job"><a href="#MapReduce-Job" class="headerlink" title="MapReduce Job"></a>MapReduce Job</h4><p><img src="/2024/05/23/MIT6824-Lab1/image.png"></p>
+<ul>
+<li>Job。整个MapReduce计算称为Job。</li>
+<li>Task。每一次MapReduce调用称为Task。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/05/23/MIT6824-Lab1/" data-id="clwj1eh4o0003p8vc4yrk6v4s" data-title="MIT6824-Lab1" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Paper" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/22/Paper/" class="article-date">
+  <time class="dt-published" datetime="2024-05-22T14:43:56.000Z" itemprop="datePublished">2024-05-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a>►<a class="article-category-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/22/Paper/">Paper~</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey"><a href="#ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey" class="headerlink" title="ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey"></a>ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</h2><h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>不同场景下，有什么不同的图像匹配技术？<br>图像匹配（又称图像配准或配对）旨在从两幅以上的图像中识别出相同或相似的结构&#x2F;内容，然后将其对应起来。该技术可用于高维结构恢复以及信息识别和整合，如三维重建、视觉同步定位和地图绘制（VSLAM）、图像拼图、图像融合、图像检索、目标识别和跟踪以及变化检测等<br>一般来说，图像匹配包括两个部分，即匹配特征的性质和匹配策略，这两个部分分别说明了用什么进行匹配和如何进行匹配。匹配的最终目的是将感测图像以几何方式扭曲成参照图像的共同空间坐标系，并将它们的共同区域像素对像素对齐（即图像注册  image registration）。</p>
+<h4 id="area-based-method"><a href="#area-based-method" class="headerlink" title="area-based method"></a>area-based method</h4><ul>
+<li>一种直接的策略（也称为基于区域的方法）是通过在预定大小的滑动窗口甚至整个图像中使用像素域变换后的原始图像像素强度或信息的相似性测量值来注册两幅图像，而不试图检测任何突出的图像结构</li>
+<li>直接匹配图像的基于区域的方法通常依赖于适当的斑块相似性测量来创建图像之间像素级的匹配。这些方法的计算成本较高，而且对图像失真、噪声引起的外观变化、不同的光照和不同的成像传感器很敏感，这些都会对相似性测量和匹配搜索产生负面影响。因此，这些方法通常只能在较小的旋转、缩放和局部变形情况下有效。但是，这些方法基于特征检测和描述、特征匹配和几何模型估计，这也是一个挑战。一方面，在基于特征的图像匹配中，很难定义和提取现实世界中属于三维空间相同位置的高比例和大量特征，以确保匹配度。另一方面，将 N 个特征点与另一幅图像中检测到的 N 个特征点进行匹配，总共会产生 N! 种可能的匹配结果，而通常要从高分辨率图像中提取成千上万个特征点，且特征点集合中通常会包含主要的异常值和噪声，这给现有的匹配方法带来了明显的困难。 </li>
+<li>当应用于宽基线图像立体或复杂和严重变形情况下的配准时，从图像中学习直接配准或变换模型估计的选择是有限的。将卷积神经网络（CNN）应用于稀疏点数据的匹配、配准和变换模型估计也很困难，因为需要匹配的点由于其无序和分散的性质而被称为非结构化或非欧几里得数据，这使得使用深度卷积技术操作和提取两个或多个点之间的空间关系（例如相邻元素、相对位置以及多点之间的长度和角度信息）变得困难</li>
+</ul>
+<h4 id="feature-based-method"><a href="#feature-based-method" class="headerlink" title="feature based method"></a>feature based method</h4><ul>
+<li>基于特征的方法，即特征检测和描述、特征匹配、变换模型估计、图像重采样和变换。基于特征的图像匹配因其灵活性和鲁棒性以及广泛的应用能力而广受欢迎。其中，特征检测可以从图像中提取独特的结构，而特征描述可视为一种图像表示方法，被广泛应用于图像编码和相似性测量，如图像分类和检索。此外，由于深度特征获取和非线性表达能力强，将深度学习技术应用于图像信息表示和&#x2F;或相似性测量，以及图像对变换的参数回归，是当今图像匹配界的热门话题，与传统方法相比，已被证明能获得更好的匹配性能，并呈现出更大的潜力。</li>
+<li>检测到的特征代表了图像或现实世界中的特定语义结构，可分为<strong>角特征</strong>（Moravec，1977 年；Harrisetal，1988 年；Smith 和 Brady，1997 年；RostenandDrummond，2006 年；Rubleeetal，2011 年。 等人，2008 年；Yi 等人，2016 年）、<strong>线&#x2F;边</strong>（Harris 等人，1988 年；Smith 和 Brady，1997 年；Canny，1987 年；Perona 和 Malik，1990 年）以及<strong>形态逻辑区域特征</strong>（Matas 等人，2004 年；Mikolajczyk 等人，2005 年）。不过，<strong>最常用的匹配特征是点</strong>（又称关键点或兴趣点）。 与线条和区域特征相比，点易于提取和定义，其形式也比较简单，大致可分为角点和圆点。 一个好的兴趣点必须易于找到，而且最好能快速计算，因为一个好位置上的兴趣点对于进一步的特征描述和匹配至关重要。为了提高(i) 可匹配性，(ii) 后续应用能力，(iii) 匹配效率和减少存储需求，人们提出了许多可靠特征提取所需的属性（Zitova 和 Flusser，2003 年；Tuytelaars 和 Mikolajczyk，2008 年），包括重复性、不变性、鲁棒性和效率。特征检测的共同理念是构建特征响应，以区分突出的点、线和区域，以及平面和非突出的图像区域。这种思路可分为梯度检测、强度检测、二阶导数检测、轮廓曲率检测、区域分割检测和基于学习的检测。下面，我们将全面介绍这些方法中的特征检测器，重点介绍基于学习的方法，以指导研究人员了解传统检测器和可训练检测器是如何工作的，并深入分析它们的优势和不足。</li>
+</ul>
+<h5 id="corner-feature"><a href="#corner-feature" class="headerlink" title="corner feature"></a>corner feature</h5><ul>
+<li>拐角特征可定义为 “L”、”T”、”X “形两条直线的交叉点或轮廓线的高曲率点。拐角检测的共同理念是计算拐角响应，并将其与边缘、平面或其他不同的图像区域区分开来。传统的拐角搜索可以采用不同的策略，即基于梯度、基于强度和基于轮廓曲率的策略。 详情请参考 Zitova 和 Flusser (2003)、Li 等人 (2015)、Tuyte laars 和 Mikolajczyk (2008) 以及 Rosten 等人 (2010)。</li>
+</ul>
+<h6 id="梯度检测器"><a href="#梯度检测器" class="headerlink" title="梯度检测器"></a>梯度检测器</h6><ul>
+<li>该方法首先提出了 “兴趣点 “的概念来定义明显的特征点，这些特征点是根据局部强度的自相关关系提取的。该方法从八个方向的移动窗口中计算并搜索每个像素的最小强度变化，如果最小值优于给定的阈值，则检测到兴趣点。 然而，由于比较的方向和大小不连续，莫拉维克检测器对方向或图像旋转并不不变。著名的 Harris 角检测器（Harris 等人，1988 年）就是为了解决各向异性和计算复杂性问题而引入的。哈里斯方法的目标是利用二阶矩阵或自相关矩阵找到灰度值变化最快和最小的方向，因此它不受方向和光照的影响，具有可靠的重复性和独特性。Shi 和 Tomasi（1993 年）对 Harris 进行了进一步改进，使特征更加 “分散”，定位更加准确，从而提高了跟踪性能。</li>
+</ul>
+<h6 id="强度检测器"><a href="#强度检测器" class="headerlink" title="强度检测器"></a>强度检测器</h6><p>有几种基于模板或强度比较的拐角检测器是通过比较周围像素与中心像素的强度来简化图像梯度计算的。由于其二进制性质，它们被广泛应用于许多现代应用中，特别是一些有存储和实时性要求的应用中。 基于亮度的角检测器，即最小单值段同化核（SUSAN）（Smith 和 Brady，1997 年），是基于局部半径区域像素与核之间的亮度相似性。由于 SUSAN 不需要梯度计算，因此可以快速实现。基于亮度比较的概念，人们提出了许多类似的方法，其中最著名的是 FAST 检测器（Trajkovi´c 和 Hedley，1998 年）。FAST 使用二进制比较法，将沿圆圈图案的每个像素与中心像素进行比较，然后使用机器学习（即 ID3 树，Quinlan 1986 年）策略确定更可靠的角落特征。作为 SUSAN 的改进版，FAST 具有极高的效率和重复性，因此得到了更广泛的应用。为了在不降低效率的情况下改进 FAST，引入了 FAST-ER（Ros ten 等人，2010 年），通过进一步以原子核为中心的像素亮度比较，对探测器进行通用化，从而提高了重复性。另一项改进是 AGAST（Mair 等人，2010 年），该方法定义了另外两个像素亮度比较标准，然后在扩展的配置空间中训练出一棵最优化和专业化的决策树，从而使 FAST 检测器更具通用性和适应性。为了结合 FAST针对哈里斯检测器的可靠性问题，Rublee 等人（2011 年）提出了一种用于匹配的集成特征检测器和描述器，称为 ORB。ORB 使用 Harris 响应来选择一定数量的 FAST 角作为最终检测到的特征。局部斑块的灰度中心点和中心像素本身组成一个向量，代表 ORB 特征的主要方向，这有助于计算 ORB 中二元描述符的相似性。最近，有人提出了一种类似 Sadder 的检测器（Aldana-Iuit 等人，2016 年）来提取兴趣点。在该检测器中，通过在两个具有一定几何约束的同心圆上进行强度比较，可有效验证鞍形条件。与传统方法相比，即使是现代可训练方法，Sadder 检测器也能实现更高的重复性和更大的扩展性（Komorowski 等人，2018 年）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/05/22/Paper/" data-id="clwj1eh4l0001p8vc9wbr9s1p" data-title="Paper~" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-再看动态规划" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="article-date">
@@ -95,7 +287,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" data-id="clwghtpd1000aqcvc7j1u9guj" data-title="再看动态规划" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" data-id="clwj1eh4u000bp8vc0vg9eiyp" data-title="再看动态规划" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -140,6 +332,7 @@
 <li>Right Join 右连接，返回由表所有的行，左表返回匹配行，不匹配的返回NULL <strong>右表+交集</strong></li>
 <li>Full Join 全连接，只要其中一个表存在匹配，则返回行 <strong>左表+右表+交集</strong></li>
 <li>Cross Join 笛卡尔积</li>
+<li>左连接和右连接也可以称为左外连接和右外连接，统称为外连接</li>
 <li>这些连接方法常常和ON配合使用，<strong>ON条件是在生成临时表时使用的条件</strong>，如果满足条件，就会加入中间结果表，当然对于左右连接来说，即使没有匹配也会保留边的数据。</li>
 <li>需要注意的是，ON条件是不和Cross Join配合使用的，这时候要用Where来筛选。这也很好理解，笛卡尔积也可以看成一个“原子操作”，后续的筛选就是对这个中间结果表的筛选了，如果还想着用ON条件，直接用Join或者其他就好了</li>
 </ul>
@@ -148,6 +341,10 @@
 <h4 id="PARTITION-BY-子句"><a href="#PARTITION-BY-子句" class="headerlink" title="PARTITION BY 子句"></a>PARTITION BY 子句</h4><p>例如<code>PARTITION BY customer_id</code> 将数据按 customer_id 进行分区。分区的意思是将查询结果集划分成一个个小组，每个小组包含相同 customer_id 的所有行。在每个分区内，行号的计数从1开始，并在每个新分区重置。</p>
 <h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4>   <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ROW_NUMBER</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> customer_id <span class="keyword">ORDER</span> <span class="keyword">BY</span> order_date <span class="keyword">DESC</span>) <span class="keyword">AS</span> rank_tag</span><br></pre></td></tr></table></figure>
 <p>   <img src="/2024/05/21/SQL/image.png"></p>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ul>
+<li><strong>round(x,d) ，x指要处理的数，d是指保留几位小数</strong><br>这里有个值得注意的地方是，d可以是负数，这时是指定小数点左边的d位整数位为0,同时小数位均为0； <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 结果为1100</span></span><br><span class="line"><span class="keyword">select</span> round(<span class="number">1123.26723</span>,<span class="number">-2</span>);</span><br><span class="line"><span class="comment">-- 结果为1120</span></span><br><span class="line"><span class="keyword">select</span> round(<span class="number">1123.26723</span>,<span class="number">-1</span>);</span><br><span class="line"><span class="comment">-- 结果为1123.27</span></span><br><span class="line"><span class="keyword">select</span> round(<span class="number">1123.26723</span>,<span class="number">2</span>);</span><br></pre></td></tr></table></figure></li>
+<li><strong>IFNULL(expr1,expr2)，如果expr1的值为null，则返回expr2的值，如果expr1的值不为null，则返回expr1的值。</strong></li>
+</ul>
 <h3 id="题型总结"><a href="#题型总结" class="headerlink" title="题型总结"></a>题型总结</h3><h4 id="全部参与类"><a href="#全部参与类" class="headerlink" title="全部参与类"></a>全部参与类</h4><ol>
 <li>employee， project(eno,pno)表，找出所有员工都参与的项目.<br>思路：项目的参与人数 &#x3D; 员工人数<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> pno</span><br><span class="line"><span class="keyword">FROM</span> works</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> pno</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> eno) <span class="operator">=</span> (<span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> employees);</span><br></pre></td></tr></table></figure></li>
 <li>sailor，reserve，boats表，找出预定了所有船的员工(相当于找出参与了所有项目的员工)<br>思路：通过group by找出每个人租的所有船，租船的数目 &#x3D; 船的总数(注意去重)<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> sailors.sname </span><br><span class="line"><span class="keyword">FROM</span> sailors</span><br><span class="line"><span class="keyword">JOIN</span> reserves <span class="keyword">ON</span> reserves.sid <span class="operator">=</span> sailors.sid</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> sailors.sid, sailors.sname</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> reserves.bid) <span class="operator">=</span> (<span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> boats);</span><br></pre></td></tr></table></figure></li>
@@ -159,11 +356,15 @@
 <li>用户表，订单表，产品表，找到每个用户最近三笔订单。若用户订单少于3笔，则返回该用户的全部订单，找到每个用户的最近三笔订单。如果用户的订单少于 3 笔，则返回他的全部订单。返回的结果按照 customer_name 升序 排列。如果有相同的排名，则按照 customer_id 升序 排列。如果排名还有相同，则按照 order_date 降序 排列。 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*LEETCODE 1532*/</span></span><br><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">   c.name customer_name,</span><br><span class="line">   c.customer_id, </span><br><span class="line">   t.order_id, </span><br><span class="line">   t.order_date</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">   <span class="keyword">SELECT</span>  </span><br><span class="line">      order_id,</span><br><span class="line">      order_date,</span><br><span class="line">      customer_id,</span><br><span class="line">      <span class="built_in">row_number</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> customer_id <span class="keyword">order</span> <span class="keyword">by</span> order_date <span class="keyword">DESC</span>) <span class="keyword">as</span> rank_tag</span><br><span class="line">   <span class="keyword">FROM</span> orders ) t</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> customers c  </span><br><span class="line">   <span class="keyword">ON</span> t.customer_id <span class="operator">=</span> c.customer_id    </span><br><span class="line"><span class="keyword">WHERE</span> </span><br><span class="line">   rank_tag <span class="operator">&lt;=</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> </span><br><span class="line">   name, customer_id, order_date <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure>
  当然我们也可以不用分区的函数，直接手搓。。也就会是对于每一个Order，我们都直接计算它的rank，rank的计算就是再次遍历order表，得出比他大的个数 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> name customer_name, order_id, order_date</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line">   <span class="keyword">select</span></span><br><span class="line">      o1.customer_id,</span><br><span class="line">      o1.order_id,</span><br><span class="line">      o1.order_date,</span><br><span class="line">      (</span><br><span class="line">      <span class="keyword">select</span></span><br><span class="line">         <span class="number">1</span> <span class="operator">+</span> <span class="built_in">count</span>(<span class="operator">*</span>)</span><br><span class="line">      <span class="keyword">from</span></span><br><span class="line">         orders o7</span><br><span class="line">      <span class="keyword">where</span></span><br><span class="line">         o7.customer_id <span class="operator">=</span> o1.customer_id</span><br><span class="line">         <span class="keyword">and</span> o7.order_date <span class="operator">&gt;</span> o1.order_date</span><br><span class="line">      ) <span class="keyword">as</span> rnk</span><br><span class="line">   <span class="keyword">from</span></span><br><span class="line">      orders o1</span><br><span class="line">) t</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> customers <span class="keyword">on</span> customers.customer_id <span class="operator">=</span> t.customer_id</span><br><span class="line"><span class="keyword">where</span> rnk <span class="operator">&lt;=</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> name <span class="keyword">asc</span>, order_date <span class="keyword">desc</span></span><br></pre></td></tr></table></figure></li>
 </ul>
+<h4 id="参与最多"><a href="#参与最多" class="headerlink" title="参与最多"></a>参与最多</h4><p>很套路且符合直觉，一般就是count+group by+order by+limit</p>
+<ul>
+<li>编写一个sql语句，查询参加比赛场次最多的选手，若参与比赛场次相同，选择用户编号player_id较小的选手，结果返回用户编号player_id和参与的比赛数量match_num。<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> players.player_id,<span class="built_in">COUNT</span>(matches.match_id)</span><br><span class="line"><span class="keyword">FROM</span> players</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> <span class="keyword">matches</span></span><br><span class="line"><span class="keyword">ON</span> matches.first_player <span class="operator">=</span> players.player_id <span class="keyword">OR</span> matches.second_player <span class="operator">=</span> players.player_id</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> players.player_id</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="built_in">COUNT</span>(matches.match_id) <span class="keyword">DESC</span>, players.player_id <span class="keyword">ASC</span></span><br><span class="line">LIMIT <span class="number">1</span></span><br></pre></td></tr></table></figure></li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/21/SQL/" data-id="clwghtpcv0003qcvc77arblb8" data-title="SQL" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/21/SQL/" data-id="clwj1eh4p0004p8vcfo2edw2e" data-title="SQL" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -216,7 +417,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/" data-id="clwghtpcq0001qcvcgs7y6u88" data-title="Makefile语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/" data-id="clwj1eh4w000dp8vc7zp93uct" data-title="Makefile语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -312,7 +513,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/19/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/" data-id="clwghtpd3000eqcvc2v1a2iqo" data-title="常见的布局方法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/19/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/" data-id="clwj1eh53000xp8vcg6gb3cib" data-title="常见的布局方法" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -367,7 +568,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/19/CSS%E5%8A%A8%E7%94%BB/" data-id="clwghtpcl0000qcvc3tu95khi" data-title="CSS动画" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/19/CSS%E5%8A%A8%E7%94%BB/" data-id="clwj1eh4h0000p8vc9d92dkfd" data-title="CSS动画" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -413,7 +614,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" data-id="clwghtpcw0004qcvcgbomfdsn" data-title="TypeScript的一些常用语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" data-id="clwj1eh4q0005p8vc67tc2g4m" data-title="TypeScript的一些常用语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -489,13 +690,34 @@
 <li>EXIST KEY [KEY1 ..]<br>判断key是不是存在，需要注意的是，如果有重复key那么也会被重复计算</li>
 <li>EXPIRE KEY SECOND<br>给一个KEY设置有效期，设置的时间过期后，key 会被自动删除。带有超时时间的 key 通常被称为易失的(volatile)。已经设置过期的key，可以调用 EXPIRE 重新设置。在这种情况下 key 的生存时间被更新为新值。</li>
 <li>TTL KEY<br>查看一个Key的剩余有效时间<br>结果显示-1代表永久有效，-2就是被删除了</li>
-<li>SETNX KEY VALUE<br>真正的新增kv命令，只有不存在才会写入键值对</li>
-<li>SETNX KEY SECONDS VALUE<br>带过期时间的新增</li>
 </ul>
 <h5 id="STRING相关命令"><a href="#STRING相关命令" class="headerlink" title="STRING相关命令"></a>STRING相关命令</h5><ul>
 <li>INCR &#x2F; INCRBY &#x2F; INCRBYFLOAT KEY STEP<br>自增键值，前者自增1，后两者者step</li>
-<li></li>
+<li>SETNX KEY VALUE<br>真正的新增kv命令，只有不存在才会写入键值对</li>
+<li>SETNX KEY SECONDS VALUE<br>带过期时间的新增</li>
 </ul>
+<h5 id="HASH相关命令"><a href="#HASH相关命令" class="headerlink" title="HASH相关命令"></a>HASH相关命令</h5><ul>
+<li>HGET，HSET，HMSET，HMSET。注意set的时候不仅要指定key，还要指feild</li>
+<li>HGETALL KEY<br>依次返回所有键值对</li>
+<li>HKEYS KEY<br>hash value中的所有key</li>
+<li>HVALS KEY<br>hash value中的所有value</li>
+<li>HICNBY KEY field num<br>增加value</li>
+<li>HSETNX KEY field value<br>如果对应field不存在则写入</li>
+</ul>
+<h5 id="LIST相关命令"><a href="#LIST相关命令" class="headerlink" title="LIST相关命令"></a>LIST相关命令</h5><ul>
+<li>LPUSH、LPOP、RPUSH、RPOP</li>
+<li>LRANGE key start end<br>下标内的元素</li>
+<li>BLPOP，BRPOP 可以阻塞，pop不了不会马上返回，需要指定阻塞时间(s)</li>
+</ul>
+<h5 id="SET相关命令"><a href="#SET相关命令" class="headerlink" title="SET相关命令"></a>SET相关命令</h5><ul>
+<li>SADD key number..<br>加入元素</li>
+<li>SREM key number..<br>删除元素</li>
+<li>SCARD key<br>元素个数</li>
+<li>SISMEMBER key member<br>判断是不是在集合内</li>
+<li>SMEMBERS key<br>获取所有元素</li>
+<li>SINTER，SDIFF，SUNION<br>交集差集并集</li>
+</ul>
+<h4 id="SORTSET相关命令"><a href="#SORTSET相关命令" class="headerlink" title="SORTSET相关命令"></a>SORTSET相关命令</h4><p><img src="/2024/05/18/redis%E5%9F%BA%E7%A1%80/image3.png"></p>
 <h4 id="REDIS数据结构"><a href="#REDIS数据结构" class="headerlink" title="REDIS数据结构"></a>REDIS数据结构</h4><ul>
 <li><strong>REDIS是一个键值型数据库，key一般是String类型，value的类型多种多样</strong><br><img src="/2024/05/18/redis%E5%9F%BA%E7%A1%80/image.png"><br>后三者实际上是String类型的一些拓展类型</li>
 </ul>
@@ -506,13 +728,41 @@
 <li>float：浮点数类型，可以自增自减</li>
 </ol>
 </li>
-<li></li>
+<li>应用：缓存 Session、Token、图片地址、序列化后的对象(相比较于 Hash 存储更节省内存)，举例：用户单位时间的请求数（简单限流可以用到）、页面单位时间的访问数。</li>
+</ul>
+<h5 id="Hash类型"><a href="#Hash类型" class="headerlink" title="Hash类型"></a>Hash类型</h5><ul>
+<li>value中的每个字段可以独立存储<br><img src="/2024/05/18/redis%E5%9F%BA%E7%A1%80/image2.png"></li>
+<li>应用：对象数据存储场景：举例：用户信息、商品信息、文章信息、购物车信息。</li>
+</ul>
+<h5 id="LIST类型"><a href="#LIST类型" class="headerlink" title="LIST类型"></a>LIST类型</h5><ul>
+<li>类似双向链表结构，可以正向反向检索</li>
+<li>有序，元素可以重复，插入删除快，查询一般</li>
+<li>应用：信息流展示（评论），消息队列</li>
+</ul>
+<h5 id="SET"><a href="#SET" class="headerlink" title="SET"></a>SET</h5><ul>
+<li>无序，元素不可以重复，查询快，可以交并差</li>
+<li>应用：需要存放的数据不能重复的场景：文章点赞、动态点赞等场景。需要获取多个数据源交集、并集和差集的场景举例：共同好友(交集)、共同粉丝(交集)、共同关注(交集)、好友推荐（差集）、音乐推荐（差集）、订阅号推荐差集+交集） 等场景。</li>
+</ul>
+<h5 id="SORTSET"><a href="#SORTSET" class="headerlink" title="SORTSET"></a>SORTSET</h5><ul>
+<li>可以排序的SET，每个元素带一个score，底层是zset+hash实现</li>
+<li>应用：排行榜，优先队列</li>
+</ul>
+<h4 id="REDIS-客户端"><a href="#REDIS-客户端" class="headerlink" title="REDIS 客户端"></a>REDIS 客户端</h4><ul>
+<li>Jedis：方法名和redis一样</li>
+<li>lettuce：以netty为基础</li>
+</ul>
+<h5 id="JEDIS"><a href="#JEDIS" class="headerlink" title="JEDIS"></a>JEDIS</h5><h6 id="连接虚拟机redis错误"><a href="#连接虚拟机redis错误" class="headerlink" title="连接虚拟机redis错误"></a>连接虚拟机redis错误</h6><ul>
+<li>time out<ol>
+<li>检查redis.conf，注释掉bind（让其他地址可以访问），关闭安全守护模式，将 protected-mode 设置为 no</li>
+<li>关闭防火墙&#x2F;开放端口：firewall-cmd –query-port&#x3D;xxxx&#x2F;tcp  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl  status firewalld.service 查看防火墙的状态；</span><br><span class="line">systemctl  start firewalld.service 启动防火墙；</span><br><span class="line">systemctl  stop firewalld.service 关闭防火墙；</span><br><span class="line">systemctl  restart firewalld.service 重启防火墙；</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/" data-id="clwghtpd00008qcvc24wy3u2t" data-title="redis基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/" data-id="clwj1eh4t000ap8vcfeze84dn" data-title="redis基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -555,99 +805,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" data-id="clwghtpd2000bqcvc25ob5ibe" data-title="分治的讨论" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-简单01背包问题的一个通用思路" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" class="article-date">
-  <time class="dt-published" datetime="2024-05-18T03:22:19.000Z" itemprop="datePublished">2024-05-18</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/">简单01背包问题的一个通用思路</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="DP设计思路"><a href="#DP设计思路" class="headerlink" title="DP设计思路"></a>DP设计思路</h3><ul>
-<li>在处理01背包问题时，我们往往是遇到这样以下情景：<ol>
-<li>最多装c，求方案数&#x2F;最大和 </li>
-<li>恰好装c，求方案数&#x2F;最大和&#x2F;最小和 </li>
-<li>至少装c，求方案数&#x2F;最小和<br>因此，c也就是背包的容量应该是dp数组的一个维度，另外物品是有限的，那么就需要再引入一个维度用于物品的遍历，以leetcode494为例：在我们把问题转化为01背包之后，dp[i][j]代表前i+1个数得出和为j的方法数<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findTargetSumWays</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x : nums) target += x;</span><br><span class="line">    <span class="keyword">if</span> (target &lt; <span class="number">0</span> || target % <span class="number">2</span> == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    target /= <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> nums.length;</span><br><span class="line">    <span class="type">int</span>[][] f = <span class="keyword">new</span> <span class="title class_">int</span>[n + <span class="number">1</span>][target + <span class="number">1</span>];</span><br><span class="line">    f[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> <span class="number">0</span>; c &lt;= target; ++c)</span><br><span class="line">            <span class="keyword">if</span> (c &lt; nums[i]) f[i + <span class="number">1</span>][c] = f[i][c];</span><br><span class="line">            <span class="keyword">else</span> f[i + <span class="number">1</span>][c] = f[i][c] + f[i][c - nums[i]];</span><br><span class="line">    <span class="keyword">return</span> f[n][target];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-类似的还有leetcode474，只不过这道题需要统计0，1的个数，因此还需要再加一维：dp[i][j][z]代表前i+1个字符串0的个数和1的个数<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findMaxForm</span><span class="params">(String[] strs, <span class="type">int</span> m, <span class="type">int</span> n)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span> strs.length;</span><br><span class="line">    <span class="type">int</span>[][][] dp = <span class="keyword">new</span> <span class="title class_">int</span>[length + <span class="number">1</span>][m + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= length; i++) &#123;</span><br><span class="line">        <span class="type">int</span>[] zerosOnes = getZerosOnes(strs[i - <span class="number">1</span>]);</span><br><span class="line">        <span class="type">int</span> <span class="variable">zeros</span> <span class="operator">=</span> zerosOnes[<span class="number">0</span>], ones = zerosOnes[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt;= m; j++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> <span class="number">0</span>; k &lt;= n; k++) &#123;</span><br><span class="line">                dp[i][j][k] = dp[i - <span class="number">1</span>][j][k];</span><br><span class="line">                <span class="keyword">if</span> (j &gt;= zeros &amp;&amp; k &gt;= ones) &#123;</span><br><span class="line">                    dp[i][j][k] = Math.max(dp[i][j][k], dp[i - <span class="number">1</span>][j - zeros][k - ones] + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[length][m][n];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span>[] getZerosOnes(String str) &#123;</span><br><span class="line">    <span class="type">int</span>[] zerosOnes = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">2</span>];</span><br><span class="line">    <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span> str.length();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">        zerosOnes[str.charAt(i) - <span class="string">&#x27;0&#x27;</span>]++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> zerosOnes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-另外有时候要注意初始化问题，如leetcode2915，和为目标和的最长子序列长度<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">lengthOfLongestSubsequence</span><span class="params">(List&lt;Integer&gt; nums, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> nums.size();</span><br><span class="line">        <span class="type">int</span>[][] dp = <span class="keyword">new</span> <span class="title class_">int</span>[n+<span class="number">1</span>][target+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">t</span> <span class="operator">=</span> <span class="number">0</span>;t&lt;=target;t++)&#123;</span><br><span class="line">                dp[i][t] = Integer.MIN_VALUE;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">t</span> <span class="operator">=</span> <span class="number">0</span>;t&lt;=target;t++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(t&gt;=nums.get(i))&#123;</span><br><span class="line">                    <span class="comment">//System.out.println((i+1)+&quot; &quot;+t+&quot; &quot;+dp[i][t]+&quot; &quot;+(dp[i][t-nums.get(i)]+1));</span></span><br><span class="line">                    dp[i+<span class="number">1</span>][t] =  Math.max(dp[i][t],</span><br><span class="line">                    dp[i][t-nums.get(i)]+<span class="number">1</span>);</span><br><span class="line">                    <span class="comment">//dp[i+1][t] = Math.max(dp[i+1][t],dp[i+1][])</span></span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dp[i+<span class="number">1</span>][t] = dp[i][t];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n][target]&lt;<span class="number">0</span>?-<span class="number">1</span>:dp[n][target];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</li>
-<li>所以总结来说，01背包的dp要考虑的两个维度就是物品和容量，一层循环遍历物品，一层遍历容量</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" data-id="clwghtpd9000wqcvcdh0dhoi3" data-title="简单01背包问题的一个通用思路" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-first" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/18/first/" class="article-date">
-  <time class="dt-published" datetime="2024-05-18T02:23:08.000Z" itemprop="datePublished">2024-05-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/18/first/">first</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p><img src="/2024/05/18/first/img1.jpg"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/first/" data-id="clwghtpcx0005qcvc0vzt6qiw" data-title="first" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" data-id="clwj1eh53000yp8vc92og9k2z" data-title="分治的讨论" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -674,7 +832,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -702,6 +860,14 @@
       <ul>
         
           <li>
+            <a href="/2024/05/23/MIT6824-Lab1/">MIT6824-Lab1</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/22/Paper/">Paper~</a>
+          </li>
+        
+          <li>
             <a href="/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">再看动态规划</a>
           </li>
         
@@ -711,14 +877,6 @@
         
           <li>
             <a href="/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/">Makefile语法</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/19/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/">常见的布局方法</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/19/CSS%E5%8A%A8%E7%94%BB/">CSS动画</a>
           </li>
         
       </ul>
