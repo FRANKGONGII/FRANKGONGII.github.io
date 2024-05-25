@@ -14,7 +14,7 @@
 <meta property="og:description" content="ImageMatchingfromHandcraftedtoDeepFeatures:ASurveyIntroduction不同场景下，有什么不同的图像匹配技术？图像匹配（又称图像配准或配对）旨在从两幅以上的图像中识别出相同或相似的结构&#x2F;内容，然后将其对应起来。该技术可用于高维结构恢复以及信息识别和整合，如三维重建、视觉同步定位和地图绘制（VSLAM）、图像拼图、图像融合、图像检索、目标">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-05-22T14:43:56.000Z">
-<meta property="article:modified_time" content="2024-05-22T16:35:07.412Z">
+<meta property="article:modified_time" content="2024-05-23T09:17:20.308Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -113,12 +113,14 @@
 <h6 id="梯度检测器"><a href="#梯度检测器" class="headerlink" title="梯度检测器"></a>梯度检测器</h6><ul>
 <li>该方法首先提出了 “兴趣点 “的概念来定义明显的特征点，这些特征点是根据局部强度的自相关关系提取的。该方法从八个方向的移动窗口中计算并搜索每个像素的最小强度变化，如果最小值优于给定的阈值，则检测到兴趣点。 然而，由于比较的方向和大小不连续，莫拉维克检测器对方向或图像旋转并不不变。著名的 Harris 角检测器（Harris 等人，1988 年）就是为了解决各向异性和计算复杂性问题而引入的。哈里斯方法的目标是利用二阶矩阵或自相关矩阵找到灰度值变化最快和最小的方向，因此它不受方向和光照的影响，具有可靠的重复性和独特性。Shi 和 Tomasi（1993 年）对 Harris 进行了进一步改进，使特征更加 “分散”，定位更加准确，从而提高了跟踪性能。</li>
 </ul>
-<h6 id="强度检测器"><a href="#强度检测器" class="headerlink" title="强度检测器"></a>强度检测器</h6><p>有几种基于模板或强度比较的拐角检测器是通过比较周围像素与中心像素的强度来简化图像梯度计算的。由于其二进制性质，它们被广泛应用于许多现代应用中，特别是一些有存储和实时性要求的应用中。 基于亮度的角检测器，即最小单值段同化核（SUSAN）（Smith 和 Brady，1997 年），是基于局部半径区域像素与核之间的亮度相似性。由于 SUSAN 不需要梯度计算，因此可以快速实现。基于亮度比较的概念，人们提出了许多类似的方法，其中最著名的是 FAST 检测器（Trajkovi´c 和 Hedley，1998 年）。FAST 使用二进制比较法，将沿圆圈图案的每个像素与中心像素进行比较，然后使用机器学习（即 ID3 树，Quinlan 1986 年）策略确定更可靠的角落特征。作为 SUSAN 的改进版，FAST 具有极高的效率和重复性，因此得到了更广泛的应用。为了在不降低效率的情况下改进 FAST，引入了 FAST-ER（Ros ten 等人，2010 年），通过进一步以原子核为中心的像素亮度比较，对探测器进行通用化，从而提高了重复性。另一项改进是 AGAST（Mair 等人，2010 年），该方法定义了另外两个像素亮度比较标准，然后在扩展的配置空间中训练出一棵最优化和专业化的决策树，从而使 FAST 检测器更具通用性和适应性。为了结合 FAST针对哈里斯检测器的可靠性问题，Rublee 等人（2011 年）提出了一种用于匹配的集成特征检测器和描述器，称为 ORB。ORB 使用 Harris 响应来选择一定数量的 FAST 角作为最终检测到的特征。局部斑块的灰度中心点和中心像素本身组成一个向量，代表 ORB 特征的主要方向，这有助于计算 ORB 中二元描述符的相似性。最近，有人提出了一种类似 Sadder 的检测器（Aldana-Iuit 等人，2016 年）来提取兴趣点。在该检测器中，通过在两个具有一定几何约束的同心圆上进行强度比较，可有效验证鞍形条件。与传统方法相比，即使是现代可训练方法，Sadder 检测器也能实现更高的重复性和更大的扩展性（Komorowski 等人，2018 年）</p>
+<h6 id="强度检测器"><a href="#强度检测器" class="headerlink" title="强度检测器"></a>强度检测器</h6><ul>
+<li>有几种基于模板或强度比较的拐角检测器是通过比较周围像素与中心像素的强度来简化图像梯度计算的。由于其二进制性质，它们被广泛应用于许多现代应用中，特别是一些有存储和实时性要求的应用中。 基于亮度的角检测器，即最小单值段同化核（SUSAN）（Smith 和 Brady，1997 年），是基于局部半径区域像素与核之间的亮度相似性。由于 SUSAN 不需要梯度计算，因此可以快速实现。基于亮度比较的概念，人们提出了许多类似的方法，其中最著名的是 FAST 检测器（Trajkovi´c 和 Hedley，1998 年）。FAST 使用二进制比较法，将沿圆圈图案的每个像素与中心像素进行比较，然后使用机器学习（即 ID3 树，Quinlan 1986 年）策略确定更可靠的角落特征。作为 SUSAN 的改进版，FAST 具有极高的效率和重复性，因此得到了更广泛的应用。为了在不降低效率的情况下改进 FAST，引入了 FAST-ER（Ros ten 等人，2010 年），通过进一步以原子核为中心的像素亮度比较，对探测器进行通用化，从而提高了重复性。另一项改进是 AGAST（Mair 等人，2010 年），该方法定义了另外两个像素亮度比较标准，然后在扩展的配置空间中训练出一棵最优化和专业化的决策树，从而使 FAST 检测器更具通用性和适应性。为了结合 FAST针对哈里斯检测器的可靠性问题，Rublee 等人（2011 年）提出了一种用于匹配的集成特征检测器和描述器，称为 ORB。ORB 使用 Harris 响应来选择一定数量的 FAST 角作为最终检测到的特征。局部斑块的灰度中心点和中心像素本身组成一个向量，代表 ORB 特征的主要方向，这有助于计算 ORB 中二元描述符的相似性。最近，有人提出了一种类似 Sadder 的检测器（Aldana-Iuit 等人，2016 年）来提取兴趣点。在该检测器中，通过在两个具有一定几何约束的同心圆上进行强度比较，可有效验证鞍形条件。与传统方法相比，即使是现代可训练方法，Sadder 检测器也能实现更高的重复性和更大的扩展性（Komorowski 等人，2018 年）</li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/22/Paper/" data-id="clwj1eh4l0001p8vc9wbr9s1p" data-title="Paper~" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/22/Paper/" data-id="clwlwacy00003qkvc8f3u9bmv" data-title="Paper~" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
