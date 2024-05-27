@@ -69,6 +69,49 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-常用算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2024-05-26T03:20:30.000Z" itemprop="datePublished">2024-05-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="求一个数所有因子"><a href="#求一个数所有因子" class="headerlink" title="求一个数所有因子"></a>求一个数所有因子</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> num,ArrayList&lt;Integer&gt; arr)</span>&#123;</span><br><span class="line">    <span class="comment">//从1遍历到num的平方跟即可。</span></span><br><span class="line">    <span class="comment">//这时你可能会说，那后面的数呢，比如num本身，不是计算不到了嘛？</span></span><br><span class="line">    <span class="comment">//别急，看for循环里面的处理情况</span></span><br><span class="line">    <span class="keyword">for</span> ( <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span> ; i &lt;= Math.sqrt(num) ; i++ )&#123;</span><br><span class="line">        <span class="comment">//如果能被num整除，那肯定是num的因子，毫无疑问</span></span><br><span class="line">        <span class="keyword">if</span> ( num % i == <span class="number">0</span> )&#123;</span><br><span class="line">            arr.add(i);</span><br><span class="line">            <span class="comment">//重点的部分在这里！！！</span></span><br><span class="line">            <span class="comment">//当i能被num整除的情况下，此时i是相对较小的因子，用i求出num另一个较大的因子n</span></span><br><span class="line">            <span class="comment">//因为当i能被num整除时，那么数&quot;num/i&quot;也一定能被num整除</span></span><br><span class="line">            <span class="comment">//不需要再进行重复的计算，这样算法的运行时间大大降低</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> num / i;</span><br><span class="line">            <span class="comment">//但用i算出另一个较大的因子时，会出现重复的情况</span></span><br><span class="line">            <span class="comment">//例如num = 4,当遍历到2时，算出另一个较大的因子也是2，这就重复了，要判断一下</span></span><br><span class="line">            <span class="keyword">if</span> ( n != i )&#123;    </span><br><span class="line">                arr.add(n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" data-id="clwp591aq0000x8vcczfhaulo" data-title="常用算法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-MIT6824-Lab1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/23/MIT6824-Lab1/" class="article-date">
@@ -269,6 +312,10 @@
   <time class="dt-published" datetime="2024-05-21T06:53:02.000Z" itemprop="datePublished">2024-05-21</time>
 </a>
     
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a>
+  </div>
+
   </div>
   <div class="article-inner">
     
@@ -327,7 +374,11 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>开这篇博客的缘由是数据库开发要上机了，不得不恶补一下SQL，记录一下语法和常见的题型。更搞笑的是OJ上面的一道题竟然让我百思不得其解，简直怀疑我学了个假SQL（当然最后看估计还是OJ自己错了，同样的代码在lc上是可以跑通的。。）</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>开这篇博客的缘由是数据库开发要上机了，不得不恶补一下SQL，记录一下语法和常见的题型。更搞笑的是OJ上面的一道题竟然让我百思不得其解，简直怀疑我学了个假SQL（当然最后看估计还是OJ自己错了，同样的代码在lc上是可以跑通的。。）</p>
+<h2 id="SQL基础知识"><a href="#SQL基础知识" class="headerlink" title="SQL基础知识"></a>SQL基础知识</h2><h3 id="技巧和注意"><a href="#技巧和注意" class="headerlink" title="技巧和注意"></a>技巧和注意</h3><ul>
+<li>聚合函数内可以用DISTINCT修饰</li>
+<li></li>
+</ul>
 <h3 id="表的连接"><a href="#表的连接" class="headerlink" title="表的连接"></a>表的连接</h3><ul>
 <li>Join(Inner Join) 内连接，如果表之后至少有一个匹配，则返回行。<strong>交集</strong></li>
 <li>Left Join 左连接，返回左表所有的行，右表返回匹配行，不匹配的返回NULL <strong>左表+交集</strong></li>
@@ -338,29 +389,51 @@
 <li>这些连接方法常常和ON配合使用，<strong>ON条件是在生成临时表时使用的条件</strong>，如果满足条件，就会加入中间结果表，当然对于左右连接来说，即使没有匹配也会保留边的数据。</li>
 <li>需要注意的是，ON条件是不和Cross Join配合使用的，这时候要用Where来筛选。这也很好理解，笛卡尔积也可以看成一个“原子操作”，后续的筛选就是对这个中间结果表的筛选了，如果还想着用ON条件，直接用Join或者其他就好了</li>
 </ul>
-<h3 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h3><h4 id="ROW-NUMBER-函数"><a href="#ROW-NUMBER-函数" class="headerlink" title="ROW_NUMBER() 函数"></a>ROW_NUMBER() 函数</h4><p>ROW_NUMBER() 是一个窗口函数（也称为分析函数），用于为查询结果中的每一行分配一个唯一的行号。行号的分配可以根据指定的排序规则进行。</p>
+<h3 id="SQL执行顺序"><a href="#SQL执行顺序" class="headerlink" title="SQL执行顺序"></a>SQL执行顺序</h3><ol>
+<li>FROM <left_table> </left_table></li>
+<li><join_type> JOIN <right_table> </right_table></join_type></li>
+<li>ON <join_condition> </join_condition></li>
+<li>WHERE <where_condition> </where_condition></li>
+<li>GROUP BY <group_by_list></group_by_list></li>
+<li>WITH {CUBE | ROLLUP} </li>
+<li>HAVING <having_condition> </having_condition></li>
+<li>SELECT -&gt; DISTINCT </li>
+<li>ORDER BY <order_by_list> </order_by_list></li>
+<li>LIMIT OFFSET</li>
+</ol>
+<h3 id="窗口函数"><a href="#窗口函数" class="headerlink" title="窗口函数"></a>窗口函数</h3><h4 id="ROW-NUMBER-函数"><a href="#ROW-NUMBER-函数" class="headerlink" title="ROW_NUMBER() 函数"></a>ROW_NUMBER() 函数</h4><p>ROW_NUMBER() 是一个窗口函数（也称为分析函数），用于为查询结果中的每一行分配一个唯一的行号。行号的分配可以根据指定的排序规则进行。</p>
 <h4 id="OVER-子句"><a href="#OVER-子句" class="headerlink" title="OVER 子句"></a>OVER 子句</h4><p>OVER 子句用于定义窗口函数的工作范围。OVER 子句可以包含 PARTITION BY 子句和 ORDER BY 子句，分别用于分区和排序。</p>
 <h4 id="PARTITION-BY-子句"><a href="#PARTITION-BY-子句" class="headerlink" title="PARTITION BY 子句"></a>PARTITION BY 子句</h4><p>例如<code>PARTITION BY customer_id</code> 将数据按 customer_id 进行分区。分区的意思是将查询结果集划分成一个个小组，每个小组包含相同 customer_id 的所有行。在每个分区内，行号的计数从1开始，并在每个新分区重置。</p>
 <h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4>   <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ROW_NUMBER</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> customer_id <span class="keyword">ORDER</span> <span class="keyword">BY</span> order_date <span class="keyword">DESC</span>) <span class="keyword">AS</span> rank_tag</span><br></pre></td></tr></table></figure>
 <p>   <img src="/2024/05/21/SQL/image.png"></p>
-<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ul>
+<h3 id="计算函数"><a href="#计算函数" class="headerlink" title="计算函数"></a>计算函数</h3><ul>
 <li><strong>round(x,d) ，x指要处理的数，d是指保留几位小数</strong><br>这里有个值得注意的地方是，d可以是负数，这时是指定小数点左边的d位整数位为0,同时小数位均为0； <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 结果为1100</span></span><br><span class="line"><span class="keyword">select</span> round(<span class="number">1123.26723</span>,<span class="number">-2</span>);</span><br><span class="line"><span class="comment">-- 结果为1120</span></span><br><span class="line"><span class="keyword">select</span> round(<span class="number">1123.26723</span>,<span class="number">-1</span>);</span><br><span class="line"><span class="comment">-- 结果为1123.27</span></span><br><span class="line"><span class="keyword">select</span> round(<span class="number">1123.26723</span>,<span class="number">2</span>);</span><br></pre></td></tr></table></figure></li>
 <li><strong>IFNULL(expr1,expr2)，如果expr1的值为null，则返回expr2的值，如果expr1的值不为null，则返回expr1的值。</strong></li>
 </ul>
-<h3 id="题型总结"><a href="#题型总结" class="headerlink" title="题型总结"></a>题型总结</h3><h4 id="全部参与类"><a href="#全部参与类" class="headerlink" title="全部参与类"></a>全部参与类</h4><ol>
+<h3 id="UNION-操作符"><a href="#UNION-操作符" class="headerlink" title="UNION 操作符"></a>UNION 操作符</h3><ul>
+<li>操作符合并两个或多个 SELECT 语句的结果。UNION 内部的每个 SELECT 语句必须拥有相同数量的列。列也必须拥有相似的数据类型。同时，每个 SELECT 语句中的列的顺序必须相同。</li>
+<li><strong>默认地，UNION 操作符选取不同的值。如果允许重复的值，请使用 UNION ALL。</strong></li>
+</ul>
+<h2 id="题型总结"><a href="#题型总结" class="headerlink" title="题型总结"></a>题型总结</h2><h3 id="全部参与类"><a href="#全部参与类" class="headerlink" title="全部参与类"></a>全部参与类</h3><ol>
 <li>employee， project(eno,pno)表，找出所有员工都参与的项目.<br>思路：项目的参与人数 &#x3D; 员工人数<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> pno</span><br><span class="line"><span class="keyword">FROM</span> works</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> pno</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> eno) <span class="operator">=</span> (<span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> employees);</span><br></pre></td></tr></table></figure></li>
 <li>sailor，reserve，boats表，找出预定了所有船的员工(相当于找出参与了所有项目的员工)<br>思路：通过group by找出每个人租的所有船，租船的数目 &#x3D; 船的总数(注意去重)<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> sailors.sname </span><br><span class="line"><span class="keyword">FROM</span> sailors</span><br><span class="line"><span class="keyword">JOIN</span> reserves <span class="keyword">ON</span> reserves.sid <span class="operator">=</span> sailors.sid</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> sailors.sid, sailors.sname</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(<span class="keyword">DISTINCT</span> reserves.bid) <span class="operator">=</span> (<span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">FROM</span> boats);</span><br></pre></td></tr></table></figure></li>
 </ol>
-<h4 id="多表连接，多条件"><a href="#多表连接，多条件" class="headerlink" title="多表连接，多条件"></a>多表连接，多条件</h4><ul>
+<h3 id="多表连接，多条件"><a href="#多表连接，多条件" class="headerlink" title="多表连接，多条件"></a>多表连接，多条件</h3><ul>
 <li>sailor，reserve，boats表，找出年龄在35岁以上，并且在2020-08-01至2020-08-31期间同时预定了红色船（RED）和绿色船（GREEN）的水手，结果返回水手姓名sname。<br>思路：用sid判断这个id是不是同时满足多个要求，而不是看id对应的人是不是同时租了两种船<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> s.sname</span><br><span class="line"><span class="keyword">FROM</span> sailors s</span><br><span class="line"><span class="keyword">WHERE</span> s.age <span class="operator">&gt;</span> <span class="number">35</span></span><br><span class="line"><span class="keyword">AND</span> s.sid <span class="keyword">IN</span> (</span><br><span class="line">   <span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> r1.sid</span><br><span class="line">   <span class="keyword">FROM</span> reserves r1</span><br><span class="line">   <span class="keyword">JOIN</span> boats b1 <span class="keyword">ON</span> r1.bid <span class="operator">=</span> b1.bid</span><br><span class="line">   <span class="keyword">WHERE</span> b1.color <span class="operator">=</span> <span class="string">&#x27;GREEN&#x27;</span></span><br><span class="line">   <span class="keyword">AND</span> r1.reserve_date <span class="keyword">BETWEEN</span> <span class="string">&#x27;2020-08-01&#x27;</span> <span class="keyword">AND</span> <span class="string">&#x27;2020-08-31&#x27;</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">AND</span> s.sid <span class="keyword">IN</span> (</span><br><span class="line">   <span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> r2.sid</span><br><span class="line">   <span class="keyword">FROM</span> reserves r2</span><br><span class="line">   <span class="keyword">JOIN</span> boats b2 <span class="keyword">ON</span> r2.bid <span class="operator">=</span> b2.bid</span><br><span class="line">   <span class="keyword">WHERE</span> b2.color <span class="operator">=</span> <span class="string">&#x27;RED&#x27;</span></span><br><span class="line">   <span class="keyword">AND</span> r2.reserve_date <span class="keyword">BETWEEN</span> <span class="string">&#x27;2020-08-01&#x27;</span> <span class="keyword">AND</span> <span class="string">&#x27;2020-08-31&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
 </ul>
-<h4 id="分区-1"><a href="#分区-1" class="headerlink" title="分区"></a>分区</h4><ul>
+<h3 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h3><ul>
 <li>用户表，订单表，产品表，找到每个用户最近三笔订单。若用户订单少于3笔，则返回该用户的全部订单，找到每个用户的最近三笔订单。如果用户的订单少于 3 笔，则返回他的全部订单。返回的结果按照 customer_name 升序 排列。如果有相同的排名，则按照 customer_id 升序 排列。如果排名还有相同，则按照 order_date 降序 排列。 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*LEETCODE 1532*/</span></span><br><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">   c.name customer_name,</span><br><span class="line">   c.customer_id, </span><br><span class="line">   t.order_id, </span><br><span class="line">   t.order_date</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">   <span class="keyword">SELECT</span>  </span><br><span class="line">      order_id,</span><br><span class="line">      order_date,</span><br><span class="line">      customer_id,</span><br><span class="line">      <span class="built_in">row_number</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> customer_id <span class="keyword">order</span> <span class="keyword">by</span> order_date <span class="keyword">DESC</span>) <span class="keyword">as</span> rank_tag</span><br><span class="line">   <span class="keyword">FROM</span> orders ) t</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> customers c  </span><br><span class="line">   <span class="keyword">ON</span> t.customer_id <span class="operator">=</span> c.customer_id    </span><br><span class="line"><span class="keyword">WHERE</span> </span><br><span class="line">   rank_tag <span class="operator">&lt;=</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> </span><br><span class="line">   name, customer_id, order_date <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure>
  当然我们也可以不用分区的函数，直接手搓。。也就会是对于每一个Order，我们都直接计算它的rank，rank的计算就是再次遍历order表，得出比他大的个数 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> name customer_name, order_id, order_date</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line">   <span class="keyword">select</span></span><br><span class="line">      o1.customer_id,</span><br><span class="line">      o1.order_id,</span><br><span class="line">      o1.order_date,</span><br><span class="line">      (</span><br><span class="line">      <span class="keyword">select</span></span><br><span class="line">         <span class="number">1</span> <span class="operator">+</span> <span class="built_in">count</span>(<span class="operator">*</span>)</span><br><span class="line">      <span class="keyword">from</span></span><br><span class="line">         orders o7</span><br><span class="line">      <span class="keyword">where</span></span><br><span class="line">         o7.customer_id <span class="operator">=</span> o1.customer_id</span><br><span class="line">         <span class="keyword">and</span> o7.order_date <span class="operator">&gt;</span> o1.order_date</span><br><span class="line">      ) <span class="keyword">as</span> rnk</span><br><span class="line">   <span class="keyword">from</span></span><br><span class="line">      orders o1</span><br><span class="line">) t</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> customers <span class="keyword">on</span> customers.customer_id <span class="operator">=</span> t.customer_id</span><br><span class="line"><span class="keyword">where</span> rnk <span class="operator">&lt;=</span> <span class="number">3</span></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> name <span class="keyword">asc</span>, order_date <span class="keyword">desc</span></span><br></pre></td></tr></table></figure></li>
 </ul>
-<h4 id="参与最多"><a href="#参与最多" class="headerlink" title="参与最多"></a>参与最多</h4><p>很套路且符合直觉，一般就是count+group by+order by+limit</p>
+<h3 id="参与最多"><a href="#参与最多" class="headerlink" title="参与最多"></a>参与最多</h3><p>很套路且符合直觉，一般就是count+group by+order by+limit</p>
 <ul>
 <li>编写一个sql语句，查询参加比赛场次最多的选手，若参与比赛场次相同，选择用户编号player_id较小的选手，结果返回用户编号player_id和参与的比赛数量match_num。<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> players.player_id,<span class="built_in">COUNT</span>(matches.match_id)</span><br><span class="line"><span class="keyword">FROM</span> players</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> <span class="keyword">matches</span></span><br><span class="line"><span class="keyword">ON</span> matches.first_player <span class="operator">=</span> players.player_id <span class="keyword">OR</span> matches.second_player <span class="operator">=</span> players.player_id</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> players.player_id</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="built_in">COUNT</span>(matches.match_id) <span class="keyword">DESC</span>, players.player_id <span class="keyword">ASC</span></span><br><span class="line">LIMIT <span class="number">1</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="统计一个id在两个字段上的出现和"><a href="#统计一个id在两个字段上的出现和" class="headerlink" title="统计一个id在两个字段上的出现和"></a>统计一个id在两个字段上的出现和</h3><ul>
+<li><p>编写一个sql语句，找出拥有最多的好友的用户以及他拥有的好友数目，好友数相同时选择user_id较小的用户，结果返回用户编号user_id和好友数目friend_num。(request_id,accepter_id,accept_date) 是该表的主键，一个人可能会多次同意其他人的申请</p>
+</li>
+<li><p>统计某个id在requester_id和accepter_id中出现的次数和。直接使用union会合并重复数据，因此这里使用union all。统计后排序再取表中第一项即可。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ids <span class="keyword">as</span> user_id, <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">as</span> friend_num</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">   <span class="keyword">SELECT</span> requester_id <span class="keyword">as</span> ids</span><br><span class="line">   <span class="keyword">FROM</span> accepted_requests</span><br><span class="line">   <span class="keyword">UNION</span> <span class="keyword">ALL</span></span><br><span class="line">   <span class="keyword">SELECT</span> accepter_id <span class="keyword">as</span> ids</span><br><span class="line">   <span class="keyword">FROM</span> accepted_requests</span><br><span class="line">) <span class="keyword">as</span> t</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> ids</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> friend_num <span class="keyword">DESC</span></span><br><span class="line">LIMIT <span class="number">1</span>;</span><br></pre></td></tr></table></figure></li>
 </ul>
 
       
@@ -808,49 +881,6 @@
 
 
   
-    <article id="post-分治的讨论" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" class="article-date">
-  <time class="dt-published" datetime="2024-05-18T03:28:18.000Z" itemprop="datePublished">2024-05-18</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/">分治的讨论</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>zbsd</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" data-id="clwlwacyf000xqkvc6pou5t3k" data-title="分治的讨论" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -894,6 +924,10 @@
       <ul>
         
           <li>
+            <a href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
+          </li>
+        
+          <li>
             <a href="/2024/05/23/MIT6824-Lab1/">MIT6824-Lab1</a>
           </li>
         
@@ -907,10 +941,6 @@
         
           <li>
             <a href="/2024/05/21/SQL/">SQL</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/">Makefile语法</a>
           </li>
         
       </ul>
