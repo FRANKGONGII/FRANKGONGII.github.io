@@ -4,17 +4,13 @@
   <meta charset="utf-8">
   
   
-  <title>Makefile语法 | Hexo</title>
+  <title>Category: 常用算法 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="obj-m :&#x3D; obj-m 是一个内核模块编译的特殊变量。这个变量用于告诉内核构建系统要编译成模块的目标文件列表。obj-m 是 “object modules” 的缩写，它表示模块对象文件。 :&#x3D; 是Makefile中的赋值操作符，表示立即展开赋值。它与 &#x3D; 的区别在于，:&#x3D; 在赋值时会立即计算右边表达式的值，而 &#x3D; 是延迟计算，直到这个变量被">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Makefile语法">
-<meta property="og:url" content="http://example.com/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="obj-m :&#x3D; obj-m 是一个内核模块编译的特殊变量。这个变量用于告诉内核构建系统要编译成模块的目标文件列表。obj-m 是 “object modules” 的缩写，它表示模块对象文件。 :&#x3D; 是Makefile中的赋值操作符，表示立即展开赋值。它与 &#x3D; 的区别在于，:&#x3D; 在赋值时会立即计算右边表达式的值，而 &#x3D; 是延迟计算，直到这个变量被">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-05-20T02:56:40.000Z">
-<meta property="article:modified_time" content="2024-05-20T03:01:22.591Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -71,76 +67,39 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-Makefile语法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/" class="article-date">
-  <time class="dt-published" datetime="2024-05-20T02:56:40.000Z" itemprop="datePublished">2024-05-20</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Makefile/">Makefile</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+        <section id="main">
   
-    <h1 class="p-name article-title" itemprop="headline name">
-      Makefile语法
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2024" class="archive-year">2024</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" class="archive-article-date">
+  <time class="dt-published" datetime="2024-05-26T03:20:30.000Z" itemprop="datePublished">May 26</time>
+</a>
+      
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
     </h1>
   
 
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="obj-m"><a href="#obj-m" class="headerlink" title="obj-m :&#x3D;"></a>obj-m :&#x3D;</h4><ul>
-<li>obj-m 是一个内核模块编译的特殊变量。这个变量用于告诉内核构建系统要编译成模块的目标文件列表。obj-m 是 “object modules” 的缩写，它表示模块对象文件。</li>
-<li>:&#x3D; 是Makefile中的赋值操作符，表示立即展开赋值。它与 &#x3D; 的区别在于，:&#x3D; 在赋值时会立即计算右边表达式的值，而 &#x3D; 是延迟计算，直到这个变量被使用时才计算右边表达式的值。</li>
-<li>使用例子：定义一个包含内核模块目标文件的列表变量 obj-m，其中的目标文件是 hello.o。<br>内核构建系统会根据这个定义去查找 hello.c 源文件，进行编译，最终生成 hello.ko 模块文件。<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj-m := hello.o</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="编译目标"><a href="#编译目标" class="headerlink" title="编译目标"></a>编译目标</h4><h5 id="all"><a href="#all" class="headerlink" title="all"></a>all</h5><ul>
-<li>这是一个Makefile的目标，表示默认目标，即在执行 make 命令时默认执行的任务。</li>
-</ul>
-<h5 id="自定义目标"><a href="#自定义目标" class="headerlink" title="自定义目标"></a>自定义目标</h5><ul>
-<li>如以下这个命令，代表在clean目标的具体命令<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> clean:</span><br><span class="line">make -C /lib/modules/<span class="variable">$(<span class="built_in">shell</span> uname -r)</span>/build M=<span class="variable">$(<span class="built_in">shell</span> pwd)</span> clean</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/" data-id="clwlwacy30007qkvc4gzeby1e" data-title="Makefile语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
+    </header>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2024/05/21/SQL/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          SQL
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2024/05/19/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">常见的布局方法</div>
-    </a>
-  
-</nav>
-
-  
 </article>
+  
+  
+    </div></section>
+  
 
 
 </section>
