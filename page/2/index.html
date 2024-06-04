@@ -69,6 +69,232 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-TypeScript的一些常用语法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2024-05-18T12:40:55.000Z" itemprop="datePublished">2024-05-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>►<a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/">TypeScript的一些常用语法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="遍历Map"><a href="#遍历Map" class="headerlink" title="遍历Map"></a>遍历Map</h4><ul>
+<li>最简单的遍历方式，需要注意的是参数格式value在前key在后<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">map.<span class="title function_">forEach</span>(<span class="function">(<span class="params">value , key</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+<li>用keys()遍历<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">of</span> <span class="title class_">Object</span>.<span class="title function_">keys</span>(res.<span class="property">data</span>))&#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">log</span>(key,res.<span class="property">data</span>[key]);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="title class_">Object</span>.<span class="title function_">keys</span>(obj).<span class="title function_">forEach</span>( <span class="function"><span class="params">key</span> =&gt;</span>&#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(key,obj[key])</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h4><ul>
+<li>我们希望设置一个定时任务，每x ms获取一个数据<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data = ref&lt;<span class="built_in">any</span>&gt;(<span class="literal">null</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">updateData</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> newData = <span class="keyword">await</span> <span class="title function_">fetchData</span>();</span><br><span class="line">  <span class="keyword">if</span> (newData) &#123;</span><br><span class="line">    data.<span class="property">value</span> = newData;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">interval</span>: <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">onMounted</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">updateData</span>();</span><br><span class="line">  interval = <span class="built_in">setInterval</span>(updateData, <span class="number">5000</span>); <span class="comment">// 每5秒获取一次数据</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">onUnmounted</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">clearInterval</span>(interval);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="interface"><a href="#interface" class="headerlink" title="interface"></a>interface</h4><ul>
+<li><p>定义对象类型</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">age</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可选属性</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">age</span>: <span class="built_in">number</span>;</span><br><span class="line">  address?: <span class="built_in">string</span>; <span class="comment">// address 是可选属性</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>接口继承</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Named</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Person</span> <span class="keyword">extends</span> <span class="title class_">Named</span> &#123;</span><br><span class="line">  <span class="attr">age</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">person</span>: <span class="title class_">Person</span> = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;John Doe&#x27;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">30</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="script-setup-标签"><a href="#script-setup-标签" class="headerlink" title="script setup 标签"></a>script setup 标签</h4><ul>
+<li>能够使用纯 Typescript 声明 props 和抛出事件。</li>
+<li>更好的运行时性能 (其模板会被编译成与其同一作用域的渲染函数，没有任何的中间代理)。</li>
+<li>更好的 IDE 类型推断性能 (减少语言服务器从代码中抽离类型的工作)</li>
+</ul>
+<h5 id="组件数据传递-props-语法改变"><a href="#组件数据传递-props-语法改变" class="headerlink" title="组件数据传递 props 语法改变"></a>组件数据传递 props 语法改变</h5><ul>
+<li>子组件<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义 ChartOption 和 ChartData 类型</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">ChartOption</span> &#123;</span><br><span class="line">  [<span class="attr">key</span>: <span class="built_in">string</span>]: <span class="built_in">unknown</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">ChartData</span> &#123;</span><br><span class="line">  <span class="attr">stockId</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="attr">domId</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">option</span>: <span class="title class_">ChartOption</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 defineProps 并传入定义好的类型</span></span><br><span class="line"><span class="keyword">const</span> props = defineProps&lt;&#123; <span class="attr">data</span>: <span class="title class_">ChartData</span> &#125;&gt;();</span><br></pre></td></tr></table></figure></li>
+<li>父组件使用<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">k-line-table</span> <span class="attr">:data</span>=<span class="string">&quot;chartData&quot;</span> <span class="attr">style</span>=<span class="string">&quot;height: 1000px;width: 1000px;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">k-line-table</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="组件数据传递-emits-语法改变"><a href="#组件数据传递-emits-语法改变" class="headerlink" title="组件数据传递 emits 语法改变"></a>组件数据传递 emits 语法改变</h5><ul>
+<li><p>子组件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h2</span> @<span class="attr">click</span>=<span class="string">&quot;sendString&quot;</span>&gt;</span>我是子组件 点我给父组件传&quot;hello&quot;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> emits = <span class="title function_">defineEmits</span>([<span class="string">&#x27;sendEmit&#x27;</span>]);</span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> sendString = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">emits</span>(<span class="string">&#x27;sendEmit&#x27;</span>, <span class="string">&#x27;hello&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>父组件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box&quot;</span> <span class="attr">style</span>=<span class="string">&quot;margin: 0 auto;text-align: center;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>我是父组件<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">son</span> @<span class="attr">sendEmit</span>=<span class="string">&quot;sendEmit&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">son</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">import</span> son <span class="keyword">from</span> <span class="string">&#x27;./son.vue&#x27;</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> sendEmit = <span class="keyword">function</span> (<span class="params">s</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="variable language_">console</span>.<span class="title function_">log</span>(s);</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="属性使用方法"><a href="#属性使用方法" class="headerlink" title="属性使用方法"></a>属性使用方法</h5>  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box&quot;</span> <span class="attr">style</span>=<span class="string">&quot;margin: 0 auto;text-align: center;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123;data&#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> data = <span class="string">&#x27;语法糖真香&#x27;</span></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="组件不需要components注册"><a href="#组件不需要components注册" class="headerlink" title="组件不需要components注册"></a>组件不需要components注册</h5><p>直接import即可</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" data-id="clwlwacy20005qkvc865i4n2l" data-title="TypeScript的一些常用语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-redis基础" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/18/redis%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time class="dt-published" datetime="2024-05-18T05:25:21.000Z" itemprop="datePublished">2024-05-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/REDIS/">REDIS</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/18/redis%E5%9F%BA%E7%A1%80/">redis基础</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="什么是redis？"><a href="#什么是redis？" class="headerlink" title="什么是redis？"></a>什么是redis？</h4><ul>
+<li>redis是一个key-value结构的Nosql数据库，value可以是各种redis的数据类型，比如字符串，集合</li>
+<li>Nosql vs Sql<ul>
+<li>Sql是结构化的（表结构），关联的（外键），用sql查询 ，满足ACID（原子性，一致性，隔离性，持久性）</li>
+<li>Nosql是非结构化的（kv，图，文档数据库），无关联的，用非sql查询（不同的非关系数据库是不同的查询方法，例如mogodb是类似类的方法，el类似restful请求），BASE（不能完全满足ACID）</li>
+<li>Sql只能垂直拓展，分库分表比较难，但是Nosql天然支持水平拓展</li>
+</ul>
+</li>
+<li>在非关系的，没有数据表的情况下，redis怎么区分不同的业务数据，如果id重复怎么办？<br>redis key可以允许多个单词形成层次结构（用：间隔表示），多个单词之间用:隔开，比如 <strong>项目名:业务名:类型:id</strong><br>value如果是一个对象，那么可以序列化成json字符串去存储</li>
+</ul>
+<h4 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h4><h5 id="客户端命令行"><a href="#客户端命令行" class="headerlink" title="客户端命令行"></a>客户端命令行</h5><ul>
+<li>redis-cli [options] [commands] <ul>
+<li>常见options <ul>
+<li>-h 127.0.0.1 指定要连接的redis节点的ip地址</li>
+<li>-p 6379 指定要连接的节点的端口</li>
+<li>-a 123456 指定redis访问密码</li>
+</ul>
+</li>
+<li>没有command会进入交互式命令行</li>
+<li>常见commands<ul>
+<li>AUTH [USER] [PASSWORD]</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h5><ul>
+<li>SET KEY VALUE<br>设置k-v键值对</li>
+<li>GET KEY<br>获取键值</li>
+<li>MSET KEY VALUE [KEY VALUE ..]<br>一次性设置多个键值对</li>
+<li>KEYS *<ul>
+<li>是来匹配的，比如na*，就可以匹配出name，nasa等等符合条件的key</li>
+</ul>
+</li>
+<li>DEL KEY [KEY1 ..]<br>删除键值对，如果有没有的键值对，那么不会删除</li>
+<li>EXIST KEY [KEY1 ..]<br>判断key是不是存在，需要注意的是，如果有重复key那么也会被重复计算</li>
+<li>EXPIRE KEY SECOND<br>给一个KEY设置有效期，设置的时间过期后，key 会被自动删除。带有超时时间的 key 通常被称为易失的(volatile)。已经设置过期的key，可以调用 EXPIRE 重新设置。在这种情况下 key 的生存时间被更新为新值。</li>
+<li>TTL KEY<br>查看一个Key的剩余有效时间<br>结果显示-1代表永久有效，-2就是被删除了</li>
+</ul>
+<h5 id="STRING相关命令"><a href="#STRING相关命令" class="headerlink" title="STRING相关命令"></a>STRING相关命令</h5><ul>
+<li>INCR &#x2F; INCRBY &#x2F; INCRBYFLOAT KEY STEP<br>自增键值，前者自增1，后两者者step</li>
+<li>SETNX KEY VALUE<br>真正的新增kv命令，只有不存在才会写入键值对</li>
+<li>SETNX KEY SECONDS VALUE<br>带过期时间的新增</li>
+</ul>
+<h5 id="HASH相关命令"><a href="#HASH相关命令" class="headerlink" title="HASH相关命令"></a>HASH相关命令</h5><ul>
+<li>HGET，HSET，HMSET，HMSET。注意set的时候不仅要指定key，还要指feild</li>
+<li>HGETALL KEY<br>依次返回所有键值对</li>
+<li>HKEYS KEY<br>hash value中的所有key</li>
+<li>HVALS KEY<br>hash value中的所有value</li>
+<li>HICNBY KEY field num<br>增加value</li>
+<li>HSETNX KEY field value<br>如果对应field不存在则写入</li>
+</ul>
+<h5 id="LIST相关命令"><a href="#LIST相关命令" class="headerlink" title="LIST相关命令"></a>LIST相关命令</h5><ul>
+<li>LPUSH、LPOP、RPUSH、RPOP</li>
+<li>LRANGE key start end<br>下标内的元素</li>
+<li>BLPOP，BRPOP 可以阻塞，pop不了不会马上返回，需要指定阻塞时间(s)</li>
+</ul>
+<h5 id="SET相关命令"><a href="#SET相关命令" class="headerlink" title="SET相关命令"></a>SET相关命令</h5><ul>
+<li>SADD key number..<br>加入元素</li>
+<li>SREM key number..<br>删除元素</li>
+<li>SCARD key<br>元素个数</li>
+<li>SISMEMBER key member<br>判断是不是在集合内</li>
+<li>SMEMBERS key<br>获取所有元素</li>
+<li>SINTER，SDIFF，SUNION<br>交集差集并集</li>
+</ul>
+<h4 id="SORTSET相关命令"><a href="#SORTSET相关命令" class="headerlink" title="SORTSET相关命令"></a>SORTSET相关命令</h4><p><img src="/2024/05/18/redis%E5%9F%BA%E7%A1%80/image3.png"></p>
+<h4 id="REDIS数据结构"><a href="#REDIS数据结构" class="headerlink" title="REDIS数据结构"></a>REDIS数据结构</h4><ul>
+<li><strong>REDIS是一个键值型数据库，key一般是String类型，value的类型多种多样</strong><br><img src="/2024/05/18/redis%E5%9F%BA%E7%A1%80/image.png"><br>后三者实际上是String类型的一些拓展类型</li>
+</ul>
+<h5 id="String类型"><a href="#String类型" class="headerlink" title="String类型"></a>String类型</h5><ul>
+<li>键值对的value是字符串，根据格式可以继续分为三类，最大都是512M<ol>
+<li>string：普通字符串</li>
+<li>int：整数类型，可以自增自减</li>
+<li>float：浮点数类型，可以自增自减</li>
+</ol>
+</li>
+<li>应用：缓存 Session、Token、图片地址、序列化后的对象(相比较于 Hash 存储更节省内存)，举例：用户单位时间的请求数（简单限流可以用到）、页面单位时间的访问数。</li>
+</ul>
+<h5 id="Hash类型"><a href="#Hash类型" class="headerlink" title="Hash类型"></a>Hash类型</h5><ul>
+<li>value中的每个字段可以独立存储<br><img src="/2024/05/18/redis%E5%9F%BA%E7%A1%80/image2.png"></li>
+<li>应用：对象数据存储场景：举例：用户信息、商品信息、文章信息、购物车信息。</li>
+</ul>
+<h5 id="LIST类型"><a href="#LIST类型" class="headerlink" title="LIST类型"></a>LIST类型</h5><ul>
+<li>类似双向链表结构，可以正向反向检索</li>
+<li>有序，元素可以重复，插入删除快，查询一般</li>
+<li>应用：信息流展示（评论），消息队列</li>
+</ul>
+<h5 id="SET"><a href="#SET" class="headerlink" title="SET"></a>SET</h5><ul>
+<li>无序，元素不可以重复，查询快，可以交并差</li>
+<li>应用：需要存放的数据不能重复的场景：文章点赞、动态点赞等场景。需要获取多个数据源交集、并集和差集的场景举例：共同好友(交集)、共同粉丝(交集)、共同关注(交集)、好友推荐（差集）、音乐推荐（差集）、订阅号推荐差集+交集） 等场景。</li>
+</ul>
+<h5 id="SORTSET"><a href="#SORTSET" class="headerlink" title="SORTSET"></a>SORTSET</h5><ul>
+<li>可以排序的SET，每个元素带一个score，底层是zset+hash实现</li>
+<li>应用：排行榜，优先队列</li>
+</ul>
+<h4 id="REDIS-客户端"><a href="#REDIS-客户端" class="headerlink" title="REDIS 客户端"></a>REDIS 客户端</h4><ul>
+<li>Jedis：方法名和redis一样</li>
+<li>lettuce：以netty为基础</li>
+</ul>
+<h5 id="JEDIS"><a href="#JEDIS" class="headerlink" title="JEDIS"></a>JEDIS</h5><h6 id="连接虚拟机redis错误"><a href="#连接虚拟机redis错误" class="headerlink" title="连接虚拟机redis错误"></a>连接虚拟机redis错误</h6><ul>
+<li>time out<ol>
+<li>检查redis.conf，注释掉bind（让其他地址可以访问），关闭安全守护模式，将 protected-mode 设置为 no</li>
+<li>关闭防火墙&#x2F;开放端口：firewall-cmd –query-port&#x3D;xxxx&#x2F;tcp  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl  status firewalld.service 查看防火墙的状态；</span><br><span class="line">systemctl  start firewalld.service 启动防火墙；</span><br><span class="line">systemctl  stop firewalld.service 关闭防火墙；</span><br><span class="line">systemctl  restart firewalld.service 重启防火墙；</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/05/18/redis%E5%9F%BA%E7%A1%80/" data-id="clwlwacye000vqkvc0erdav27" data-title="redis基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-分治的讨论" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" class="article-date">
@@ -270,7 +496,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -285,7 +511,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
     </div>
   </div>
 
@@ -298,6 +524,14 @@
       <ul>
         
           <li>
+            <a href="/2024/06/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">软件设计模式</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/">并发的简单实现-OS大作业</a>
+          </li>
+        
+          <li>
             <a href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
           </li>
         
@@ -307,14 +541,6 @@
         
           <li>
             <a href="/2024/05/22/Paper/">Paper~</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">再看动态规划</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/21/SQL/">SQL</a>
           </li>
         
       </ul>

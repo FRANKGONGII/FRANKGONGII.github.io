@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>常用算法 | Hexo</title>
+  <title>并发的简单实现-OS大作业 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="求一个数所有因子123456789101112131415161718192021public static void fun(int num,ArrayList&lt;Integer&gt; arr)&#123;    &#x2F;&#x2F;从1遍历到num的平方跟即可。    &#x2F;&#x2F;这时你可能会说，那后面的数呢，比如num本身，不是计算不到了嘛？    &#x2F;&#x2F;别急，看for循环里面的处理情况    for ( in">
+  <meta name="description" content="大文件支持 直接块变成11个，一个一级间接块，一个二级间接块 修改NDIRECT，NINDIRECT这两个宏 涉及的函数有fs中的iwalk和itrunc，mkfs中的iwalk  共享内存实验要求 两个系统调用12void *mmap();void munmap(void *addr);  分别是申请和释放一页共享内存，共享内存在fork时会被共享给子进程，也就是父子进程的这个虚拟地址映射到相同">
 <meta property="og:type" content="article">
-<meta property="og:title" content="常用算法">
-<meta property="og:url" content="http://example.com/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:title" content="并发的简单实现-OS大作业">
+<meta property="og:url" content="http://example.com/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="求一个数所有因子123456789101112131415161718192021public static void fun(int num,ArrayList&lt;Integer&gt; arr)&#123;    &#x2F;&#x2F;从1遍历到num的平方跟即可。    &#x2F;&#x2F;这时你可能会说，那后面的数呢，比如num本身，不是计算不到了嘛？    &#x2F;&#x2F;别急，看for循环里面的处理情况    for ( in">
+<meta property="og:description" content="大文件支持 直接块变成11个，一个一级间接块，一个二级间接块 修改NDIRECT，NINDIRECT这两个宏 涉及的函数有fs中的iwalk和itrunc，mkfs中的iwalk  共享内存实验要求 两个系统调用12void *mmap();void munmap(void *addr);  分别是申请和释放一页共享内存，共享内存在fork时会被共享给子进程，也就是父子进程的这个虚拟地址映射到相同">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-05-26T03:20:30.000Z">
-<meta property="article:modified_time" content="2024-05-31T10:18:36.618Z">
+<meta property="article:published_time" content="2024-05-31T11:04:30.000Z">
+<meta property="article:modified_time" content="2024-05-31T15:36:24.907Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -71,14 +71,14 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-常用算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-并发的简单实现-OS大作业" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" class="article-date">
-  <time class="dt-published" datetime="2024-05-26T03:20:30.000Z" itemprop="datePublished">2024-05-26</time>
+    <a href="/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/" class="article-date">
+  <time class="dt-published" datetime="2024-05-31T11:04:30.000Z" itemprop="datePublished">2024-05-31</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
+    <a class="article-category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
   </div>
 
   </div>
@@ -89,7 +89,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      常用算法
+      并发的简单实现-OS大作业
     </h1>
   
 
@@ -97,12 +97,53 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="求一个数所有因子"><a href="#求一个数所有因子" class="headerlink" title="求一个数所有因子"></a>求一个数所有因子</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> num,ArrayList&lt;Integer&gt; arr)</span>&#123;</span><br><span class="line">    <span class="comment">//从1遍历到num的平方跟即可。</span></span><br><span class="line">    <span class="comment">//这时你可能会说，那后面的数呢，比如num本身，不是计算不到了嘛？</span></span><br><span class="line">    <span class="comment">//别急，看for循环里面的处理情况</span></span><br><span class="line">    <span class="keyword">for</span> ( <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span> ; i &lt;= Math.sqrt(num) ; i++ )&#123;</span><br><span class="line">        <span class="comment">//如果能被num整除，那肯定是num的因子，毫无疑问</span></span><br><span class="line">        <span class="keyword">if</span> ( num % i == <span class="number">0</span> )&#123;</span><br><span class="line">            arr.add(i);</span><br><span class="line">            <span class="comment">//重点的部分在这里！！！</span></span><br><span class="line">            <span class="comment">//当i能被num整除的情况下，此时i是相对较小的因子，用i求出num另一个较大的因子n</span></span><br><span class="line">            <span class="comment">//因为当i能被num整除时，那么数&quot;num/i&quot;也一定能被num整除</span></span><br><span class="line">            <span class="comment">//不需要再进行重复的计算，这样算法的运行时间大大降低</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> num / i;</span><br><span class="line">            <span class="comment">//但用i算出另一个较大的因子时，会出现重复的情况</span></span><br><span class="line">            <span class="comment">//例如num = 4,当遍历到2时，算出另一个较大的因子也是2，这就重复了，要判断一下</span></span><br><span class="line">            <span class="keyword">if</span> ( n != i )&#123;    </span><br><span class="line">                arr.add(n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+        <h3 id="大文件支持"><a href="#大文件支持" class="headerlink" title="大文件支持"></a>大文件支持</h3><ul>
+<li>直接块变成11个，一个一级间接块，一个二级间接块</li>
+<li>修改NDIRECT，NINDIRECT这两个宏</li>
+<li>涉及的函数有fs中的iwalk和itrunc，mkfs中的iwalk</li>
+</ul>
+<h3 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h3><h4 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h4><ul>
+<li>两个系统调用<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">mmap</span><span class="params">()</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">munmap</span><span class="params">(<span class="type">void</span> *addr)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>分别是申请和释放一页共享内存，共享内存在fork时会被共享给子进程，也就是父子进程的这个虚拟地址映射到相同的物理地址。</li>
+<li>我们规定这种内存的虚拟地址都在USR_MEM以上(注意我们的USR_MEM定义为0xc0000000，这个地址往上的空间可以用于mmap映射)，这样处理起来可能比较方便，对物理页维护引用计数是解决这个问题的好方法。同时，只有fork之前的mmap会被共享。</li>
+<li>如何实现？<ol>
+<li>toy os的地址回顾：<br>  <strong>QEMU一共有128MiB的物理内存，即[0, 0x08000000)即[0, PHY_MEM)</strong></li>
+</ol>
+<ul>
+<li>[KER_MEM, PHY_MEM)这块区域我们称为内核的堆区，意思是类比我们一般程序的堆区——程序开始运行的时候不用，但后面需要的时候可以随时取用。<br>  我们记0x00200000为KER_MEM，意思是往下的内存内核自己要用，往上的内存内核自己现在不用，可以分配给用户程序或别的什么用。</li>
+<li>我们约定用户程序的栈在虚拟内存的[0xbffff000, 0xc0000000)即[USR_MEM-PGSIZE, USR_MEM)，映射到物理内存的哪里，还是操作系统说了算。  </li>
+<li>[KER_MEM-PGSIZE, KER_MEM)这段内存是给内核栈用的</li>
+<li>[USR_MEM, 0xFFFFFFFF)是没有用的内存，我们应该在这里分配空间，并且在[KER_MEM, PHY_MEM)建对应页表</li>
+</ul>
+<ol start="2">
+<li>分页机制回顾</li>
+</ol>
+<ul>
+<li>PD：页目录，可以看做1024个PDE（页目录项）的数组。一个PD大小为4KB，按页对齐</li>
+<li>PE：页表，可以看做1024个PTE（页表项）的数组。大小也是4KB，按页对齐</li>
+<li>我们的os中：高10位为页目录号，中间10位为页表号，低12位为页内偏移量</li>
+</ul>
+<ol start="3">
+<li>我们页目录的设计</li>
+</ol>
+<ul>
+<li>为了降低难度，这里我们采用一个比相对简单的设计：不论是内核页目录还是用户页目录，都将虚拟内存[0, PHY_MEM)映射到物理内存[0, PHY_MEM)（恒等映射），同时保持kernel链接在0x00101000不变，这样我们在内核就能直接把物理地址当虚拟地址访问</li>
+<li>内核页目录kpd，内核页表kpt</li>
+<li>我们需要一些管理内核堆区的手段。具体地，可以学习用户程序堆区的管理制度：只有malloc分配出的堆区内存可以被使用，分配出的堆区内存在完事后可以通过free还给堆区；我们的kernel也可以设计两个API：kalloc和kfree，约定如果想使用堆区内存就必须通过调用kalloc来分配，完事后可以通过kfree释放.</li>
+</ul>
+<ol start="4">
+<li>因此这里我们要做的就是，把[USR_MEM, 0xFFFFFFFF)是没有用的内存作为虚拟页映射到内核堆区去</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="系统级线程"><a href="#系统级线程" class="headerlink" title="系统级线程"></a>系统级线程</h4>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" data-id="clwp591aq0000x8vcczfhaulo" data-title="常用算法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/" data-id="clwzwe0oy0001okvca76r2pzd" data-title="并发的简单实现-OS大作业" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -112,19 +153,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2024/06/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          并发的简单实现-OS大作业
+          软件设计模式
         
       </div>
     </a>
   
   
-    <a href="/2024/05/23/MIT6824-Lab1/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">MIT6824-Lab1</div>
+      <div class="article-nav-title">常用算法</div>
     </a>
   
 </nav>
