@@ -4,13 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>Category: TypeScript | Hexo</title>
+  <title>Leetcode101-回溯-46 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/categories/%E5%89%8D%E7%AB%AF/TypeScript/index.html">
+  <meta name="description" content="给定一个不含重复数字的数组 nums ，返回其 所有可能的全排列 。你可以 按任意顺序 返回答案。 选择，递归，恢复现场的方法 aa1234567891011121314151617181920212223242526272829class Solution &#123;    List&lt;List&lt;Integer&gt;&gt; ans &#x3D; new ArrayList();    L">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leetcode101-回溯-46">
+<meta property="og:url" content="http://example.com/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-46/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="给定一个不含重复数字的数组 nums ，返回其 所有可能的全排列 。你可以 按任意顺序 返回答案。 选择，递归，恢复现场的方法 aa1234567891011121314151617181920212223242526272829class Solution &#123;    List&lt;List&lt;Integer&gt;&gt; ans &#x3D; new ArrayList();    L">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-07-28T11:27:53.000Z">
+<meta property="article:modified_time" content="2024-07-28T11:58:10.939Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -67,39 +71,61 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2024" class="archive-year">2024</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" class="archive-article-date">
-  <time class="dt-published" datetime="2024-05-18T12:40:55.000Z" itemprop="datePublished">May 18</time>
+        <section id="main"><article id="post-Leetcode101-回溯-46" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-46/" class="article-date">
+  <time class="dt-published" datetime="2024-07-28T11:27:53.000Z" itemprop="datePublished">2024-07-28</time>
 </a>
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/LeetCode101/">LeetCode101</a>►<a class="article-category-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/05/18/TypeScript%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/">TypeScript的一些常用语法</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      Leetcode101-回溯-46
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>给定一个不含重复数字的数组 nums ，返回其 所有可能的全排列 。你可以 按任意顺序 返回答案。</li>
+<li>选择，递归，恢复现场的方法</li>
+<li>aa<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    List&lt;List&lt;Integer&gt;&gt; ans = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">    List&lt;Integer&gt; path = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">    <span class="type">boolean</span>[] onPath;</span><br><span class="line">    <span class="type">int</span>[] nums;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">permute</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.nums = nums;</span><br><span class="line">        path = Arrays.asList(<span class="keyword">new</span> <span class="title class_">Integer</span>[nums.length]);</span><br><span class="line">        onPath = <span class="keyword">new</span> <span class="title class_">boolean</span>[nums.length];</span><br><span class="line">        dfs(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> i)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i==nums.length)&#123;</span><br><span class="line">            ans.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(path));</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;j&lt;nums.length;j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!onPath[j])&#123;</span><br><span class="line">                path.set(i,nums[j]);</span><br><span class="line">                onPath[j] =<span class="literal">true</span>;</span><br><span class="line">                dfs(i+<span class="number">1</span>);</span><br><span class="line">                onPath[j] =<span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-46/" data-id="clz5iax9r0000e8vchpiod92x" data-title="Leetcode101-回溯-46" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-417/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Leetcode101-深度优先搜索-417</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
 
 
 </section>
