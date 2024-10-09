@@ -69,6 +69,183 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-常用算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2024-05-26T03:20:30.000Z" itemprop="datePublished">2024-05-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="求一个数所有因子"><a href="#求一个数所有因子" class="headerlink" title="求一个数所有因子"></a>求一个数所有因子</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> num,ArrayList&lt;Integer&gt; arr)</span>&#123;</span><br><span class="line">    <span class="comment">//从1遍历到num的平方跟即可。</span></span><br><span class="line">    <span class="comment">//这时你可能会说，那后面的数呢，比如num本身，不是计算不到了嘛？</span></span><br><span class="line">    <span class="comment">//别急，看for循环里面的处理情况</span></span><br><span class="line">    <span class="keyword">for</span> ( <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span> ; i &lt;= Math.sqrt(num) ; i++ )&#123;</span><br><span class="line">        <span class="comment">//如果能被num整除，那肯定是num的因子，毫无疑问</span></span><br><span class="line">        <span class="keyword">if</span> ( num % i == <span class="number">0</span> )&#123;</span><br><span class="line">            arr.add(i);</span><br><span class="line">            <span class="comment">//重点的部分在这里！！！</span></span><br><span class="line">            <span class="comment">//当i能被num整除的情况下，此时i是相对较小的因子，用i求出num另一个较大的因子n</span></span><br><span class="line">            <span class="comment">//因为当i能被num整除时，那么数&quot;num/i&quot;也一定能被num整除</span></span><br><span class="line">            <span class="comment">//不需要再进行重复的计算，这样算法的运行时间大大降低</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> num / i;</span><br><span class="line">            <span class="comment">//但用i算出另一个较大的因子时，会出现重复的情况</span></span><br><span class="line">            <span class="comment">//例如num = 4,当遍历到2时，算出另一个较大的因子也是2，这就重复了，要判断一下</span></span><br><span class="line">            <span class="keyword">if</span> ( n != i )&#123;    </span><br><span class="line">                arr.add(n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" data-id="clwp591aq0000x8vcczfhaulo" data-title="常用算法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-MIT6824-Lab1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/23/MIT6824-Lab1/" class="article-date">
+  <time class="dt-published" datetime="2024-05-23T02:22:49.000Z" itemprop="datePublished">2024-05-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>►<a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/23/MIT6824-Lab1/">MIT6824-Lab1</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="Map-Reduce-Paper"><a href="#Map-Reduce-Paper" class="headerlink" title="Map Reduce Paper"></a>Map Reduce Paper</h3><ul>
+<li><p>用一种kv结构管理数据的模型（map），一个reduce函数管理相同key的value</p>
+</li>
+<li><p>以这种函数式风格编写的程序可自动并行化，并在大型计算机集群上执行。运行时系统会处理分割输入数据、调度程序在一组机器上的执行、处理机器故障以及管理所需的机器间通信等细节。这样，没有任何并行和分布式系统经验的程序员也能轻松利用大型分布式系统的资源。</p>
+</li>
+<li><p>如何工作？</p>
+<ol>
+<li>Map 由用户编写，它接收输入对并生成一组中间键&#x2F;值对。MapReuce 库将与同一中间键 I 相关的所有中间值组合在一起，并将它们传递给 Reduce 函数。 </li>
+<li>Reduce 函数也是由用户编写的，它接受一个中间键 I 和该键的一组值。它将这些值合并在一起，形成一个可能更小的值集。通常情况下，每次调用 Reduce 函数只会产生零个或一个输出值。中间值通过迭代器提供给用户的还原函数。这样，我们就能处理内存中容纳不下的数值列表 </li>
+<li><img src="/2024/05/23/MIT6824-Lab1/image.png"></li>
+</ol>
+</li>
+<li><p>用例：</p>
+<ul>
+<li>URL 访问频率计数： 映射函数处理网页请求日志并输出⟨URL,1⟩。还原函数将同一 URL 的所有值相加，输出一对 ⟨URL,total count⟩。</li>
+<li>反向网络链接图： mapfunction 会为在名为源的页面中发现的每个指向目标 URL 的链接输出⟨target,source⟩对。还原函数将所有源 URL 列表与给定的目标 URL 连接起来，并输出对：⟨target,list(source)⟩target,list(source)⟩target,list(source)</li>
+</ul>
+</li>
+<li><p><strong>实现</strong><br><img src="/2024/05/23/MIT6824-Lab1/image.png"></p>
+</li>
+</ul>
+<ol>
+<li>用户程序中的 MapReduce 库首先会将输入文件分割成 M 个片段，每个片段通常为 16 MB 至 64 MB（用户可通过可选参数进行控制）。然后，它在一组机器上启动多个程序副本。</li>
+<li>程序中的一个副本是特殊的–主程序。其余的都是由主程序分派工作的工作者。有 M 个映射任务和 R 个还原任务需要分配。主程序会挑选空闲的工作者，为每个工作者分配一个映射任务或还原任务。</li>
+<li>分配给 Map 任务的工作程序会读取相应输入分片的内容。它从输入数据中解析出键&#x2F;值对，并将每个键&#x2F;值对传递给用户定义的 Map 函数。Map 函数生成的键&#x2F;值对在内存中缓冲</li>
+<li>缓冲数据对会定期写入本地磁盘，并由分区函数分割成 R 个区域。本地磁盘上这些缓冲对的位置会传回主控器，由主控器负责将这些位置转发给还原工作者。</li>
+<li>还原工作程序会遍历已排序的中间数据，并将每个唯一的中间键和相应的中间值集传递给用户的 Reduce 函数。Reduce 函数的输出会附加到该还原分区的最终输出文件中</li>
+<li>当所有映射任务和还原任务完成后，主程序会唤醒用户程序。 此时，用户程序中的 MapReduce 调用将返回用户代码</li>
+</ol>
+<ul>
+<li><p>Map函数中调用emit的效果是在worker的本地磁盘上创建文件，这些文件包含了当前worker的Map函数生成的所有的key和value。</p>
+</li>
+<li><p>Reduce函数运算完了会调用自己的emit，这个emit与Map函数中的emit不一样，它会将输出写入到一个Google使用的共享文件服务中。</p>
+</li>
+<li><p>容错：</p>
+</li>
+</ul>
+<ol>
+<li>worker失效：主服务器会定期 ping 每个 Worker。如果在一定时间内没有收到工作者的回复，主站就会将工作者标记为失败。该 Worker 完成的任何映射任务都会被重置回初始空闲状态，从而有资格在其他 Worker 上进行调度。同样，失败 Worker 上正在进行的任何映射任务或还原任务也会被重置为空闲状态，并有资格重新安排。当一个Map任务首先被worker A执行，之后由于worker A失效了又被调度到worker B执行，这个“重新执行”的动作会被通知给所有执行Reduce任务的worker。任何还没有从worker A读取数据的Reduce任务将从worker B读取数据。</li>
+<li>master失效：master可以建立检查点并持久化，如果主任务死亡，可以从最后一个检查点状态启动新的副本。不过，由于只有一个主任务，它发生故障的可能性不大；因此，如果主任务发生故障，我们目前的实现会中止 MapReduce 计算。客户端可以检查这种情况，并根据需要重试 MapReduce 操作。</li>
+<li>失效任务处理：当用户提供的Map和Reduce 操作是输入确定性函数（即相同的输入产生相同的输出）时，我们的分布式实现在任何情况下的输出都和所有程序没有出现任何错误、顺序的执行产生的输出是一样的。我们依赖对Map和Reduce任务的输出是原子提交的来完成这个特性。每个工作中的任务把它的输出写到私有的临时文件中。每个Reduce任务生成一个这样的文件，而每个Map任务则生成R个这样的文件（一个Reduce任务对应一个文件）。当一个Map任务完成的时，worker发送一个包含R个临时文件名的完成消息给master。如果master 从一个已经完成的Map任务再次接收到到一个完成消息，master将忽略这个消息；否则，master将这R个文件的名字记录在数据结构里。</li>
+</ol>
+<ul>
+<li>备用任务<br>影响一个 MapReduce 的总执行时间最通常的因素是“落伍者”：在运算过程中，如果有一台机器花了很长的时间才完成最后几个Map或Reduce任务，导致MapReduce操作总的执行时间超过预期。出现“落伍者”的原因非常多。比如：如果一个机器的硬盘出了问题，在读取的时候要经常的进行读取纠错操作，导致读取数据的速度从30M&#x2F;s降低到1M&#x2F;s。如果cluster的调度系统在这台机器上又调度了其他的任务，由于CPU、内存、本地硬盘和网络带宽等竞争因素的存在，导致执行MapReduce代码的执行效率更加缓慢。我们最近遇到的一个问题是由于机器的初始化代码有 bug，导致关闭了的处理器的缓存：在这些机器上执行任务的性能和正常情况相差上百倍。<br>我们有一个通用的机制来减少“落伍者”出现的情况。当一个MapReduce操作接近完成的时候，master调度备用（backup）任务进程来执行剩下的、处于处理中状态（in-progress）的任务。无论是最初的执行进程、还是备用（backup）任务进程完成了任务，我们都把这个任务标记成为已经完成。我们调优了这个机制，通常只会占用比正常操作多几个百分点的计算资源。我们发现采用这样的机制对于减少超大MapReduce操作的总处理时间效果显著。例如，在5.3 节描述的排序任务，在关闭掉备用任务的情况下要多花44%的时间完成排序任务。</li>
+</ul>
+<h3 id="lecture1"><a href="#lecture1" class="headerlink" title="lecture1"></a>lecture1</h3><ul>
+<li>我们希望能找到一个抽象来描述分布式的存储或者计算，使得它们能够像非分布式系统一样有简单易懂的接口，将分布式特性隐藏在整个系统内<ul>
+<li>在讨论这些抽象时，第一个话题就是实现，常见的工具有：<ol>
+<li>RPC（Remote Procedure Call）。RPC的目标就是掩盖我们正在不可靠网络上通信的事实。</li>
+<li>线程。这是一种编程技术，使得我们可以利用多核心计算机。对于本课程而言，更重要的是，线程提供了一种结构化的并发操作方式，这样，从程序员角度来说可以简化并发操作。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="可拓展性："><a href="#可拓展性：" class="headerlink" title="可拓展性："></a>可拓展性：</h4><ul>
+<li>这是一个很强大的特性。如果你构建了一个系统，并且只要增加计算机的数量，系统就能相应提高性能或者吞吐量，这将会是一个巨大的成果，因为计算机只需要花钱就可以买到。如果不增加计算机，就需要花钱雇程序员来重构这些系统，进而使这些系统有更高的性能，更高的运行效率，或者应用一个更好的算法之类的。花钱请程序员来修补这些代码，使它们运行的更快，通常会是一个昂贵的方法。</li>
+<li>变化的瓶颈：网站的木桶原理。当你只有1-2个用户时，一台计算机就可以运行web服务器和数据，或者一台计算机运行web服务器，一台计算机运行数据库。但是有可能你的网站一夜之间就火了起来，你发现可能有一亿人要登录你的网站。你该怎么修改你的网站，使它能够在一台计算机上支持一亿个用户？你可以花费大量时间极致优化你的网站，但是很显然你没有那个时间。<br>所以，为了提升性能，你要做的第一件事情就是购买更多的web服务器，然后把不同用户分到不同服务器上。这样，一部分用户可以去访问第一台web服务器，另一部分去访问第二台web服务器。因为你正在构建的是类似于Reddit的网站，所有的用户最终都需要看到相同的数据。所以，所有的web服务器都与后端数据库通信。这样，很长一段时间你都可以通过添加web服务器来并行的提高web服务器的代码效率。只要单台web服务器没有给数据库带来太多的压力，你可以在出现问题前添加很多web服务器。<br>是这种可扩展性并不是无限的。很可能在某个时间点你有了10台，20台，甚至100台web服务器，它们都在和同一个数据库通信。现在，数据库突然成为了瓶颈，并且增加更多的web服务器都无济于事了。所以很少有可以通过无限增加计算机来获取完整的可扩展性的场景。因为在某个临界点，你在系统中添加计算机的位置将不再是瓶颈了。在我们的例子中，如果你有了很多的web服务器，那么瓶颈就会转移到了别的地方，这里是从web服务器移到了数据库。这时，你几乎是必然要做一些重构工作。但是只有一个数据库时，很难重构它。而虽然可以将一个数据库拆分成多个数据库（进而提升性能），但是这需要大量的工作。</li>
+</ul>
+<h4 id="可用性："><a href="#可用性：" class="headerlink" title="可用性："></a>可用性：</h4><ul>
+<li>大型分布式系统中有一个大问题，那就是一些很罕见的问题会被放大。例如在我们的1000台计算机的集群中，总是有故障，要么是机器故障，要么是运行出错，要么是运行缓慢，要么是执行错误的任务。一个更常见的问题是网络，在一个有1000台计算机的网络中，会有大量的网络电缆和网络交换机，所以总是会有人踩着网线导致网线从接口掉出，或者交换机风扇故障导致交换机过热而不工作。在一个大规模分布式系统中，各个地方总是有一些小问题出现。所以大规模系统会将一些几乎不可能并且你不需要考虑的问题，变成一个持续不断的问题。</li>
+<li>所以，因为错误总会发生，必须要在设计时就考虑，系统能够屏蔽错误，或者说能够在出错时继续运行。同时，因为我们需要为第三方应用开发人员提供方便的抽象接口，我们的确也需要构建这样一种基础架构，它能够尽可能多的对应用开发人员屏蔽和掩盖错误。这样，应用开发人员就不需要处理各种各样的可能发生的错误。</li>
+<li>active redundancy 主动冗余 <ul>
+<li>好处与成本：主动冗余是在数据写入时立即创建数据的多个副本，这些副本存储在不同的位置或设备上并通过心跳机制等方法保持在相同的状态并以并行的方式对请求响应。主动冗余的优点是切换时间非常短，数据和计算都是热备份的。所以一旦系统出现错误，就可以立刻切换，基本不会影响系统的正常运行。但缺点也十分明显，所有的冗余模块都处于激活状态，并指向相同的任务，即使在主系统没有故障的情况下仍需要对请求做同样的处理，从而保障所有模块的运行结果一致性，就造成了资源的成倍增加。另外这种冗余通常通过复制或镜像数据来实现，因此其成本很高，不仅需要更多的设备，还需要一套可靠的同步机制。</li>
+</ul>
+</li>
+<li>passive redundancy 被动冗余<ul>
+<li>好处与成本：被动冗余是在主数据失效后才使用冗余或修复数据的过程。例如主系统出错后启用冗余系统，并把冗余系统同步到上一次主系统的同步状态，而修复通常通过使用冗余校验和或纠错码来实现。这种实现方法下，主系统和冗余之间的同步频率较低，消耗的资源也较少，但是相应的，出错后的处理恢复时间也比主动冗余要更长，因为数据的修复需要一定时间。总的来说，被动冗余是资源和可用性的平衡。</li>
+</ul>
+</li>
+<li>spare 备件<ul>
+<li>好处与成本：备件是将数据复制到独立的存储介质中，以防止原始数据丢失或损坏，并在需要的时候通过空闲机器导入备份。备件可以是完整的、增量的或差异的。备件所需要的资源最少，几乎可以说只需要存储空间把数据隔一段时间存起来即可。备件实现的难度和资源需求是这三种策略里面最低的，但是其对可用性的保证效果也最差，通过备件恢复系统的时间最长</li>
+</ul>
+</li>
+</ul>
+<h4 id="一致性"><a href="#一致性" class="headerlink" title="一致性"></a>一致性</h4><ul>
+<li>从性能和容错的角度来说，我们通常会有多个副本。在一个非分布式系统中，你通常只有一个服务器，一个表单。虽然不是绝对，但是通常来说对于put&#x2F;get的行为不会有歧义。直观上来说，put就是更新这个表单，get就是从表单中获取当前表单中存储的数据。但是在一个分布式系统中，由于复制或者缓存，数据可能存在于多个副本当中，于是就有了多个不同版本的key-value对。<ol>
+<li>假设服务器有两个副本，那么他们都有一个key-value表单，两个表单中key 1对应的值都是20。</li>
+<li>现在某个客户端发送了一个put请求，并希望将key 1改成值21。这里或许是KV服务里面的一个计数器。这个put请求发送给了第一台服务器，</li>
+<li>之后会发送给第二台服务器，因为相同的put请求需要发送给两个副本，这样这两个副本才能保持同步。但是就在客户端准备给第二台服务器发送相同请求时，这个客户端故障了，可能是电源故障或者操作系统的bug之类的。所以，现在我们处于一个不好的状态，我们发送了一个put请求，更新了一个副本的值是21，但是另一个副本的值仍然是20。</li>
+<li>如果现在某人通过get读取key为1的值，那么他可能获得21，也可能获得20，取决于get请求发送到了哪个服务器。即使规定了总是把请求先发送给第一个服务器，那么我们在构建容错系统时，如果第一台服务器故障了，请求也会发给第二台服务器。所以不管怎么样，总有一天你会面临暴露旧数据的风险。很可能是这样，最开始许多get请求都得到了21，之后过了一周突然一些get请求得到了一周之前的旧数据（20）。所以，这里不是很一致。并且，如果我们不小心的话，这个场景是可能发生的。所以，我们需要确定put&#x2F;get操作的一些规则。</li>
+</ol>
+</li>
+<li>强一致性：比如说get请求可以得到最近一次完成的put请求写入的值。这种一般也被称为强一致（Strong Consistency）</li>
+<li>弱一致性：弱一致是指，不保证get请求可以得到最近一次完成的put请求写入的值。</li>
+</ul>
+<h4 id="MapReduce-Job"><a href="#MapReduce-Job" class="headerlink" title="MapReduce Job"></a>MapReduce Job</h4><p><img src="/2024/05/23/MIT6824-Lab1/image.png"></p>
+<ul>
+<li>Job。整个MapReduce计算称为Job。</li>
+<li>Task。每一次MapReduce调用称为Task。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/05/23/MIT6824-Lab1/" data-id="clwlwacxx0001qkvchsqj60mm" data-title="MIT6824-Lab1" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Paper" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/22/Paper/" class="article-date">
@@ -875,102 +1052,6 @@
 
 
   
-    <article id="post-分治的讨论" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" class="article-date">
-  <time class="dt-published" datetime="2024-05-18T03:28:18.000Z" itemprop="datePublished">2024-05-18</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/">分治的讨论</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>zbsd</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" data-id="clwlwacyf000xqkvc6pou5t3k" data-title="分治的讨论" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-简单01背包问题的一个通用思路" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" class="article-date">
-  <time class="dt-published" datetime="2024-05-18T03:22:19.000Z" itemprop="datePublished">2024-05-18</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/">简单01背包问题的一个通用思路</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="DP设计思路"><a href="#DP设计思路" class="headerlink" title="DP设计思路"></a>DP设计思路</h3><ul>
-<li>在处理01背包问题时，我们往往是遇到这样以下情景：<ol>
-<li>最多装c，求方案数&#x2F;最大和 </li>
-<li>恰好装c，求方案数&#x2F;最大和&#x2F;最小和 </li>
-<li>至少装c，求方案数&#x2F;最小和<br>因此，c也就是背包的容量应该是dp数组的一个维度，另外物品是有限的，那么就需要再引入一个维度用于物品的遍历，以leetcode494为例：在我们把问题转化为01背包之后，dp[i][j]代表前i+1个数得出和为j的方法数<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findTargetSumWays</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x : nums) target += x;</span><br><span class="line">    <span class="keyword">if</span> (target &lt; <span class="number">0</span> || target % <span class="number">2</span> == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    target /= <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> nums.length;</span><br><span class="line">    <span class="type">int</span>[][] f = <span class="keyword">new</span> <span class="title class_">int</span>[n + <span class="number">1</span>][target + <span class="number">1</span>];</span><br><span class="line">    f[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">c</span> <span class="operator">=</span> <span class="number">0</span>; c &lt;= target; ++c)</span><br><span class="line">            <span class="keyword">if</span> (c &lt; nums[i]) f[i + <span class="number">1</span>][c] = f[i][c];</span><br><span class="line">            <span class="keyword">else</span> f[i + <span class="number">1</span>][c] = f[i][c] + f[i][c - nums[i]];</span><br><span class="line">    <span class="keyword">return</span> f[n][target];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-类似的还有leetcode474，只不过这道题需要统计0，1的个数，因此还需要再加一维：dp[i][j][z]代表前i+1个字符串0的个数和1的个数<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findMaxForm</span><span class="params">(String[] strs, <span class="type">int</span> m, <span class="type">int</span> n)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span> strs.length;</span><br><span class="line">    <span class="type">int</span>[][][] dp = <span class="keyword">new</span> <span class="title class_">int</span>[length + <span class="number">1</span>][m + <span class="number">1</span>][n + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= length; i++) &#123;</span><br><span class="line">        <span class="type">int</span>[] zerosOnes = getZerosOnes(strs[i - <span class="number">1</span>]);</span><br><span class="line">        <span class="type">int</span> <span class="variable">zeros</span> <span class="operator">=</span> zerosOnes[<span class="number">0</span>], ones = zerosOnes[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt;= m; j++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> <span class="number">0</span>; k &lt;= n; k++) &#123;</span><br><span class="line">                dp[i][j][k] = dp[i - <span class="number">1</span>][j][k];</span><br><span class="line">                <span class="keyword">if</span> (j &gt;= zeros &amp;&amp; k &gt;= ones) &#123;</span><br><span class="line">                    dp[i][j][k] = Math.max(dp[i][j][k], dp[i - <span class="number">1</span>][j - zeros][k - ones] + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[length][m][n];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span>[] getZerosOnes(String str) &#123;</span><br><span class="line">    <span class="type">int</span>[] zerosOnes = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">2</span>];</span><br><span class="line">    <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span> str.length();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">        zerosOnes[str.charAt(i) - <span class="string">&#x27;0&#x27;</span>]++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> zerosOnes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-另外有时候要注意初始化问题，如leetcode2915，和为目标和的最长子序列长度<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">lengthOfLongestSubsequence</span><span class="params">(List&lt;Integer&gt; nums, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> nums.size();</span><br><span class="line">        <span class="type">int</span>[][] dp = <span class="keyword">new</span> <span class="title class_">int</span>[n+<span class="number">1</span>][target+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">t</span> <span class="operator">=</span> <span class="number">0</span>;t&lt;=target;t++)&#123;</span><br><span class="line">                dp[i][t] = Integer.MIN_VALUE;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">t</span> <span class="operator">=</span> <span class="number">0</span>;t&lt;=target;t++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(t&gt;=nums.get(i))&#123;</span><br><span class="line">                    <span class="comment">//System.out.println((i+1)+&quot; &quot;+t+&quot; &quot;+dp[i][t]+&quot; &quot;+(dp[i][t-nums.get(i)]+1));</span></span><br><span class="line">                    dp[i+<span class="number">1</span>][t] =  Math.max(dp[i][t],</span><br><span class="line">                    dp[i][t-nums.get(i)]+<span class="number">1</span>);</span><br><span class="line">                    <span class="comment">//dp[i+1][t] = Math.max(dp[i+1][t],dp[i+1][])</span></span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dp[i+<span class="number">1</span>][t] = dp[i][t];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n][target]&lt;<span class="number">0</span>?-<span class="number">1</span>:dp[n][target];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</li>
-<li>所以总结来说，01背包的dp要考虑的两个维度就是物品和容量，一层循环遍历物品，一层遍历容量</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" data-id="clwlwacyf000yqkvc9oiohvqp" data-title="简单01背包问题的一个通用思路" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -986,7 +1067,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/baosightintern/">baosightintern</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/baosigth-intern/">baosigth intern</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -1001,7 +1082,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
     </div>
   </div>
 
@@ -1014,6 +1095,14 @@
       <ul>
         
           <li>
+            <a href="/2024/10/09/OPC-UA/">OPC_UA</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/">vscode&amp;cmake配置c++项目构建环境</a>
+          </li>
+        
+          <li>
             <a href="/2024/09/17/LCR%E7%BB%8F%E5%85%B8%E9%A2%98/">LCR经典题</a>
           </li>
         
@@ -1023,14 +1112,6 @@
         
           <li>
             <a href="/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-46/">Leetcode101-回溯-46</a>
-          </li>
-        
-          <li>
-            <a href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-417/">Leetcode101-深度优先搜索-417</a>
-          </li>
-        
-          <li>
-            <a href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-547/">Leetcode101-深度优先搜索-547</a>
           </li>
         
       </ul>

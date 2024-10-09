@@ -69,6 +69,112 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-OPC-UA" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/09/OPC-UA/" class="article-date">
+  <time class="dt-published" datetime="2024-10-09T02:41:39.000Z" itemprop="datePublished">2024-10-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/baosightintern/">baosightintern</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/09/OPC-UA/">OPC_UA</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="名词定义"><a href="#名词定义" class="headerlink" title="名词定义"></a>名词定义</h2><ul>
+<li>AddressSpace：地址空间，OPC_UA服务器向客户暴露的数据集合。OPC UA 地址空间将其内容表示为一组由引用连接的节点。</li>
+<li>Aggregate：计算原始数据派生值的函数</li>
+<li>Alarm：一种一般需要确认的事件</li>
+<li>Attribute：Node的原始数据</li>
+<li>Condition：通用术语，是一种扩展的一个事件</li>
+<li>Communication Stack：应用程序和硬件之间的一套分层软件模块，提供各种功能，对发送的信息进行编码、加密和格式化，并对接收的信息进行解码、解密和解包</li>
+<li>Complex Data：包含不止一种原始数据的数据结构，如结构体</li>
+<li>Discovery：OPC UA 客户端获取 OPC UA 服务器信息（包括端点和安全信息）的过程</li>
+<li>MoniteredItem: 服务器中由客户定义的实体，用于监控属性或事件提示器的新值或事件发生情况，并为其生成通知</li>
+<li>Node: 地址空间的重要组成部分</li>
+<li>Profile：配置文件的特定功能集，服务器可声称支持这些功能集</li>
+<li>Object：对象节点，代表系统的物理或抽象元素</li>
+</ul>
+<h2 id="什么是-OPC-UA-规范-开放式产品通信统一架构，Open-Platform-Communications-Unified-Architecture"><a href="#什么是-OPC-UA-规范-开放式产品通信统一架构，Open-Platform-Communications-Unified-Architecture" class="headerlink" title="什么是 OPC_UA 规范 (开放式产品通信统一架构，Open Platform Communications Unified Architecture)"></a>什么是 OPC_UA 规范 (开放式产品通信统一架构，Open Platform Communications Unified Architecture)</h2><ul>
+<li>OPC UA 适用于现场设备、控制系统、制造执行系统和企业资源规划系统等应用领域的制造软件。这些系统旨在为工业流程交换信息并使用指令和控制。OPC UA 定义了一个通用基础架构模型，以促进这种信息交换</li>
+<li><strong>OPC UA 定义了服务器可提供的服务集，各个服务器向客户端说明它们支持哪些服务集</strong>。信息使用 OPC UA 定义的和供应商定义的数据类型进行传递，服务器定义了客户端可以动态发现的对象模型。 服务器可提供对当前数据和历史数据的访问，以及通知客户端重要变化的警报和事件。OPC UA 可以映射到各种通信协议上，数据可以用不同的方式编码，以权衡可移植性和效率。OPC UA是独立于平台的协议</li>
+<li><strong>OPC UA 提供了一致、集成的地址空间和服务模型</strong>。这样，单个 OPC UA 服务器就能将数据、警报和事件以及历史记录集成到其地址空间中，并使用一套集成服务对其进行访问。这些服务还包括一个集成的安全模型。 OPC UA 还允许服务器为客户端提供从地址空间访问对象的类型定义。这就允许使用信息模型来描述地址空间的内容。OPC UA 允许以多种不同格式（包括二进制结构和 XML 文档）公开数据。数据格式可由 OPC、其他标准组织或供应商定义。通过地址空间，客户端可以向服务器查询描述数据格式的元数据。在许多情况下，对数据格式没有预先编程知识的客户端能够在运行时确定格式并正确使用数据。 OPC UA 增加了对节点间多种关系的支持，而不仅仅局限于单一的层次结构。这样，OPC UA 服务器就可以根据一组客户端通常希望查看数据的方式，以各种层次结构呈现数据。这种灵活性加上对类型定义的支持，使 OPC UA 适用于各种问题领域</li>
+<li><strong>OPC UA 旨在提供发布数据的稳健性</strong>。所有 OPC 服务器的一个主要特点是能够发布数据和事件通知。OPC UA 为客户端提供了快速检测和恢复与这些传输相关的通信故障的机制，而无需等待底层协议。</li>
+<li><strong>OPC UA 规范是分层的，将核心设计与底层计算技术和网络传输隔离开来</strong>。这使得 OPC UA 可以根据需要映射到未来的技术，而不会否定基本设计 – 多种数据格式和传输协议可以被支持</li>
+<li><img src="/2024/10/09/OPC-UA/1.png" alt="OPC_UA Server的结构"></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/09/OPC-UA/" data-id="cm21mhyre0000ewvc2ox8h7qo" data-title="OPC_UA" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-vscode&amp;cmake配置c++项目构建环境" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/" class="article-date">
+  <time class="dt-published" datetime="2024-10-09T01:54:50.000Z" itemprop="datePublished">2024-10-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/baosigth-intern/">baosigth intern</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/">vscode&amp;cmake配置c++项目构建环境</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/" data-id="cm21mhyrg0001ewvc2y0fekf0" data-title="vscode&amp;cmake配置c++项目构建环境" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-LCR经典题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/09/17/LCR%E7%BB%8F%E5%85%B8%E9%A2%98/" class="article-date">
@@ -95,7 +201,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="两数相除"><a href="#两数相除" class="headerlink" title="两数相除"></a>两数相除</h2><ul>
+        <h1 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h1><h2 id="两数相除"><a href="#两数相除" class="headerlink" title="两数相除"></a>两数相除</h2><ul>
 <li>由于题目要求不能使用乘法和除法，因此需要使用移位运算代替乘法和除法。基本的思路类似于扩大 - 缩小<br>需要注意的是，由于计算过程比较的是绝对值，而 a、b 和 currDivisor 都是负数，因此比较两数之间关系的不等号方向与比较两数绝对值之间关系的不等号方向相反。</li>
 <li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">divide</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (a == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (b == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> a;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (a == Integer.MIN_VALUE &amp;&amp; b == -<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Integer.MAX_VALUE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">negative</span> <span class="operator">=</span> a &lt; <span class="number">0</span> ^ b &lt; <span class="number">0</span>;</span><br><span class="line">        a = -Math.abs(a);</span><br><span class="line">        b = -Math.abs(b);</span><br><span class="line">        <span class="type">int</span> <span class="variable">quotient</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">currDivisor</span> <span class="operator">=</span> b, factor = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (a &gt;&gt; <span class="number">1</span> &lt; currDivisor) &#123;</span><br><span class="line">            currDivisor &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">            factor &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (a &lt;= b) &#123;</span><br><span class="line">            <span class="keyword">while</span> (a &gt; currDivisor) &#123;</span><br><span class="line">                currDivisor &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">                factor &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            quotient += factor;</span><br><span class="line">            a -= currDivisor;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(negative) &#123;</span><br><span class="line">            quotient = -quotient;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> quotient;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
@@ -178,7 +284,31 @@
 <li><p>判断一个数是不是有效数字 – 有限状态机<br><img src="/2024/09/17/LCR%E7%BB%8F%E5%85%B8%E9%A2%98/%E7%8A%B6%E6%80%81%E5%9B%BE.png" alt="alt text"></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">validNumber</span><span class="params">(String s)</span> &#123;</span><br><span class="line">        Map[] states = &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;() &#123;&#123; put(<span class="string">&#x27; &#x27;</span>, <span class="number">0</span>); put(<span class="string">&#x27;s&#x27;</span>, <span class="number">1</span>); put(<span class="string">&#x27;d&#x27;</span>, <span class="number">2</span>); put(<span class="string">&#x27;.&#x27;</span>, <span class="number">4</span>); &#125;&#125;, <span class="comment">// 0.</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;() &#123;&#123; put(<span class="string">&#x27;d&#x27;</span>, <span class="number">2</span>); put(<span class="string">&#x27;.&#x27;</span>, <span class="number">4</span>); &#125;&#125;,                           <span class="comment">// 1.</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;() &#123;&#123; put(<span class="string">&#x27;d&#x27;</span>, <span class="number">2</span>); put(<span class="string">&#x27;.&#x27;</span>, <span class="number">3</span>); put(<span class="string">&#x27;e&#x27;</span>, <span class="number">5</span>); put(<span class="string">&#x27; &#x27;</span>, <span class="number">8</span>); &#125;&#125;, <span class="comment">// 2.</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;() &#123;&#123; put(<span class="string">&#x27;d&#x27;</span>, <span class="number">3</span>); put(<span class="string">&#x27;e&#x27;</span>, <span class="number">5</span>); put(<span class="string">&#x27; &#x27;</span>, <span class="number">8</span>); &#125;&#125;,              <span class="comment">// 3.</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;() &#123;&#123; put(<span class="string">&#x27;d&#x27;</span>, <span class="number">3</span>); &#125;&#125;,                                        <span class="comment">// 4.</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;() &#123;&#123; put(<span class="string">&#x27;s&#x27;</span>, <span class="number">6</span>); put(<span class="string">&#x27;d&#x27;</span>, <span class="number">7</span>); &#125;&#125;,                           <span class="comment">// 5.</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;() &#123;&#123; put(<span class="string">&#x27;d&#x27;</span>, <span class="number">7</span>); &#125;&#125;,                                        <span class="comment">// 6.</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;() &#123;&#123; put(<span class="string">&#x27;d&#x27;</span>, <span class="number">7</span>); put(<span class="string">&#x27; &#x27;</span>, <span class="number">8</span>); &#125;&#125;,                           <span class="comment">// 7.</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;() &#123;&#123; put(<span class="string">&#x27; &#x27;</span>, <span class="number">8</span>); &#125;&#125;                                         <span class="comment">// 8.</span></span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="type">int</span> <span class="variable">p</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">char</span> t;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">char</span> c : s.toCharArray()) &#123;</span><br><span class="line">            <span class="keyword">if</span>(c &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; c &lt;= <span class="string">&#x27;9&#x27;</span>) t = <span class="string">&#x27;d&#x27;</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(c == <span class="string">&#x27;+&#x27;</span> || c == <span class="string">&#x27;-&#x27;</span>) t = <span class="string">&#x27;s&#x27;</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(c == <span class="string">&#x27;e&#x27;</span> || c == <span class="string">&#x27;E&#x27;</span>) t = <span class="string">&#x27;e&#x27;</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(c == <span class="string">&#x27;.&#x27;</span> || c == <span class="string">&#x27; &#x27;</span>) t = c;</span><br><span class="line">            <span class="keyword">else</span> t = <span class="string">&#x27;?&#x27;</span>;</span><br><span class="line">            <span class="keyword">if</span>(!states[p].containsKey(t)) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            p = (<span class="type">int</span>)states[p].get(t);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> p == <span class="number">2</span> || p == <span class="number">3</span> || p == <span class="number">7</span> || p == <span class="number">8</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
-
+<h1 id="数组-字符串"><a href="#数组-字符串" class="headerlink" title="数组 &amp; 字符串"></a>数组 &amp; 字符串</h1><h2 id="长度最小的子数组-滑动窗口"><a href="#长度最小的子数组-滑动窗口" class="headerlink" title="长度最小的子数组 - 滑动窗口"></a>长度最小的子数组 - 滑动窗口</h2><ul>
+<li>给定一个含有 n 个正整数的数组和一个正整数 target 。找出该数组中满足其和 ≥ target 的长度最小的 连续子数组 [numsl, numsl+1, …, numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0 。</li>
+<li><strong>由于是要求 &gt;&#x3D; ， 这就不适合用哈希快速判断前序的情况</strong>， 可以用滑动窗口<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">minSubArrayLen</span><span class="params">(<span class="type">int</span> target, <span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">res</span> <span class="operator">=</span> Integer.MAX_VALUE;</span><br><span class="line">        <span class="type">int</span> <span class="variable">start</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">end</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (start &lt;= end &amp;&amp; end &lt; nums.length) &#123;</span><br><span class="line">            <span class="comment">// 不满足则一直扩大</span></span><br><span class="line">            <span class="keyword">while</span> (sum &lt; target &amp;&amp; end &lt;= nums.length - <span class="number">1</span>) &#123;</span><br><span class="line">                sum += nums[end++];</span><br><span class="line">                len++;</span><br><span class="line">                <span class="comment">//System.out.println(sum + &quot; &quot; + len + &quot; &quot; + start + &quot; &quot; + end);</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 满足则一直减少</span></span><br><span class="line">            <span class="keyword">while</span> (sum &gt;= target) &#123;</span><br><span class="line">                res = Math.min(len, res);</span><br><span class="line">                sum -= nums[start++];</span><br><span class="line">                len --;</span><br><span class="line">                <span class="comment">//System.out.println(sum + &quot; &quot; + len + &quot; &quot; + start + &quot; &quot; + end);</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res == Integer.MAX_VALUE ? <span class="number">0</span> : res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="乘积小于k的子数组-滑动窗口"><a href="#乘积小于k的子数组-滑动窗口" class="headerlink" title="乘积小于k的子数组 - 滑动窗口"></a>乘积小于k的子数组 - 滑动窗口</h2><ul>
+<li>给定一个正整数数组 nums和整数 k ，请找出该数组内乘积小于 k 的连续的子数组的个数。</li>
+<li>也是滑动窗口，但是应该一次移动一个：因为一个新的数字引入就会有不一样，不应该一直右移<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">numSubarrayProductLessThanK</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> nums.length, ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> (k &lt;= <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>, j = <span class="number">0</span>, cur = <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">            cur *= nums[i];</span><br><span class="line">            <span class="keyword">while</span> (cur &gt;= k) cur /= nums[j++];</span><br><span class="line">            ans += i - j + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="三数之和-–-双指针"><a href="#三数之和-–-双指针" class="headerlink" title="三数之和 – 双指针"></a>三数之和 – 双指针</h2><ul>
+<li>给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a ，b ，c ，使得 a + b + c &#x3D; 0 ？请找出所有和为 0 且 不重复 的三元组。</li>
+<li>思路：<ol>
+<li>hash + 去重， 不好，去重方案比较好的是字符串hash，但是对于全0超时</li>
+<li>双指针<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">threeSum</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> nums.length;</span><br><span class="line">        Arrays.sort(nums);</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; ans = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;List&lt;Integer&gt;&gt;();</span><br><span class="line">        <span class="comment">// 枚举 a</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">first</span> <span class="operator">=</span> <span class="number">0</span>; first &lt; n; ++first) &#123;</span><br><span class="line">            <span class="comment">// 需要和上一次枚举的数不相同</span></span><br><span class="line">            <span class="keyword">if</span> (first &gt; <span class="number">0</span> &amp;&amp; nums[first] == nums[first - <span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// c 对应的指针初始指向数组的最右端</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">third</span> <span class="operator">=</span> n - <span class="number">1</span>;</span><br><span class="line">            <span class="type">int</span> <span class="variable">target</span> <span class="operator">=</span> -nums[first];</span><br><span class="line">            <span class="comment">// 枚举 b</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">second</span> <span class="operator">=</span> first + <span class="number">1</span>; second &lt; n; ++second) &#123;</span><br><span class="line">                <span class="comment">// 需要和上一次枚举的数不相同</span></span><br><span class="line">                <span class="keyword">if</span> (second &gt; first + <span class="number">1</span> &amp;&amp; nums[second] == nums[second - <span class="number">1</span>]) &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 需要保证 b 的指针在 c 的指针的左侧</span></span><br><span class="line">                <span class="keyword">while</span> (second &lt; third &amp;&amp; nums[second] + nums[third] &gt; target) &#123;</span><br><span class="line">                    --third;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 如果指针重合，随着 b 后续的增加</span></span><br><span class="line">                <span class="comment">// 就不会有满足 a+b+c=0 并且 b&lt;c 的 c 了，可以退出循环</span></span><br><span class="line">                <span class="keyword">if</span> (second == third) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (nums[second] + nums[third] == target) &#123;</span><br><span class="line">                    List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Integer&gt;();</span><br><span class="line">                    list.add(nums[first]);</span><br><span class="line">                    list.add(nums[second]);</span><br><span class="line">                    list.add(nums[third]);</span><br><span class="line">                    ans.add(list);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+<h2 id="相同01个数的最长子串-–-前缀和-hash"><a href="#相同01个数的最长子串-–-前缀和-hash" class="headerlink" title="相同01个数的最长子串 – 前缀和+hash"></a>相同01个数的最长子串 – 前缀和+hash</h2><ul>
+<li>给定一个二进制数组 nums , 找到含有相同数量的 0 和 1 的最长连续子数组，并返回该子数组的长度。</li>
+<li>为什么这题同样是子串，就不能滑动&#x2F;双指针呢？滑动窗口和双指针我认为都隐藏了一个有序的特征，也就是向一个方向时，变化是一定的。像上面两道采用滑动窗口的题目，都是正整数，窗口变化时值的变化是一定的<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findMaxLength</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">maxLength</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        Map&lt;Integer, Integer&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;Integer, Integer&gt;();</span><br><span class="line">        <span class="type">int</span> <span class="variable">counter</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        map.put(counter, -<span class="number">1</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> nums.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">num</span> <span class="operator">=</span> nums[i];</span><br><span class="line">            <span class="keyword">if</span> (num == <span class="number">1</span>) &#123;</span><br><span class="line">                counter++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                counter--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (map.containsKey(counter)) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">prevIndex</span> <span class="operator">=</span> map.get(counter);</span><br><span class="line">                maxLength = Math.max(maxLength, i - prevIndex);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                map.put(counter, i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxLength;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="字符串的排列-–-滑动窗口-–-字符串匹配！"><a href="#字符串的排列-–-滑动窗口-–-字符串匹配！" class="headerlink" title="字符串的排列 – 滑动窗口 –&gt; 字符串匹配！"></a>字符串的排列 – 滑动窗口 –&gt; 字符串匹配！</h2><ul>
+<li>给定两个字符串 s1 和 s2，写一个函数来判断 s2 是否包含 s1 的某个变位词。换句话说，第一个字符串的排列之一是第二个字符串的子串。</li>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">checkInclusion</span><span class="params">(String s1, String s2)</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] cnt = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">26</span>];</span><br><span class="line">        <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        Set&lt;Character&gt; chs = <span class="keyword">new</span> <span class="title class_">HashSet</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">char</span> c : s1.toCharArray()) &#123;</span><br><span class="line">            cnt[c -<span class="string">&#x27;a&#x27;</span>] ++;</span><br><span class="line">            left++;</span><br><span class="line">            chs.add(c);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (s2.length() &lt; s1.length()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">start</span> <span class="operator">=</span> s1.length() - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt;= start; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cnt[s2.charAt(i) - <span class="string">&#x27;a&#x27;</span>] &gt; <span class="number">0</span> &amp;&amp; chs.contains(s2.charAt(i))) &#123;</span><br><span class="line">                left--;</span><br><span class="line">            &#125;</span><br><span class="line">            cnt[s2.charAt(i) - <span class="string">&#x27;a&#x27;</span>] --;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (left == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> start + <span class="number">1</span>; i &lt; s2.length(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cnt[s2.charAt(i) - <span class="string">&#x27;a&#x27;</span>] &gt; <span class="number">0</span> &amp;&amp; chs.contains(s2.charAt(i))) &#123;</span><br><span class="line">                left--;</span><br><span class="line">            &#125;</span><br><span class="line">            cnt[s2.charAt(i) - <span class="string">&#x27;a&#x27;</span>] --;</span><br><span class="line">            <span class="keyword">if</span> (cnt[s2.charAt(i - start - <span class="number">1</span>) - <span class="string">&#x27;a&#x27;</span>] + <span class="number">1</span> &gt; <span class="number">0</span> &amp;&amp; chs.contains(s2.charAt(i - start - <span class="number">1</span>))) &#123;</span><br><span class="line">                left++;</span><br><span class="line">            &#125;</span><br><span class="line">            cnt[s2.charAt(i- start - <span class="number">1</span>) - <span class="string">&#x27;a&#x27;</span>] ++;</span><br><span class="line">            <span class="keyword">if</span> (left == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">         </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id><a href="#" class="headerlink" title></a></h2>
       
     </div>
     <footer class="article-footer">
@@ -565,183 +695,6 @@
 
 
   
-    <article id="post-常用算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" class="article-date">
-  <time class="dt-published" datetime="2024-05-26T03:20:30.000Z" itemprop="datePublished">2024-05-26</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="求一个数所有因子"><a href="#求一个数所有因子" class="headerlink" title="求一个数所有因子"></a>求一个数所有因子</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> num,ArrayList&lt;Integer&gt; arr)</span>&#123;</span><br><span class="line">    <span class="comment">//从1遍历到num的平方跟即可。</span></span><br><span class="line">    <span class="comment">//这时你可能会说，那后面的数呢，比如num本身，不是计算不到了嘛？</span></span><br><span class="line">    <span class="comment">//别急，看for循环里面的处理情况</span></span><br><span class="line">    <span class="keyword">for</span> ( <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span> ; i &lt;= Math.sqrt(num) ; i++ )&#123;</span><br><span class="line">        <span class="comment">//如果能被num整除，那肯定是num的因子，毫无疑问</span></span><br><span class="line">        <span class="keyword">if</span> ( num % i == <span class="number">0</span> )&#123;</span><br><span class="line">            arr.add(i);</span><br><span class="line">            <span class="comment">//重点的部分在这里！！！</span></span><br><span class="line">            <span class="comment">//当i能被num整除的情况下，此时i是相对较小的因子，用i求出num另一个较大的因子n</span></span><br><span class="line">            <span class="comment">//因为当i能被num整除时，那么数&quot;num/i&quot;也一定能被num整除</span></span><br><span class="line">            <span class="comment">//不需要再进行重复的计算，这样算法的运行时间大大降低</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> num / i;</span><br><span class="line">            <span class="comment">//但用i算出另一个较大的因子时，会出现重复的情况</span></span><br><span class="line">            <span class="comment">//例如num = 4,当遍历到2时，算出另一个较大的因子也是2，这就重复了，要判断一下</span></span><br><span class="line">            <span class="keyword">if</span> ( n != i )&#123;    </span><br><span class="line">                arr.add(n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" data-id="clwp591aq0000x8vcczfhaulo" data-title="常用算法" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-MIT6824-Lab1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/23/MIT6824-Lab1/" class="article-date">
-  <time class="dt-published" datetime="2024-05-23T02:22:49.000Z" itemprop="datePublished">2024-05-23</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>►<a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/23/MIT6824-Lab1/">MIT6824-Lab1</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="Map-Reduce-Paper"><a href="#Map-Reduce-Paper" class="headerlink" title="Map Reduce Paper"></a>Map Reduce Paper</h3><ul>
-<li><p>用一种kv结构管理数据的模型（map），一个reduce函数管理相同key的value</p>
-</li>
-<li><p>以这种函数式风格编写的程序可自动并行化，并在大型计算机集群上执行。运行时系统会处理分割输入数据、调度程序在一组机器上的执行、处理机器故障以及管理所需的机器间通信等细节。这样，没有任何并行和分布式系统经验的程序员也能轻松利用大型分布式系统的资源。</p>
-</li>
-<li><p>如何工作？</p>
-<ol>
-<li>Map 由用户编写，它接收输入对并生成一组中间键&#x2F;值对。MapReuce 库将与同一中间键 I 相关的所有中间值组合在一起，并将它们传递给 Reduce 函数。 </li>
-<li>Reduce 函数也是由用户编写的，它接受一个中间键 I 和该键的一组值。它将这些值合并在一起，形成一个可能更小的值集。通常情况下，每次调用 Reduce 函数只会产生零个或一个输出值。中间值通过迭代器提供给用户的还原函数。这样，我们就能处理内存中容纳不下的数值列表 </li>
-<li><img src="/2024/05/23/MIT6824-Lab1/image.png"></li>
-</ol>
-</li>
-<li><p>用例：</p>
-<ul>
-<li>URL 访问频率计数： 映射函数处理网页请求日志并输出⟨URL,1⟩。还原函数将同一 URL 的所有值相加，输出一对 ⟨URL,total count⟩。</li>
-<li>反向网络链接图： mapfunction 会为在名为源的页面中发现的每个指向目标 URL 的链接输出⟨target,source⟩对。还原函数将所有源 URL 列表与给定的目标 URL 连接起来，并输出对：⟨target,list(source)⟩target,list(source)⟩target,list(source)</li>
-</ul>
-</li>
-<li><p><strong>实现</strong><br><img src="/2024/05/23/MIT6824-Lab1/image.png"></p>
-</li>
-</ul>
-<ol>
-<li>用户程序中的 MapReduce 库首先会将输入文件分割成 M 个片段，每个片段通常为 16 MB 至 64 MB（用户可通过可选参数进行控制）。然后，它在一组机器上启动多个程序副本。</li>
-<li>程序中的一个副本是特殊的–主程序。其余的都是由主程序分派工作的工作者。有 M 个映射任务和 R 个还原任务需要分配。主程序会挑选空闲的工作者，为每个工作者分配一个映射任务或还原任务。</li>
-<li>分配给 Map 任务的工作程序会读取相应输入分片的内容。它从输入数据中解析出键&#x2F;值对，并将每个键&#x2F;值对传递给用户定义的 Map 函数。Map 函数生成的键&#x2F;值对在内存中缓冲</li>
-<li>缓冲数据对会定期写入本地磁盘，并由分区函数分割成 R 个区域。本地磁盘上这些缓冲对的位置会传回主控器，由主控器负责将这些位置转发给还原工作者。</li>
-<li>还原工作程序会遍历已排序的中间数据，并将每个唯一的中间键和相应的中间值集传递给用户的 Reduce 函数。Reduce 函数的输出会附加到该还原分区的最终输出文件中</li>
-<li>当所有映射任务和还原任务完成后，主程序会唤醒用户程序。 此时，用户程序中的 MapReduce 调用将返回用户代码</li>
-</ol>
-<ul>
-<li><p>Map函数中调用emit的效果是在worker的本地磁盘上创建文件，这些文件包含了当前worker的Map函数生成的所有的key和value。</p>
-</li>
-<li><p>Reduce函数运算完了会调用自己的emit，这个emit与Map函数中的emit不一样，它会将输出写入到一个Google使用的共享文件服务中。</p>
-</li>
-<li><p>容错：</p>
-</li>
-</ul>
-<ol>
-<li>worker失效：主服务器会定期 ping 每个 Worker。如果在一定时间内没有收到工作者的回复，主站就会将工作者标记为失败。该 Worker 完成的任何映射任务都会被重置回初始空闲状态，从而有资格在其他 Worker 上进行调度。同样，失败 Worker 上正在进行的任何映射任务或还原任务也会被重置为空闲状态，并有资格重新安排。当一个Map任务首先被worker A执行，之后由于worker A失效了又被调度到worker B执行，这个“重新执行”的动作会被通知给所有执行Reduce任务的worker。任何还没有从worker A读取数据的Reduce任务将从worker B读取数据。</li>
-<li>master失效：master可以建立检查点并持久化，如果主任务死亡，可以从最后一个检查点状态启动新的副本。不过，由于只有一个主任务，它发生故障的可能性不大；因此，如果主任务发生故障，我们目前的实现会中止 MapReduce 计算。客户端可以检查这种情况，并根据需要重试 MapReduce 操作。</li>
-<li>失效任务处理：当用户提供的Map和Reduce 操作是输入确定性函数（即相同的输入产生相同的输出）时，我们的分布式实现在任何情况下的输出都和所有程序没有出现任何错误、顺序的执行产生的输出是一样的。我们依赖对Map和Reduce任务的输出是原子提交的来完成这个特性。每个工作中的任务把它的输出写到私有的临时文件中。每个Reduce任务生成一个这样的文件，而每个Map任务则生成R个这样的文件（一个Reduce任务对应一个文件）。当一个Map任务完成的时，worker发送一个包含R个临时文件名的完成消息给master。如果master 从一个已经完成的Map任务再次接收到到一个完成消息，master将忽略这个消息；否则，master将这R个文件的名字记录在数据结构里。</li>
-</ol>
-<ul>
-<li>备用任务<br>影响一个 MapReduce 的总执行时间最通常的因素是“落伍者”：在运算过程中，如果有一台机器花了很长的时间才完成最后几个Map或Reduce任务，导致MapReduce操作总的执行时间超过预期。出现“落伍者”的原因非常多。比如：如果一个机器的硬盘出了问题，在读取的时候要经常的进行读取纠错操作，导致读取数据的速度从30M&#x2F;s降低到1M&#x2F;s。如果cluster的调度系统在这台机器上又调度了其他的任务，由于CPU、内存、本地硬盘和网络带宽等竞争因素的存在，导致执行MapReduce代码的执行效率更加缓慢。我们最近遇到的一个问题是由于机器的初始化代码有 bug，导致关闭了的处理器的缓存：在这些机器上执行任务的性能和正常情况相差上百倍。<br>我们有一个通用的机制来减少“落伍者”出现的情况。当一个MapReduce操作接近完成的时候，master调度备用（backup）任务进程来执行剩下的、处于处理中状态（in-progress）的任务。无论是最初的执行进程、还是备用（backup）任务进程完成了任务，我们都把这个任务标记成为已经完成。我们调优了这个机制，通常只会占用比正常操作多几个百分点的计算资源。我们发现采用这样的机制对于减少超大MapReduce操作的总处理时间效果显著。例如，在5.3 节描述的排序任务，在关闭掉备用任务的情况下要多花44%的时间完成排序任务。</li>
-</ul>
-<h3 id="lecture1"><a href="#lecture1" class="headerlink" title="lecture1"></a>lecture1</h3><ul>
-<li>我们希望能找到一个抽象来描述分布式的存储或者计算，使得它们能够像非分布式系统一样有简单易懂的接口，将分布式特性隐藏在整个系统内<ul>
-<li>在讨论这些抽象时，第一个话题就是实现，常见的工具有：<ol>
-<li>RPC（Remote Procedure Call）。RPC的目标就是掩盖我们正在不可靠网络上通信的事实。</li>
-<li>线程。这是一种编程技术，使得我们可以利用多核心计算机。对于本课程而言，更重要的是，线程提供了一种结构化的并发操作方式，这样，从程序员角度来说可以简化并发操作。</li>
-</ol>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="可拓展性："><a href="#可拓展性：" class="headerlink" title="可拓展性："></a>可拓展性：</h4><ul>
-<li>这是一个很强大的特性。如果你构建了一个系统，并且只要增加计算机的数量，系统就能相应提高性能或者吞吐量，这将会是一个巨大的成果，因为计算机只需要花钱就可以买到。如果不增加计算机，就需要花钱雇程序员来重构这些系统，进而使这些系统有更高的性能，更高的运行效率，或者应用一个更好的算法之类的。花钱请程序员来修补这些代码，使它们运行的更快，通常会是一个昂贵的方法。</li>
-<li>变化的瓶颈：网站的木桶原理。当你只有1-2个用户时，一台计算机就可以运行web服务器和数据，或者一台计算机运行web服务器，一台计算机运行数据库。但是有可能你的网站一夜之间就火了起来，你发现可能有一亿人要登录你的网站。你该怎么修改你的网站，使它能够在一台计算机上支持一亿个用户？你可以花费大量时间极致优化你的网站，但是很显然你没有那个时间。<br>所以，为了提升性能，你要做的第一件事情就是购买更多的web服务器，然后把不同用户分到不同服务器上。这样，一部分用户可以去访问第一台web服务器，另一部分去访问第二台web服务器。因为你正在构建的是类似于Reddit的网站，所有的用户最终都需要看到相同的数据。所以，所有的web服务器都与后端数据库通信。这样，很长一段时间你都可以通过添加web服务器来并行的提高web服务器的代码效率。只要单台web服务器没有给数据库带来太多的压力，你可以在出现问题前添加很多web服务器。<br>是这种可扩展性并不是无限的。很可能在某个时间点你有了10台，20台，甚至100台web服务器，它们都在和同一个数据库通信。现在，数据库突然成为了瓶颈，并且增加更多的web服务器都无济于事了。所以很少有可以通过无限增加计算机来获取完整的可扩展性的场景。因为在某个临界点，你在系统中添加计算机的位置将不再是瓶颈了。在我们的例子中，如果你有了很多的web服务器，那么瓶颈就会转移到了别的地方，这里是从web服务器移到了数据库。这时，你几乎是必然要做一些重构工作。但是只有一个数据库时，很难重构它。而虽然可以将一个数据库拆分成多个数据库（进而提升性能），但是这需要大量的工作。</li>
-</ul>
-<h4 id="可用性："><a href="#可用性：" class="headerlink" title="可用性："></a>可用性：</h4><ul>
-<li>大型分布式系统中有一个大问题，那就是一些很罕见的问题会被放大。例如在我们的1000台计算机的集群中，总是有故障，要么是机器故障，要么是运行出错，要么是运行缓慢，要么是执行错误的任务。一个更常见的问题是网络，在一个有1000台计算机的网络中，会有大量的网络电缆和网络交换机，所以总是会有人踩着网线导致网线从接口掉出，或者交换机风扇故障导致交换机过热而不工作。在一个大规模分布式系统中，各个地方总是有一些小问题出现。所以大规模系统会将一些几乎不可能并且你不需要考虑的问题，变成一个持续不断的问题。</li>
-<li>所以，因为错误总会发生，必须要在设计时就考虑，系统能够屏蔽错误，或者说能够在出错时继续运行。同时，因为我们需要为第三方应用开发人员提供方便的抽象接口，我们的确也需要构建这样一种基础架构，它能够尽可能多的对应用开发人员屏蔽和掩盖错误。这样，应用开发人员就不需要处理各种各样的可能发生的错误。</li>
-<li>active redundancy 主动冗余 <ul>
-<li>好处与成本：主动冗余是在数据写入时立即创建数据的多个副本，这些副本存储在不同的位置或设备上并通过心跳机制等方法保持在相同的状态并以并行的方式对请求响应。主动冗余的优点是切换时间非常短，数据和计算都是热备份的。所以一旦系统出现错误，就可以立刻切换，基本不会影响系统的正常运行。但缺点也十分明显，所有的冗余模块都处于激活状态，并指向相同的任务，即使在主系统没有故障的情况下仍需要对请求做同样的处理，从而保障所有模块的运行结果一致性，就造成了资源的成倍增加。另外这种冗余通常通过复制或镜像数据来实现，因此其成本很高，不仅需要更多的设备，还需要一套可靠的同步机制。</li>
-</ul>
-</li>
-<li>passive redundancy 被动冗余<ul>
-<li>好处与成本：被动冗余是在主数据失效后才使用冗余或修复数据的过程。例如主系统出错后启用冗余系统，并把冗余系统同步到上一次主系统的同步状态，而修复通常通过使用冗余校验和或纠错码来实现。这种实现方法下，主系统和冗余之间的同步频率较低，消耗的资源也较少，但是相应的，出错后的处理恢复时间也比主动冗余要更长，因为数据的修复需要一定时间。总的来说，被动冗余是资源和可用性的平衡。</li>
-</ul>
-</li>
-<li>spare 备件<ul>
-<li>好处与成本：备件是将数据复制到独立的存储介质中，以防止原始数据丢失或损坏，并在需要的时候通过空闲机器导入备份。备件可以是完整的、增量的或差异的。备件所需要的资源最少，几乎可以说只需要存储空间把数据隔一段时间存起来即可。备件实现的难度和资源需求是这三种策略里面最低的，但是其对可用性的保证效果也最差，通过备件恢复系统的时间最长</li>
-</ul>
-</li>
-</ul>
-<h4 id="一致性"><a href="#一致性" class="headerlink" title="一致性"></a>一致性</h4><ul>
-<li>从性能和容错的角度来说，我们通常会有多个副本。在一个非分布式系统中，你通常只有一个服务器，一个表单。虽然不是绝对，但是通常来说对于put&#x2F;get的行为不会有歧义。直观上来说，put就是更新这个表单，get就是从表单中获取当前表单中存储的数据。但是在一个分布式系统中，由于复制或者缓存，数据可能存在于多个副本当中，于是就有了多个不同版本的key-value对。<ol>
-<li>假设服务器有两个副本，那么他们都有一个key-value表单，两个表单中key 1对应的值都是20。</li>
-<li>现在某个客户端发送了一个put请求，并希望将key 1改成值21。这里或许是KV服务里面的一个计数器。这个put请求发送给了第一台服务器，</li>
-<li>之后会发送给第二台服务器，因为相同的put请求需要发送给两个副本，这样这两个副本才能保持同步。但是就在客户端准备给第二台服务器发送相同请求时，这个客户端故障了，可能是电源故障或者操作系统的bug之类的。所以，现在我们处于一个不好的状态，我们发送了一个put请求，更新了一个副本的值是21，但是另一个副本的值仍然是20。</li>
-<li>如果现在某人通过get读取key为1的值，那么他可能获得21，也可能获得20，取决于get请求发送到了哪个服务器。即使规定了总是把请求先发送给第一个服务器，那么我们在构建容错系统时，如果第一台服务器故障了，请求也会发给第二台服务器。所以不管怎么样，总有一天你会面临暴露旧数据的风险。很可能是这样，最开始许多get请求都得到了21，之后过了一周突然一些get请求得到了一周之前的旧数据（20）。所以，这里不是很一致。并且，如果我们不小心的话，这个场景是可能发生的。所以，我们需要确定put&#x2F;get操作的一些规则。</li>
-</ol>
-</li>
-<li>强一致性：比如说get请求可以得到最近一次完成的put请求写入的值。这种一般也被称为强一致（Strong Consistency）</li>
-<li>弱一致性：弱一致是指，不保证get请求可以得到最近一次完成的put请求写入的值。</li>
-</ul>
-<h4 id="MapReduce-Job"><a href="#MapReduce-Job" class="headerlink" title="MapReduce Job"></a>MapReduce Job</h4><p><img src="/2024/05/23/MIT6824-Lab1/image.png"></p>
-<ul>
-<li>Job。整个MapReduce计算称为Job。</li>
-<li>Task。每一次MapReduce调用称为Task。</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/23/MIT6824-Lab1/" data-id="clwlwacxx0001qkvchsqj60mm" data-title="MIT6824-Lab1" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -757,7 +710,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/baosightintern/">baosightintern</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/baosigth-intern/">baosigth intern</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -772,7 +725,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
     </div>
   </div>
 
@@ -785,6 +738,14 @@
       <ul>
         
           <li>
+            <a href="/2024/10/09/OPC-UA/">OPC_UA</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/">vscode&amp;cmake配置c++项目构建环境</a>
+          </li>
+        
+          <li>
             <a href="/2024/09/17/LCR%E7%BB%8F%E5%85%B8%E9%A2%98/">LCR经典题</a>
           </li>
         
@@ -794,14 +755,6 @@
         
           <li>
             <a href="/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-46/">Leetcode101-回溯-46</a>
-          </li>
-        
-          <li>
-            <a href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-417/">Leetcode101-深度优先搜索-417</a>
-          </li>
-        
-          <li>
-            <a href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-547/">Leetcode101-深度优先搜索-547</a>
           </li>
         
       </ul>
