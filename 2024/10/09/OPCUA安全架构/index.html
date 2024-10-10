@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>OPCUA安全架构 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="目标 – 保证信息安全 认证 授权 保密性：数据加密，保证在传输，存储时的安全性 完整性：数据不应该有变化 可审计性：系统的行动应该记录在案 可用性  威胁 message flooding – 可用性 攻击者可以发送大量信息或包含大量请求的单个信息，目的是压垮 OPC UA 服务器或 CPU、TCP&#x2F;IP 栈、操作系统或文件系统等依赖组件。泛洪攻击可在多层进行，包括 OPC UA、SO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OPCUA安全架构">
+<meta property="og:url" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="目标 – 保证信息安全 认证 授权 保密性：数据加密，保证在传输，存储时的安全性 完整性：数据不应该有变化 可审计性：系统的行动应该记录在案 可用性  威胁 message flooding – 可用性 攻击者可以发送大量信息或包含大量请求的单个信息，目的是压垮 OPC UA 服务器或 CPU、TCP&#x2F;IP 栈、操作系统或文件系统等依赖组件。泛洪攻击可在多层进行，包括 OPC UA、SO">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png">
+<meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/message%20chunk.png">
+<meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/KEM%E8%BF%87%E7%A8%8B.png">
+<meta property="article:published_time" content="2024-10-09T08:50:36.000Z">
+<meta property="article:modified_time" content="2024-10-10T07:39:20.988Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-OPCUA安全架构" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" class="article-date">
+  <time class="dt-published" datetime="2024-10-09T08:50:36.000Z" itemprop="datePublished">2024-10-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/baosight-intern/">baosight intern</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      OPCUA安全架构
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="目标-–-保证信息安全"><a href="#目标-–-保证信息安全" class="headerlink" title="目标 – 保证信息安全"></a>目标 – 保证信息安全</h2><ol>
+<li>认证</li>
+<li>授权</li>
+<li>保密性：数据加密，保证在传输，存储时的安全性</li>
+<li>完整性：数据不应该有变化</li>
+<li>可审计性：系统的行动应该记录在案</li>
+<li>可用性</li>
+</ol>
+<h2 id="威胁"><a href="#威胁" class="headerlink" title="威胁"></a>威胁</h2><ul>
+<li>message flooding – 可用性<ul>
+<li>攻击者可以发送大量信息或包含大量请求的单个信息，目的是压垮 OPC UA 服务器或 CPU、TCP&#x2F;IP 栈、操作系统或文件系统等依赖组件。泛洪攻击可在多层进行，包括 OPC UA、SOAP、HTTP 或 TCP。 信息泛洪攻击既可以使用格式良好的信息，也可以使用格式不良的信息。在第一种情况下，攻击者可能是使用合法客户端向服务器发出大量请求的恶意人员。 有两种情况，一种是客户端没有与服务器建立会话，另一种是客户端与服务器建立了会话。信息泛滥可能会损害建立 OPC UA 会话或终止现有会话的能力。在第二种情况下，攻击者可以使用恶意客户端，向 OPC UA 服务器发送畸形信息，以耗尽服务器的资源。 一般来说，信息泛洪可能会损害与 OPC UA 实体的通信能力，并导致拒绝服务。 信息泛洪会影响可用性。</li>
+</ul>
+</li>
+<li>窃听 – 保密性</li>
+<li>消息伪造 – 完整性、可审计性和授权</li>
+<li>消息重放 – 授权</li>
+<li>畸形消息 – 完整性、可用性</li>
+</ul>
+<h2 id="消息安全协议"><a href="#消息安全协议" class="headerlink" title="消息安全协议"></a>消息安全协议</h2><h3 id="安全握手"><a href="#安全握手" class="headerlink" title="安全握手"></a>安全握手</h3><ul>
+<li><p>安全协议应该支持三种模式：无处理，签名，签名以及加密</p>
+<ul>
+<li>如果是无处理模式，仍然要提供一个逻辑上的信道和唯一的标识符</li>
+</ul>
+</li>
+<li><p>握手过程</p>
+<ul>
+<li><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png"><ol>
+<li>客户端请求打开安全信道：用客户端私钥签名，用服务端公钥加密</li>
+<li>服务端回复请求：用服务端私钥签名，用客户端公钥加密</li>
+<li>客户端创建会话请求：用客户端签名的秘钥签名，用服务端加密的秘钥加密</li>
+<li>服务端创建会话服务：用服务端签名的秘钥签名，用客户端加密的秘钥加密</li>
+</ol>
+</li>
+<li>一系列在安全握手中使用的安全算法被称为<strong>安全策略</strong>（Security Policy）</li>
+<li>每个安全协议映射指明了如何应用安全算法，以及如何使用安全策略的参数。</li>
+</ul>
+</li>
+<li><p>OPCUA中的安全算法</p>
+<ol>
+<li>（非）对称加密算法：用（非）对称秘钥加密的算法</li>
+<li>非对称秘钥加密算法（秘钥封装，Key Encapsulation）：用于使用非对称密钥加密密钥的算法。类似的有对称秘钥加密算法（秘钥包装，Key Wrapping）。这个名称不重要，说法比较多，关键是有对称还是非对称的秘钥进行对另一个秘钥的加密</li>
+<li>对称签名算法：用对称秘钥为消息签名</li>
+<li>秘钥衍生算法：用于加密的密钥长度由对称加密算法（SymmetricEncryptionAlgorithm）决定。用于创建对称签名的密钥长度取决于对称签名算法（SymmetricSignatureAlgorithm），可能与加密密钥长度不同。</li>
+<li>证书签名算法：用于签署用于非对称加密的证书。该算法是最低要求算法。允许使用更强的算法</li>
+</ol>
+</li>
+<li><p>OPCUA中的证书<br>OPC UA 应用程序使用证书来存储非对称加密操作所需的公钥。</p>
+</li>
+<li><p>OPCUA中的消息块结构<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/message%20chunk.png"></p>
+<ol>
+<li>message header：包含该消息块的一些基本信息，例如消息类型、消息大小、是否是最后一个消息块等</li>
+<li></li>
+</ol>
+</li>
+</ul>
+<h3 id="插曲：对称与非对称加密，加密与签名，公钥安全"><a href="#插曲：对称与非对称加密，加密与签名，公钥安全" class="headerlink" title="插曲：对称与非对称加密，加密与签名，公钥安全"></a>插曲：对称与非对称加密，加密与签名，公钥安全</h3><p>参考：<br><a target="_blank" rel="noopener" href="https://thiscute.world/posts/practical-cryptography-basics-7-asymmetric-key-ciphers/">https://thiscute.world/posts/practical-cryptography-basics-7-asymmetric-key-ciphers/</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/boweiqiang/article/details/105737017">https://blog.csdn.net/boweiqiang/article/details/105737017</a></p>
+<h4 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h4><ul>
+<li>使用相同的秘钥进行加密和解密，也就是消息发出方和接受方需要持有相同的秘钥</li>
+<li>常见的对称加密算法：AES（AES-128、AES-192、AES-256）、ChaCha20、Twofish、IDEA、Serpent、Camelia、RC6、CAST </li>
+<li>对称加密往往是分组加密的，也就是每次只加密固定大小的块，只有少部分是流式加密，即将数据逐字节加密为密文流。</li>
+<li>单一使用对称加密往往不能满足全部的要求，例如真实性和完整性。一个完整的对称加密方案包括：秘钥派生算法，对称加密算法（分组密码工作模式（用于将分组密码转换为流密码，如 CBC 或 CTR）+ 消息填充算法（如 PKCS7） + 分组密码算法（如 AES）需要借助这两种算法，才能加密任意大小的数据）和消息认证算法等</li>
+</ul>
+<h4 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h4><ul>
+<li>非对称加密&#x2F;公钥密码学可以在不安全的信道上安全地进行密钥交换，第三方即使监听到通信过程，但是 （几乎）无法破解出密钥。每个人只需要公开自己的公钥，就可以跟其他任何人安全地通信。</li>
+<li>常见的非对称加密算法：RSA、ECC（椭圆曲线密码学）、ElGamal、Diffie-Hellman、ECDH、ECDSA 和 EdDSA。许多密码算法都是以这些密码系统为基础实现的，例如 RSA 签名、RSA 加密&#x2F;解密、ECDH 密钥交换以及 ECDSA 和 EdDSA 签名。</li>
+<li>非对称加密方案：<ol>
+<li>秘钥封装机制：KEM<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/KEM%E8%BF%87%E7%A8%8B.png"></li>
+<li>集成加密方案 (IES) 在密钥封装机制（KEM）的基础上，添加了密钥派生算法 KDF、消息认证算法 MAC 等其他密码学算法以达成更高的安全性。在 IES 方案中，非对称算法（如 RSA 或 ECC）跟 KEM 一样，都是用于加密或封装对称密钥，然后通过对称密钥（如 AES 或 Chacha20）来加密输入消息。</li>
+</ol>
+</li>
+</ul>
+<h4 id="签名：防止篡改-加密：防止泄密"><a href="#签名：防止篡改-加密：防止泄密" class="headerlink" title="签名：防止篡改 &amp; 加密：防止泄密"></a>签名：防止篡改 &amp; 加密：防止泄密</h4><ul>
+<li>同时使用加密和签名？当用公钥加密后，还需要对明文做以下操作（这套算法保证明文改动会使得被私钥签名后的结果改动）：<ol>
+<li>用哈希算法抽取明文摘要（非对称算法很耗时，对大量数据加密需要很大算力）</li>
+<li>对这个明文摘要用私钥签名</li>
+</ol>
+</li>
+<li>验签时，用私钥得到解密后的明文，用公钥得到解签后的摘要，从明文中抽取摘要对比即可</li>
+</ul>
+<h4 id="CA证书：公钥安全"><a href="#CA证书：公钥安全" class="headerlink" title="CA证书：公钥安全"></a>CA证书：公钥安全</h4>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" data-id="cm22znk0m0002dcvc3t9f5khw" data-title="OPCUA安全架构" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/10/09/OPC-UA/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">OPCUA简介</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/baosight-intern/">baosight intern</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/baosigth-intern/">baosigth intern</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全架构</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/09/OPC-UA/">OPCUA简介</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/">vscode&amp;cmake配置c++项目构建环境</a>
+          </li>
+        
+          <li>
+            <a href="/2024/09/17/LCR%E7%BB%8F%E5%85%B8%E9%A2%98/">LCR经典题</a>
+          </li>
+        
+          <li>
+            <a href="/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-77/">Leetcode101-回溯-77</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
