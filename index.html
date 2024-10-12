@@ -69,6 +69,44 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-openssl" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/12/openssl/" class="article-date">
+  <time class="dt-published" datetime="2024-10-12T03:18:15.000Z" itemprop="datePublished">2024-10-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/12/openssl/">openssl</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/12/openssl/" data-id="cm25l6xsy00017wvc7qy4aygn" data-title="openssl" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-OPCUA安全架构" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" class="article-date">
@@ -87,7 +125,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全架构</a>
+      <a class="p-name article-title" href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全 &amp; HTTPS安全</a>
     </h1>
   
 
@@ -95,7 +133,8 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="目标-–-保证信息安全"><a href="#目标-–-保证信息安全" class="headerlink" title="目标 – 保证信息安全"></a>目标 – 保证信息安全</h2><ol>
+        <p>中文博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/mikasoi/article/details/84799078">https://blog.csdn.net/mikasoi/article/details/84799078</a></p>
+<h2 id="目标-–-保证信息安全"><a href="#目标-–-保证信息安全" class="headerlink" title="目标 – 保证信息安全"></a>目标 – 保证信息安全</h2><ol>
 <li>认证</li>
 <li>授权</li>
 <li>保密性：数据加密，保证在传输，存储时的安全性</li>
@@ -124,12 +163,31 @@
 <li><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png"><ol>
 <li>客户端请求打开安全信道：用客户端私钥签名，用服务端公钥加密</li>
 <li>服务端回复请求：用服务端私钥签名，用客户端公钥加密</li>
-<li>客户端创建会话请求：用客户端签名的秘钥签名，用服务端加密的秘钥加密</li>
-<li>服务端创建会话服务：用服务端签名的秘钥签名，用客户端加密的秘钥加密</li>
+<li>？客户端创建会话请求：用客户端签名的秘钥签名，用服务端加密的秘钥加密</li>
+<li>？服务端创建会话服务：用服务端签名的秘钥签名，用客户端加密的秘钥加密</li>
 </ol>
 </li>
 <li>一系列在安全握手中使用的安全算法被称为<strong>安全策略</strong>（Security Policy）</li>
 <li>每个安全协议映射指明了如何应用安全算法，以及如何使用安全策略的参数。</li>
+<li><strong>握手步骤详解</strong>：<ul>
+<li>OpenSecureChannel Requset：<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelRequest.png"><br>和秘钥有关的参数是clientCertificate（ApplicationInstance‌Certificate），这个证书指明了客户端身份，OpenSecureChannel请求需要用证书的私钥签名（证书公钥一般包含在证书中），也就是可以通过公钥验证证书合法性</li>
+<li>OpenSecureChannel Response：<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelResponse.png"></li>
+<li><strong>看到这里肯定有一个问题？客户端和服务端的加密公钥是怎么交换的？</strong><br>这里需要了解建立SecureChannel或者Session之前的事情<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/discoverProcess.png"><br>GetEndPoints服务返回服务端支持的所有EndPoints和需要建立连接所需的信息，注意：<strong>这个服务不需要message security，也就是不需要加密，但是仍然需要传输层安全</strong><br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/getEndPoints.png"><br>服务端证书就在EndPointDescription中了，证书格式和上面的客户端证书是一样的，客户端和服务端也就完成了秘钥的交换</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>OPCUA中的CS连接是一个嵌套结构：</p>
+<ol>
+<li>原始连接：通过打开与响应主机名和端口的TCP连接以及相应的HEL&#x2F;ACK握手创建原始连接</li>
+<li>SecureChannnel：SecureChannels是在原始TCP连接之上创建的。使用OpenSecureChannel请求和响应消息对建立SecureChannel。Channel即有前文提到的3个mode</li>
+<li>Session：在OpenSecureChannel上创建，确保不以明文发送凭据。建立Session需要两个消息交换：CreateSession和ActicateSession</li>
+</ol>
+</li>
+<li><p>SecureChannel:</p>
+<ul>
+<li>一个SecureChannel是一个在单客户端和单服务器间长期运行的逻辑连接，包含一组仅有客户端和服务端知晓的秘钥。这些秘钥用于网络上信息的验证和加密。SecureChannelService保证了CS之间可以安全地协商秘钥。</li>
+<li>SecureChannel的开放和关闭是由客户使用 SecureChannel Service</li>
 </ul>
 </li>
 <li><p>OPCUA中的安全算法</p>
@@ -142,11 +200,17 @@
 </ol>
 </li>
 <li><p>OPCUA中的证书<br>OPC UA 应用程序使用证书来存储非对称加密操作所需的公钥。</p>
+<ul>
+<li>服务端证书和客户端证书在OpenSecureChannel中使用，是ApplicationInstance Certificate Data</li>
+<li>服务端软件证书和客户端软件证书在CreateSession和ActicateSession中使用，是SignedSoftwareCertificate<br>Data Type</li>
+</ul>
 </li>
 <li><p>OPCUA中的消息块结构<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/message%20chunk.png"></p>
 <ol>
 <li>message header：包含该消息块的一些基本信息，例如消息类型、消息大小、是否是最后一个消息块等</li>
-<li></li>
+<li>security header：说明对报文进行了哪些加密操作。安全标头有两个版本，取决于应用于报文的安全类型（对称or非对称）</li>
+<li>sequence header：序列头可确保通过信道发送的每个信息的第一个加密块都以不同的数据开始（就是一个序列号）</li>
+<li>padding</li>
 </ol>
 </li>
 </ul>
@@ -174,11 +238,15 @@
 </li>
 <li>验签时，用私钥得到解密后的明文，用公钥得到解签后的摘要，从明文中抽取摘要对比即可</li>
 </ul>
-<h4 id="CA证书：公钥安全"><a href="#CA证书：公钥安全" class="headerlink" title="CA证书：公钥安全"></a>CA证书：公钥安全</h4>
+<h4 id="公钥获取-公钥安全：CA证书"><a href="#公钥获取-公钥安全：CA证书" class="headerlink" title="公钥获取 &amp; 公钥安全：CA证书"></a>公钥获取 &amp; 公钥安全：CA证书</h4><ul>
+<li>怎么获取到公钥？在公钥加密中，秘钥是可以明文传输或者直接通过公用储备库在硬件上存储的。但这是服务端公钥，客户端通过这些方法获取到服务端公钥之后，服务端如何获取到客户端公钥并进行回复呢？</li>
+<li>如何保证服务端公钥真实性？这就需要CA证书，证书是需要申请的，并由专门的数字证书认证机构(CA)通过非常严格的审核之后颁发的电子证书 (当然了是要钱的，安全级别越高价格越贵)。颁发证书的同时会产生一个私钥和公钥。私钥由服务端自己保存，不可泄漏。公钥则是附带在证书的信息中，可以公开的。证书本身也附带一个证书电子签名，这个签名用来验证证书的完整性和真实性，可以防止证书被篡改。<br><img src="/./OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/https%E7%9A%84%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B.png"></li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" data-id="cm22znk0m0002dcvc3t9f5khw" data-title="OPCUA安全架构" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" data-id="cm22znk0m0002dcvc3t9f5khw" data-title="OPCUA安全 &amp; HTTPS安全" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -190,9 +258,9 @@
 
 
   
-    <article id="post-OPC-UA" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+    <article id="post-OPCUA" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2024/10/09/OPC-UA/" class="article-date">
+    <a href="/2024/10/09/OPCUA/" class="article-date">
   <time class="dt-published" datetime="2024-10-09T02:41:39.000Z" itemprop="datePublished">2024-10-09</time>
 </a>
     
@@ -208,7 +276,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/09/OPC-UA/">OPCUA简介</a>
+      <a class="p-name article-title" href="/2024/10/09/OPCUA/">OPCUA简介</a>
     </h1>
   
 
@@ -236,13 +304,13 @@
 <li><strong>OPC UA 提供了一致、集成的地址空间和服务模型</strong>。这样，单个 OPC UA 服务器就能将数据、警报和事件以及历史记录集成到其地址空间中，并使用一套集成服务对其进行访问。这些服务还包括一个集成的安全模型。 OPC UA 还允许服务器为客户端提供从地址空间访问对象的类型定义。这就允许使用信息模型来描述地址空间的内容。OPC UA 允许以多种不同格式（包括二进制结构和 XML 文档）公开数据。数据格式可由 OPC、其他标准组织或供应商定义。通过地址空间，客户端可以向服务器查询描述数据格式的元数据。在许多情况下，对数据格式没有预先编程知识的客户端能够在运行时确定格式并正确使用数据。 OPC UA 增加了对节点间多种关系的支持，而不仅仅局限于单一的层次结构。这样，OPC UA 服务器就可以根据一组客户端通常希望查看数据的方式，以各种层次结构呈现数据。这种灵活性加上对类型定义的支持，使 OPC UA 适用于各种问题领域</li>
 <li><strong>OPC UA 旨在提供发布数据的稳健性</strong>。所有 OPC 服务器的一个主要特点是能够发布数据和事件通知。OPC UA 为客户端提供了快速检测和恢复与这些传输相关的通信故障的机制，而无需等待底层协议。</li>
 <li><strong>OPC UA 规范是分层的，将核心设计与底层计算技术和网络传输隔离开来</strong>。这使得 OPC UA 可以根据需要映射到未来的技术，而不会否定基本设计 – 多种数据格式和传输协议可以被支持</li>
-<li><img src="/2024/10/09/OPC-UA/1.png" alt="OPC_UA Server的结构"></li>
+<li><img src="/2024/10/09/OPCUA/1.png" alt="OPC_UA Server的结构"></li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/09/OPC-UA/" data-id="cm21mhyre0000ewvc2ox8h7qo" data-title="OPCUA简介" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/09/OPCUA/" data-id="cm25l6xsw00007wvcd8fo66u7" data-title="OPCUA简介" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -716,53 +784,6 @@
 
 
   
-    <article id="post-软件设计模式" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/06/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="article-date">
-  <time class="dt-published" datetime="2024-06-01T07:24:50.000Z" itemprop="datePublished">2024-06-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a>►<a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/06/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">软件设计模式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="软件设计模式部分"><a href="#软件设计模式部分" class="headerlink" title="软件设计模式部分"></a>软件设计模式部分</h1><h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><ol>
-<li>单一职责原则：一个对象只有单一的职责，也就是一个类只有一个引起他变化的原因。职责：数据职责，行为职责。单一职责原则是实现高内聚，低耦合的指导方针。</li>
-<li>开闭原则：对拓展开放，对修改关闭。一个模块应该可以在不修改代码的情况下改变行为</li>
-<li></li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/06/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" data-id="clwzwe0ow0000okvcf5f7fky9" data-title="软件设计模式" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -806,11 +827,15 @@
       <ul>
         
           <li>
-            <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全架构</a>
+            <a href="/2024/10/12/openssl/">openssl</a>
           </li>
         
           <li>
-            <a href="/2024/10/09/OPC-UA/">OPCUA简介</a>
+            <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全 &amp; HTTPS安全</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/09/OPCUA/">OPCUA简介</a>
           </li>
         
           <li>
@@ -819,10 +844,6 @@
         
           <li>
             <a href="/2024/09/17/LCR%E7%BB%8F%E5%85%B8%E9%A2%98/">LCR经典题</a>
-          </li>
-        
-          <li>
-            <a href="/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-77/">Leetcode101-回溯-77</a>
           </li>
         
       </ul>

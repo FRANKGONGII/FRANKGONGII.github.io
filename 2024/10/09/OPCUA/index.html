@@ -4,15 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>Category: baosight intern | Hexo</title>
+  <title>OPCUA简介 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/categories/baosight-intern/index.html">
+  <meta name="description" content="名词定义 AddressSpace：地址空间，OPC_UA服务器向客户暴露的数据集合。OPC UA 地址空间将其内容表示为一组由引用连接的节点。 Aggregate：计算原始数据派生值的函数 Alarm：一种一般需要确认的事件 Attribute：Node的原始数据 Condition：通用术语，是一种扩展的一个事件 Communication Stack：应用程序和硬件之间的一套分层软件模块，提">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OPCUA简介">
+<meta property="og:url" content="http://example.com/2024/10/09/OPCUA/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="名词定义 AddressSpace：地址空间，OPC_UA服务器向客户暴露的数据集合。OPC UA 地址空间将其内容表示为一组由引用连接的节点。 Aggregate：计算原始数据派生值的函数 Alarm：一种一般需要确认的事件 Attribute：Node的原始数据 Condition：通用术语，是一种扩展的一个事件 Communication Stack：应用程序和硬件之间的一套分层软件模块，提">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/10/09/OPCUA/1.png">
+<meta property="article:published_time" content="2024-10-09T02:41:39.000Z">
+<meta property="article:modified_time" content="2024-10-10T00:58:43.482Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/10/09/OPCUA/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -67,58 +73,87 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2024" class="archive-year">2024</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" class="archive-article-date">
-  <time class="dt-published" datetime="2024-10-09T08:50:36.000Z" itemprop="datePublished">Oct 9</time>
+        <section id="main"><article id="post-OPCUA" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/09/OPCUA/" class="article-date">
+  <time class="dt-published" datetime="2024-10-09T02:41:39.000Z" itemprop="datePublished">2024-10-09</time>
 </a>
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/baosight-intern/">baosight intern</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全 &amp; HTTPS安全</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      OPCUA简介
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2024/10/09/OPCUA/" class="archive-article-date">
-  <time class="dt-published" datetime="2024-10-09T02:41:39.000Z" itemprop="datePublished">Oct 9</time>
-</a>
+    <div class="e-content article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/10/09/OPCUA/">OPCUA简介</a>
-    </h1>
-  
+        <h2 id="名词定义"><a href="#名词定义" class="headerlink" title="名词定义"></a>名词定义</h2><ul>
+<li>AddressSpace：地址空间，OPC_UA服务器向客户暴露的数据集合。OPC UA 地址空间将其内容表示为一组由引用连接的节点。</li>
+<li>Aggregate：计算原始数据派生值的函数</li>
+<li>Alarm：一种一般需要确认的事件</li>
+<li>Attribute：Node的原始数据</li>
+<li>Condition：通用术语，是一种扩展的一个事件</li>
+<li>Communication Stack：应用程序和硬件之间的一套分层软件模块，提供各种功能，对发送的信息进行编码、加密和格式化，并对接收的信息进行解码、解密和解包</li>
+<li>Complex Data：包含不止一种原始数据的数据结构，如结构体</li>
+<li>Discovery：OPC UA 客户端获取 OPC UA 服务器信息（包括端点和安全信息）的过程</li>
+<li>MoniteredItem: 服务器中由客户定义的实体，用于监控属性或事件提示器的新值或事件发生情况，并为其生成通知</li>
+<li>Node: 地址空间的重要组成部分</li>
+<li>Profile：配置文件的特定功能集，服务器可声称支持这些功能集</li>
+<li>Object：对象节点，代表系统的物理或抽象元素</li>
+</ul>
+<h2 id="什么是-OPC-UA-规范-开放式产品通信统一架构，Open-Platform-Communications-Unified-Architecture"><a href="#什么是-OPC-UA-规范-开放式产品通信统一架构，Open-Platform-Communications-Unified-Architecture" class="headerlink" title="什么是 OPC_UA 规范 (开放式产品通信统一架构，Open Platform Communications Unified Architecture)"></a>什么是 OPC_UA 规范 (开放式产品通信统一架构，Open Platform Communications Unified Architecture)</h2><ul>
+<li>OPC UA 适用于现场设备、控制系统、制造执行系统和企业资源规划系统等应用领域的制造软件。这些系统旨在为工业流程交换信息并使用指令和控制。OPC UA 定义了一个通用基础架构模型，以促进这种信息交换</li>
+<li><strong>OPC UA 定义了服务器可提供的服务集，各个服务器向客户端说明它们支持哪些服务集</strong>。信息使用 OPC UA 定义的和供应商定义的数据类型进行传递，服务器定义了客户端可以动态发现的对象模型。 服务器可提供对当前数据和历史数据的访问，以及通知客户端重要变化的警报和事件。OPC UA 可以映射到各种通信协议上，数据可以用不同的方式编码，以权衡可移植性和效率。OPC UA是独立于平台的协议</li>
+<li><strong>OPC UA 提供了一致、集成的地址空间和服务模型</strong>。这样，单个 OPC UA 服务器就能将数据、警报和事件以及历史记录集成到其地址空间中，并使用一套集成服务对其进行访问。这些服务还包括一个集成的安全模型。 OPC UA 还允许服务器为客户端提供从地址空间访问对象的类型定义。这就允许使用信息模型来描述地址空间的内容。OPC UA 允许以多种不同格式（包括二进制结构和 XML 文档）公开数据。数据格式可由 OPC、其他标准组织或供应商定义。通过地址空间，客户端可以向服务器查询描述数据格式的元数据。在许多情况下，对数据格式没有预先编程知识的客户端能够在运行时确定格式并正确使用数据。 OPC UA 增加了对节点间多种关系的支持，而不仅仅局限于单一的层次结构。这样，OPC UA 服务器就可以根据一组客户端通常希望查看数据的方式，以各种层次结构呈现数据。这种灵活性加上对类型定义的支持，使 OPC UA 适用于各种问题领域</li>
+<li><strong>OPC UA 旨在提供发布数据的稳健性</strong>。所有 OPC 服务器的一个主要特点是能够发布数据和事件通知。OPC UA 为客户端提供了快速检测和恢复与这些传输相关的通信故障的机制，而无需等待底层协议。</li>
+<li><strong>OPC UA 规范是分层的，将核心设计与底层计算技术和网络传输隔离开来</strong>。这使得 OPC UA 可以根据需要映射到未来的技术，而不会否定基本设计 – 多种数据格式和传输协议可以被支持</li>
+<li><img src="/2024/10/09/OPCUA/1.png" alt="OPC_UA Server的结构"></li>
+</ul>
 
-    </header>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/09/OPCUA/" data-id="cm25l6xsw00007wvcd8fo66u7" data-title="OPCUA简介" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          OPCUA安全 &amp; HTTPS安全
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">vscode&amp;cmake配置c++项目构建环境</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
 
 
 </section>

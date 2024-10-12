@@ -4,20 +4,25 @@
   <meta charset="utf-8">
   
   
-  <title>OPCUA安全架构 | Hexo</title>
+  <title>OPCUA安全 &amp; HTTPS安全 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="目标 – 保证信息安全 认证 授权 保密性：数据加密，保证在传输，存储时的安全性 完整性：数据不应该有变化 可审计性：系统的行动应该记录在案 可用性  威胁 message flooding – 可用性 攻击者可以发送大量信息或包含大量请求的单个信息，目的是压垮 OPC UA 服务器或 CPU、TCP&#x2F;IP 栈、操作系统或文件系统等依赖组件。泛洪攻击可在多层进行，包括 OPC UA、SO">
+  <meta name="description" content="中文博客：https:&#x2F;&#x2F;blog.csdn.net&#x2F;mikasoi&#x2F;article&#x2F;details&#x2F;84799078 目标 – 保证信息安全 认证 授权 保密性：数据加密，保证在传输，存储时的安全性 完整性：数据不应该有变化 可审计性：系统的行动应该记录在案 可用性  威胁 message flooding – 可用性 攻击者可以发送大量信息或包含大量请求的单个信息，目的是压垮 OPC UA 服">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OPCUA安全架构">
+<meta property="og:title" content="OPCUA安全 &amp; HTTPS安全">
 <meta property="og:url" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="目标 – 保证信息安全 认证 授权 保密性：数据加密，保证在传输，存储时的安全性 完整性：数据不应该有变化 可审计性：系统的行动应该记录在案 可用性  威胁 message flooding – 可用性 攻击者可以发送大量信息或包含大量请求的单个信息，目的是压垮 OPC UA 服务器或 CPU、TCP&#x2F;IP 栈、操作系统或文件系统等依赖组件。泛洪攻击可在多层进行，包括 OPC UA、SO">
+<meta property="og:description" content="中文博客：https:&#x2F;&#x2F;blog.csdn.net&#x2F;mikasoi&#x2F;article&#x2F;details&#x2F;84799078 目标 – 保证信息安全 认证 授权 保密性：数据加密，保证在传输，存储时的安全性 完整性：数据不应该有变化 可审计性：系统的行动应该记录在案 可用性  威胁 message flooding – 可用性 攻击者可以发送大量信息或包含大量请求的单个信息，目的是压垮 OPC UA 服">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png">
+<meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelRequest.png">
+<meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelResponse.png">
+<meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/discoverProcess.png">
+<meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/getEndPoints.png">
 <meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/message%20chunk.png">
 <meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/KEM%E8%BF%87%E7%A8%8B.png">
+<meta property="og:image" content="http://example.com/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/https%E7%9A%84%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B.png">
 <meta property="article:published_time" content="2024-10-09T08:50:36.000Z">
-<meta property="article:modified_time" content="2024-10-10T07:39:20.988Z">
+<meta property="article:modified_time" content="2024-10-11T06:36:53.219Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png">
@@ -93,7 +98,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      OPCUA安全架构
+      OPCUA安全 &amp; HTTPS安全
     </h1>
   
 
@@ -101,7 +106,8 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="目标-–-保证信息安全"><a href="#目标-–-保证信息安全" class="headerlink" title="目标 – 保证信息安全"></a>目标 – 保证信息安全</h2><ol>
+        <p>中文博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/mikasoi/article/details/84799078">https://blog.csdn.net/mikasoi/article/details/84799078</a></p>
+<h2 id="目标-–-保证信息安全"><a href="#目标-–-保证信息安全" class="headerlink" title="目标 – 保证信息安全"></a>目标 – 保证信息安全</h2><ol>
 <li>认证</li>
 <li>授权</li>
 <li>保密性：数据加密，保证在传输，存储时的安全性</li>
@@ -130,12 +136,31 @@
 <li><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png"><ol>
 <li>客户端请求打开安全信道：用客户端私钥签名，用服务端公钥加密</li>
 <li>服务端回复请求：用服务端私钥签名，用客户端公钥加密</li>
-<li>客户端创建会话请求：用客户端签名的秘钥签名，用服务端加密的秘钥加密</li>
-<li>服务端创建会话服务：用服务端签名的秘钥签名，用客户端加密的秘钥加密</li>
+<li>？客户端创建会话请求：用客户端签名的秘钥签名，用服务端加密的秘钥加密</li>
+<li>？服务端创建会话服务：用服务端签名的秘钥签名，用客户端加密的秘钥加密</li>
 </ol>
 </li>
 <li>一系列在安全握手中使用的安全算法被称为<strong>安全策略</strong>（Security Policy）</li>
 <li>每个安全协议映射指明了如何应用安全算法，以及如何使用安全策略的参数。</li>
+<li><strong>握手步骤详解</strong>：<ul>
+<li>OpenSecureChannel Requset：<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelRequest.png"><br>和秘钥有关的参数是clientCertificate（ApplicationInstance‌Certificate），这个证书指明了客户端身份，OpenSecureChannel请求需要用证书的私钥签名（证书公钥一般包含在证书中），也就是可以通过公钥验证证书合法性</li>
+<li>OpenSecureChannel Response：<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelResponse.png"></li>
+<li><strong>看到这里肯定有一个问题？客户端和服务端的加密公钥是怎么交换的？</strong><br>这里需要了解建立SecureChannel或者Session之前的事情<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/discoverProcess.png"><br>GetEndPoints服务返回服务端支持的所有EndPoints和需要建立连接所需的信息，注意：<strong>这个服务不需要message security，也就是不需要加密，但是仍然需要传输层安全</strong><br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/getEndPoints.png"><br>服务端证书就在EndPointDescription中了，证书格式和上面的客户端证书是一样的，客户端和服务端也就完成了秘钥的交换</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>OPCUA中的CS连接是一个嵌套结构：</p>
+<ol>
+<li>原始连接：通过打开与响应主机名和端口的TCP连接以及相应的HEL&#x2F;ACK握手创建原始连接</li>
+<li>SecureChannnel：SecureChannels是在原始TCP连接之上创建的。使用OpenSecureChannel请求和响应消息对建立SecureChannel。Channel即有前文提到的3个mode</li>
+<li>Session：在OpenSecureChannel上创建，确保不以明文发送凭据。建立Session需要两个消息交换：CreateSession和ActicateSession</li>
+</ol>
+</li>
+<li><p>SecureChannel:</p>
+<ul>
+<li>一个SecureChannel是一个在单客户端和单服务器间长期运行的逻辑连接，包含一组仅有客户端和服务端知晓的秘钥。这些秘钥用于网络上信息的验证和加密。SecureChannelService保证了CS之间可以安全地协商秘钥。</li>
+<li>SecureChannel的开放和关闭是由客户使用 SecureChannel Service</li>
 </ul>
 </li>
 <li><p>OPCUA中的安全算法</p>
@@ -148,11 +173,17 @@
 </ol>
 </li>
 <li><p>OPCUA中的证书<br>OPC UA 应用程序使用证书来存储非对称加密操作所需的公钥。</p>
+<ul>
+<li>服务端证书和客户端证书在OpenSecureChannel中使用，是ApplicationInstance Certificate Data</li>
+<li>服务端软件证书和客户端软件证书在CreateSession和ActicateSession中使用，是SignedSoftwareCertificate<br>Data Type</li>
+</ul>
 </li>
 <li><p>OPCUA中的消息块结构<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/message%20chunk.png"></p>
 <ol>
 <li>message header：包含该消息块的一些基本信息，例如消息类型、消息大小、是否是最后一个消息块等</li>
-<li></li>
+<li>security header：说明对报文进行了哪些加密操作。安全标头有两个版本，取决于应用于报文的安全类型（对称or非对称）</li>
+<li>sequence header：序列头可确保通过信道发送的每个信息的第一个加密块都以不同的数据开始（就是一个序列号）</li>
+<li>padding</li>
 </ol>
 </li>
 </ul>
@@ -180,11 +211,15 @@
 </li>
 <li>验签时，用私钥得到解密后的明文，用公钥得到解签后的摘要，从明文中抽取摘要对比即可</li>
 </ul>
-<h4 id="CA证书：公钥安全"><a href="#CA证书：公钥安全" class="headerlink" title="CA证书：公钥安全"></a>CA证书：公钥安全</h4>
+<h4 id="公钥获取-公钥安全：CA证书"><a href="#公钥获取-公钥安全：CA证书" class="headerlink" title="公钥获取 &amp; 公钥安全：CA证书"></a>公钥获取 &amp; 公钥安全：CA证书</h4><ul>
+<li>怎么获取到公钥？在公钥加密中，秘钥是可以明文传输或者直接通过公用储备库在硬件上存储的。但这是服务端公钥，客户端通过这些方法获取到服务端公钥之后，服务端如何获取到客户端公钥并进行回复呢？</li>
+<li>如何保证服务端公钥真实性？这就需要CA证书，证书是需要申请的，并由专门的数字证书认证机构(CA)通过非常严格的审核之后颁发的电子证书 (当然了是要钱的，安全级别越高价格越贵)。颁发证书的同时会产生一个私钥和公钥。私钥由服务端自己保存，不可泄漏。公钥则是附带在证书的信息中，可以公开的。证书本身也附带一个证书电子签名，这个签名用来验证证书的完整性和真实性，可以防止证书被篡改。<br><img src="/./OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/https%E7%9A%84%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B.png"></li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" data-id="cm22znk0m0002dcvc3t9f5khw" data-title="OPCUA安全架构" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" data-id="cm22znk0m0002dcvc3t9f5khw" data-title="OPCUA安全 &amp; HTTPS安全" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -194,8 +229,17 @@
     
 <nav id="article-nav">
   
+    <a href="/2024/10/12/openssl/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          openssl
+        
+      </div>
+    </a>
   
-    <a href="/2024/10/09/OPC-UA/" id="article-nav-older" class="article-nav-link-wrap">
+  
+    <a href="/2024/10/09/OPCUA/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">OPCUA简介</div>
     </a>
@@ -242,11 +286,15 @@
       <ul>
         
           <li>
-            <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全架构</a>
+            <a href="/2024/10/12/openssl/">openssl</a>
           </li>
         
           <li>
-            <a href="/2024/10/09/OPC-UA/">OPCUA简介</a>
+            <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全 &amp; HTTPS安全</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/09/OPCUA/">OPCUA简介</a>
           </li>
         
           <li>
@@ -255,10 +303,6 @@
         
           <li>
             <a href="/2024/09/17/LCR%E7%BB%8F%E5%85%B8%E9%A2%98/">LCR经典题</a>
-          </li>
-        
-          <li>
-            <a href="/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-77/">Leetcode101-回溯-77</a>
           </li>
         
       </ul>
