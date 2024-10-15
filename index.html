@@ -69,6 +69,49 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-LeetCode周赛" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/14/LeetCode%E5%91%A8%E8%B5%9B/" class="article-date">
+  <time class="dt-published" datetime="2024-10-14T15:08:55.000Z" itemprop="datePublished">2024-10-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/14/LeetCode%E5%91%A8%E8%B5%9B/">LeetCode周赛</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="双周赛141"><a href="#双周赛141" class="headerlink" title="双周赛141"></a>双周赛141</h2><p>+ </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/14/LeetCode%E5%91%A8%E8%B5%9B/" data-id="cm2a0umvg00006kvc3qf17x8z" data-title="LeetCode周赛" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-OPCUA-open62541支持加密" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/" class="article-date">
@@ -146,6 +189,11 @@
 <h3 id="使用prosys客户端测试"><a href="#使用prosys客户端测试" class="headerlink" title="使用prosys客户端测试"></a>使用prosys客户端测试</h3><ul>
 <li>先把客户端的证书复制到certs目录，因为要加入服务端的信任列表<br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B9EA172C0-D73A-40f8-B26E-F7B60017F434%7D.png"><br>在文件夹打开然后复制证书，在server的启动命令后加入对应证书文件目录即可</li>
 <li>然后连接时不选None模式，选Sign&#x2F;Sign&amp;Encrypt然后连接即可</li>
+</ul>
+<h3 id="使用客户证书进行连接认证"><a href="#使用客户证书进行连接认证" class="headerlink" title="使用客户证书进行连接认证"></a>使用客户证书进行连接认证</h3><p>按照上述方法执行后，客户认证选择匿名是可以成功连接，也确实是加密通信，现在尝试实现通过证书的客户认证。但是初步尝试没啥效果（生成一组新的私钥-证书对，并加入服务端的授信列表后，还是不能成功连接：显示用户identityToken有效但服务端拒绝。具体的报错代码在activateSession中，抛出<code>Bad_IdentityTokenRejected (0x80210000) &quot;The user identity token is valid but the server has rejected it.&quot;  Failed to activate Session.</code>）</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><ul>
+<li>最终排查发现open62541在activateSession中检查证书时如果证书不是用户证书，就会拒绝。而我一开始使用的openssl生成的x509证书没有指明是不是用户证书。</li>
+<li>使用以下方法生成用户证书，在prosys的客户端中的用户认证中输入证书+私钥+私钥密码，然后在上述server demo启动路径中加上证书即可<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -key browser_private_key.pem -out user.csr</span><br><span class="line">openssl x509 -req -<span class="keyword">in</span> user.csr -signkey browswe_private_key.pem -out user_cert.pem -days 365 -extensions v3_req -extfile &lt;(<span class="built_in">echo</span> <span class="string">&quot;[v3_req]&quot;</span>; <span class="built_in">echo</span> <span class="string">&quot;basicConstraints=CA:FALSE&quot;</span>)</span><br></pre></td></tr></table></figure></li>
 </ul>
 
       
@@ -835,55 +883,6 @@
 
 
   
-    <article id="post-Leetcode101-深度优先搜索-547" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-547/" class="article-date">
-  <time class="dt-published" datetime="2024-07-28T03:38:16.000Z" itemprop="datePublished">2024-07-28</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/LeetCode101/">LeetCode101</a>►<a class="article-category-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-547/">Leetcode101-深度优先搜索-547</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><p>有 n 个城市，其中一些彼此相连，另一些没有相连。如果城市 a 与城市 b 直接相连，且城市 b 与城市 c 直接相连，那么城市 a 与城市 c 间接相连。<br>省份是一组直接或间接相连的城市，组内不含其他没有相连的城市。<br>给你一个 n x n 的矩阵 isConnected ，其中 isConnected[i][j] &#x3D; 1 表示第 i 个城市和第 j 个城市直接相连，而 isConnected[i][j] &#x3D; 0 表示二者不直接相连。<br>返回矩阵中 省份 的数量。</p>
-</li>
-<li><p>思路：在DFS的过程中直接标记就行</p>
-</li>
-<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">findCircleNum</span><span class="params">(<span class="type">int</span>[][] isConnected)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">cities</span> <span class="operator">=</span> isConnected.length;</span><br><span class="line">        <span class="type">boolean</span>[] visited = <span class="keyword">new</span> <span class="title class_">boolean</span>[cities];</span><br><span class="line">        <span class="type">int</span> <span class="variable">provinces</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; cities; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!visited[i]) &#123;</span><br><span class="line">                dfs(isConnected, visited, cities, i);</span><br><span class="line">                provinces++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> provinces;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span>[][] isConnected, <span class="type">boolean</span>[] visited, <span class="type">int</span> cities, <span class="type">int</span> i)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; cities; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (isConnected[i][j] == <span class="number">1</span> &amp;&amp; !visited[j]) &#123;</span><br><span class="line">                visited[j] = <span class="literal">true</span>;</span><br><span class="line">                dfs(isConnected, visited, cities, j);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-547/" data-id="clz50kjcu0000hovcf5gye81t" data-title="Leetcode101-深度优先搜索-547" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -927,6 +926,10 @@
       <ul>
         
           <li>
+            <a href="/2024/10/14/LeetCode%E5%91%A8%E8%B5%9B/">LeetCode周赛</a>
+          </li>
+        
+          <li>
             <a href="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/">OPCUA_open62541支持加密</a>
           </li>
         
@@ -940,10 +943,6 @@
         
           <li>
             <a href="/2024/10/09/OPCUA/">OPCUA简介</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/">vscode&amp;cmake配置c++项目构建环境</a>
           </li>
         
       </ul>

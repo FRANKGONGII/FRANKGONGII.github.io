@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B036241D9-5F41-43c2-93B9-739E5DC88A7C%7D.png">
 <meta property="og:image" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B9EA172C0-D73A-40f8-B26E-F7B60017F434%7D.png">
 <meta property="article:published_time" content="2024-10-12T07:03:06.000Z">
-<meta property="article:modified_time" content="2024-10-14T07:19:41.690Z">
+<meta property="article:modified_time" content="2024-10-15T05:46:55.037Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B44223EAE-8801-420c-B0BE-616880056EF6%7D.png">
@@ -155,6 +155,11 @@
 <li>先把客户端的证书复制到certs目录，因为要加入服务端的信任列表<br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B9EA172C0-D73A-40f8-B26E-F7B60017F434%7D.png"><br>在文件夹打开然后复制证书，在server的启动命令后加入对应证书文件目录即可</li>
 <li>然后连接时不选None模式，选Sign&#x2F;Sign&amp;Encrypt然后连接即可</li>
 </ul>
+<h3 id="使用客户证书进行连接认证"><a href="#使用客户证书进行连接认证" class="headerlink" title="使用客户证书进行连接认证"></a>使用客户证书进行连接认证</h3><p>按照上述方法执行后，客户认证选择匿名是可以成功连接，也确实是加密通信，现在尝试实现通过证书的客户认证。但是初步尝试没啥效果（生成一组新的私钥-证书对，并加入服务端的授信列表后，还是不能成功连接：显示用户identityToken有效但服务端拒绝。具体的报错代码在activateSession中，抛出<code>Bad_IdentityTokenRejected (0x80210000) &quot;The user identity token is valid but the server has rejected it.&quot;  Failed to activate Session.</code>）</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><ul>
+<li>最终排查发现open62541在activateSession中检查证书时如果证书不是用户证书，就会拒绝。而我一开始使用的openssl生成的x509证书没有指明是不是用户证书。</li>
+<li>使用以下方法生成用户证书，在prosys的客户端中的用户认证中输入证书+私钥+私钥密码，然后在上述server demo启动路径中加上证书即可<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -key browser_private_key.pem -out user.csr</span><br><span class="line">openssl x509 -req -<span class="keyword">in</span> user.csr -signkey browswe_private_key.pem -out user_cert.pem -days 365 -extensions v3_req -extfile &lt;(<span class="built_in">echo</span> <span class="string">&quot;[v3_req]&quot;</span>; <span class="built_in">echo</span> <span class="string">&quot;basicConstraints=CA:FALSE&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
 
       
     </div>
@@ -168,6 +173,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2024/10/14/LeetCode%E5%91%A8%E8%B5%9B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          LeetCode周赛
+        
+      </div>
+    </a>
   
   
     <a href="/2024/10/12/SSL%20&%20TLS%20&%20openssl/" id="article-nav-older" class="article-nav-link-wrap">
@@ -217,6 +231,10 @@
       <ul>
         
           <li>
+            <a href="/2024/10/14/LeetCode%E5%91%A8%E8%B5%9B/">LeetCode周赛</a>
+          </li>
+        
+          <li>
             <a href="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/">OPCUA_open62541支持加密</a>
           </li>
         
@@ -230,10 +248,6 @@
         
           <li>
             <a href="/2024/10/09/OPCUA/">OPCUA简介</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/">vscode&amp;cmake配置c++项目构建环境</a>
           </li>
         
       </ul>
