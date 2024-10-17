@@ -6,20 +6,21 @@
   
   <title>OPCUA_open62541支持加密 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="背景 使用open62541时，在browser里面选择none的Channel Mode的时候可以连上，选其他加密或者签名的模式就不行可以看到如果是None模式，在GetEndPoints时Server的返回值里的EndPoint都没有带上证书（Missing）如果选择加密或者加密&amp;签名，结果如下，显示服务器不支持，同时抓包结果证书也是空，因此初步判断是服务器上缺少了证书之类的连接所需配">
+  <meta name="description" content="前置背景 使用open62541时，在browser里面选择none的Channel Mode的时候可以连上，选其他加密或者签名的模式就不行可以看到如果是None模式，在GetEndPoints时Server的返回值里的EndPoint都没有带上证书（Missing）如果选择加密或者加密&amp;签名，结果如下，显示服务器不支持，同时抓包结果证书也是空，因此初步判断是服务器上缺少了证书之类的连接所">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OPCUA_open62541支持加密">
 <meta property="og:url" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="背景 使用open62541时，在browser里面选择none的Channel Mode的时候可以连上，选其他加密或者签名的模式就不行可以看到如果是None模式，在GetEndPoints时Server的返回值里的EndPoint都没有带上证书（Missing）如果选择加密或者加密&amp;签名，结果如下，显示服务器不支持，同时抓包结果证书也是空，因此初步判断是服务器上缺少了证书之类的连接所需配">
+<meta property="og:description" content="前置背景 使用open62541时，在browser里面选择none的Channel Mode的时候可以连上，选其他加密或者签名的模式就不行可以看到如果是None模式，在GetEndPoints时Server的返回值里的EndPoint都没有带上证书（Missing）如果选择加密或者加密&amp;签名，结果如下，显示服务器不支持，同时抓包结果证书也是空，因此初步判断是服务器上缺少了证书之类的连接所">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B44223EAE-8801-420c-B0BE-616880056EF6%7D.png">
 <meta property="og:image" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7BF7CD931D-E0B4-4021-BBAA-7A3E02B41FB0%7D.png">
 <meta property="og:image" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B97A893F3-51D1-4e47-868A-65C608B9D183%7D.png">
 <meta property="og:image" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B036241D9-5F41-43c2-93B9-739E5DC88A7C%7D.png">
 <meta property="og:image" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B9EA172C0-D73A-40f8-B26E-F7B60017F434%7D.png">
+<meta property="og:image" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7BD2E954E7-5400-476a-9748-F03A87E9411A%7D.png">
 <meta property="article:published_time" content="2024-10-12T07:03:06.000Z">
-<meta property="article:modified_time" content="2024-10-15T05:46:55.037Z">
+<meta property="article:modified_time" content="2024-10-15T06:49:46.394Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B44223EAE-8801-420c-B0BE-616880056EF6%7D.png">
@@ -103,10 +104,10 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><ul>
+        <h2 id="前置背景"><a href="#前置背景" class="headerlink" title="前置背景"></a>前置背景</h2><ul>
 <li>使用open62541时，在browser里面选择none的Channel Mode的时候可以连上，选其他加密或者签名的模式就不行<br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B44223EAE-8801-420c-B0BE-616880056EF6%7D.png"><br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7BF7CD931D-E0B4-4021-BBAA-7A3E02B41FB0%7D.png"><br>可以看到如果是None模式，在GetEndPoints时Server的返回值里的EndPoint都没有带上证书（Missing）<br>如果选择加密或者加密&amp;签名，结果如下，显示服务器不支持，同时抓包结果证书也是空，因此初步判断是服务器上缺少了证书之类的连接所需配置：<br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B97A893F3-51D1-4e47-868A-65C608B9D183%7D.png"></li>
 </ul>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/whahu1989/article/details/107281639">https://blog.csdn.net/whahu1989/article/details/107281639</a></p>
+<h2 id="使用browser的实现"><a href="#使用browser的实现" class="headerlink" title="使用browser的实现"></a>使用browser的实现</h2><p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/whahu1989/article/details/107281639">https://blog.csdn.net/whahu1989/article/details/107281639</a></p>
 <h3 id="CMake配置"><a href="#CMake配置" class="headerlink" title="CMake配置"></a>CMake配置</h3><ul>
 <li>在根目录下的CMakeLists.txt中，找到UA_ENABLE_AMALGAMATION配置，改成ON</li>
 <li>同样的找到UA_ENABLE_ENCRYPTION 和 UA_ENABLE_ENCRYPTION_OPENSSL，前者改成”OPENSSL”，后者改成”ON”。前者的值可能根据open62541的版本有所不同，低版本改成”ON”<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># security provider</span></span><br><span class="line"><span class="keyword">set</span>(UA_ENCRYPTION_PLUGINS <span class="string">&quot;MBEDTLS&quot;</span> <span class="string">&quot;OPENSSL&quot;</span> <span class="string">&quot;LIBRESSL&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(UA_ENABLE_ENCRYPTION <span class="string">&quot;OPENSSL&quot;</span> CACHE <span class="keyword">STRING</span> <span class="string">&quot;Encryption support (LibreSSL EXPERIMENTAL)&quot;</span>)</span><br><span class="line"><span class="keyword">SET_PROPERTY</span>(CACHE UA_ENABLE_ENCRYPTION PROPERTY STRINGS <span class="string">&quot;OFF&quot;</span> <span class="variable">$&#123;UA_ENCRYPTION_PLUGINS&#125;</span>)</span><br><span class="line"><span class="keyword">option</span>(UA_ENABLE_ENCRYPTION_OPENSSL <span class="string">&quot;Deprecated: Enable encryption support (uses openssl)&quot;</span> <span class="keyword">ON</span>)</span><br><span class="line"><span class="keyword">mark_as_advanced</span>(UA_ENABLE_ENCRYPTION_OPENSSL)</span><br><span class="line"><span class="keyword">option</span>(UA_ENABLE_ENCRYPTION_MBEDTLS <span class="string">&quot;Deprecated: Enable encryption support (uses mbedTLS)&quot;</span> <span class="keyword">OFF</span>)</span><br><span class="line"><span class="keyword">mark_as_advanced</span>(UA_ENABLE_ENCRYPTION_MBEDTLS)</span><br></pre></td></tr></table></figure></li>
@@ -155,10 +156,14 @@
 <li>先把客户端的证书复制到certs目录，因为要加入服务端的信任列表<br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B9EA172C0-D73A-40f8-B26E-F7B60017F434%7D.png"><br>在文件夹打开然后复制证书，在server的启动命令后加入对应证书文件目录即可</li>
 <li>然后连接时不选None模式，选Sign&#x2F;Sign&amp;Encrypt然后连接即可</li>
 </ul>
-<h3 id="使用客户证书进行连接认证"><a href="#使用客户证书进行连接认证" class="headerlink" title="使用客户证书进行连接认证"></a>使用客户证书进行连接认证</h3><p>按照上述方法执行后，客户认证选择匿名是可以成功连接，也确实是加密通信，现在尝试实现通过证书的客户认证。但是初步尝试没啥效果（生成一组新的私钥-证书对，并加入服务端的授信列表后，还是不能成功连接：显示用户identityToken有效但服务端拒绝。具体的报错代码在activateSession中，抛出<code>Bad_IdentityTokenRejected (0x80210000) &quot;The user identity token is valid but the server has rejected it.&quot;  Failed to activate Session.</code>）</p>
+<h3 id="使用客户证书进行连接认证"><a href="#使用客户证书进行连接认证" class="headerlink" title="使用客户证书进行连接认证"></a>使用客户证书进行连接认证</h3><p><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7BD2E954E7-5400-476a-9748-F03A87E9411A%7D.png"><br>按照上述方法执行后，客户认证选择匿名是可以成功连接，也确实是加密通信，现在尝试实现通过证书的客户认证。但是初步尝试没啥效果（生成一组新的私钥-证书对，并加入服务端的授信列表后，还是不能成功连接：显示用户identityToken有效但服务端拒绝。具体的报错代码在activateSession中，抛出<code>Bad_IdentityTokenRejected (0x80210000) &quot;The user identity token is valid but the server has rejected it.&quot;  Failed to activate Session.</code>）</p>
 <h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><ul>
 <li>最终排查发现open62541在activateSession中检查证书时如果证书不是用户证书，就会拒绝。而我一开始使用的openssl生成的x509证书没有指明是不是用户证书。</li>
 <li>使用以下方法生成用户证书，在prosys的客户端中的用户认证中输入证书+私钥+私钥密码，然后在上述server demo启动路径中加上证书即可<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -key browser_private_key.pem -out user.csr</span><br><span class="line">openssl x509 -req -<span class="keyword">in</span> user.csr -signkey browswe_private_key.pem -out user_cert.pem -days 365 -extensions v3_req -extfile &lt;(<span class="built_in">echo</span> <span class="string">&quot;[v3_req]&quot;</span>; <span class="built_in">echo</span> <span class="string">&quot;basicConstraints=CA:FALSE&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Demo模拟在加密信道上交换对称秘钥"><a href="#Demo模拟在加密信道上交换对称秘钥" class="headerlink" title="Demo模拟在加密信道上交换对称秘钥"></a>Demo模拟在加密信道上交换对称秘钥</h2><ul>
+<li>这里Demo采用基于RSA的秘钥协商即可，原理：拿到公钥的一方先生成随机的会话密钥，然后利用公钥加密它；再把加密结果发给对方，对方用私钥解密；于是双方都得到了会话密钥。</li>
+<li></li>
 </ul>
 
       
