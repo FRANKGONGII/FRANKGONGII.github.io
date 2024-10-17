@@ -69,6 +69,53 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Leetcode101-深度优先搜索-417" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-417/" class="article-date">
+  <time class="dt-published" datetime="2024-07-28T04:04:24.000Z" itemprop="datePublished">2024-07-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/LeetCode101/">LeetCode101</a>►<a class="article-category-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-417/">Leetcode101-深度优先搜索-417</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>给定一个二维的非负整数矩阵，每个位置的值表示海拔高度。假设左边和上边是太平洋，右<br>边和下边是大西洋，求从哪些位置向下流水，可以流到太平洋和大西洋。水只能从海拔高的位置<br>流到海拔低或相同的位置。</li>
+<li>思路：从边缘出发找能到的所有点，两个边缘都能到的就是答案之一。所以只要vis+dfs就行了，vis就是reach数组</li>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="type">int</span>[][] map;</span><br><span class="line">    <span class="type">int</span>[][] visit;</span><br><span class="line">    <span class="type">int</span>[][] reach1;</span><br><span class="line">    <span class="type">int</span>[][] reach2;</span><br><span class="line">    <span class="type">int</span>[] dir = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;-<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,-<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">pacificAtlantic</span><span class="params">(<span class="type">int</span>[][] heights)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">m</span> <span class="operator">=</span> heights.length;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> heights[<span class="number">0</span>].length;</span><br><span class="line">        reach1 = <span class="keyword">new</span> <span class="title class_">int</span>[m][n];</span><br><span class="line">        reach2 = <span class="keyword">new</span> <span class="title class_">int</span>[m][n];</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">            dfs(heights,reach1,i,<span class="number">0</span>);</span><br><span class="line">            dfs(heights,reach2,i,n-<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;j&lt;n;j++)&#123;</span><br><span class="line">            dfs(heights,reach1,<span class="number">0</span>,j);</span><br><span class="line">            dfs(heights,reach2,m-<span class="number">1</span>,j);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;j&lt;n;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(reach1[i][j]==<span class="number">1</span>&amp;&amp;reach2[i][j]==<span class="number">1</span>)&#123;</span><br><span class="line">                    List&lt;Integer&gt; t = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">                    t.add(i);t.add(j);</span><br><span class="line">                    res.add(t);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span>[][] heights,<span class="type">int</span>[][] reach, <span class="type">int</span> i,<span class="type">int</span> j)</span>&#123;</span><br><span class="line">       </span><br><span class="line">        <span class="keyword">if</span>(reach[i][j]==<span class="number">1</span>)&#123; </span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        reach[i][j] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">p</span> <span class="operator">=</span> <span class="number">0</span>;p&lt;<span class="number">4</span>;p++)&#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> i+dir[p];</span><br><span class="line">            <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> j+dir[p+<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">if</span>(x&gt;=<span class="number">0</span>&amp;&amp;x&lt;=heights.length-<span class="number">1</span>&amp;&amp;y&gt;=<span class="number">0</span>&amp;&amp;y&lt;=heights[<span class="number">0</span>].length-<span class="number">1</span></span><br><span class="line">            &amp;&amp;heights[x][y]&gt;=heights[i][j])&#123;</span><br><span class="line">                dfs(heights,reach,x,y);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-417/" data-id="clz5iax9v0001e8vc5casdl8p" data-title="Leetcode101-深度优先搜索-417" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Leetcode101-深度优先搜索-547" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-547/" class="article-date">
@@ -850,59 +897,6 @@
 
 
   
-    <article id="post-Makefile语法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/" class="article-date">
-  <time class="dt-published" datetime="2024-05-20T02:56:40.000Z" itemprop="datePublished">2024-05-20</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Makefile/">Makefile</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/">Makefile语法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h4 id="obj-m"><a href="#obj-m" class="headerlink" title="obj-m :&#x3D;"></a>obj-m :&#x3D;</h4><ul>
-<li>obj-m 是一个内核模块编译的特殊变量。这个变量用于告诉内核构建系统要编译成模块的目标文件列表。obj-m 是 “object modules” 的缩写，它表示模块对象文件。</li>
-<li>:&#x3D; 是Makefile中的赋值操作符，表示立即展开赋值。它与 &#x3D; 的区别在于，:&#x3D; 在赋值时会立即计算右边表达式的值，而 &#x3D; 是延迟计算，直到这个变量被使用时才计算右边表达式的值。</li>
-<li>使用例子：定义一个包含内核模块目标文件的列表变量 obj-m，其中的目标文件是 hello.o。<br>内核构建系统会根据这个定义去查找 hello.c 源文件，进行编译，最终生成 hello.ko 模块文件。<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj-m := hello.o</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="编译目标"><a href="#编译目标" class="headerlink" title="编译目标"></a>编译目标</h4><h5 id="all"><a href="#all" class="headerlink" title="all"></a>all</h5><ul>
-<li>这是一个Makefile的目标，表示默认目标，即在执行 make 命令时默认执行的任务。</li>
-</ul>
-<h5 id="自定义目标"><a href="#自定义目标" class="headerlink" title="自定义目标"></a>自定义目标</h5><ul>
-<li>如以下这个命令，代表在clean目标的具体命令<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> clean:</span><br><span class="line">make -C /lib/modules/<span class="variable">$(<span class="built_in">shell</span> uname -r)</span>/build M=<span class="variable">$(<span class="built_in">shell</span> pwd)</span> clean</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/" data-id="clwlwacy30007qkvc4gzeby1e" data-title="Makefile语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -946,6 +940,10 @@
       <ul>
         
           <li>
+            <a href="/2024/10/17/OPCUA%E6%8F%A1%E6%89%8B%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/">OPCUA握手的简单实现</a>
+          </li>
+        
+          <li>
             <a href="/2024/10/14/LeetCode%E5%91%A8%E8%B5%9B/">LeetCode周赛</a>
           </li>
         
@@ -959,10 +957,6 @@
         
           <li>
             <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全 &amp; HTTPS安全</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/09/OPCUA/">OPCUA简介</a>
           </li>
         
       </ul>

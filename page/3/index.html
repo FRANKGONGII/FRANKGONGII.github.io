@@ -69,6 +69,59 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Makefile语法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2024-05-20T02:56:40.000Z" itemprop="datePublished">2024-05-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Makefile/">Makefile</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/">Makefile语法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="obj-m"><a href="#obj-m" class="headerlink" title="obj-m :&#x3D;"></a>obj-m :&#x3D;</h4><ul>
+<li>obj-m 是一个内核模块编译的特殊变量。这个变量用于告诉内核构建系统要编译成模块的目标文件列表。obj-m 是 “object modules” 的缩写，它表示模块对象文件。</li>
+<li>:&#x3D; 是Makefile中的赋值操作符，表示立即展开赋值。它与 &#x3D; 的区别在于，:&#x3D; 在赋值时会立即计算右边表达式的值，而 &#x3D; 是延迟计算，直到这个变量被使用时才计算右边表达式的值。</li>
+<li>使用例子：定义一个包含内核模块目标文件的列表变量 obj-m，其中的目标文件是 hello.o。<br>内核构建系统会根据这个定义去查找 hello.c 源文件，进行编译，最终生成 hello.ko 模块文件。<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj-m := hello.o</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="编译目标"><a href="#编译目标" class="headerlink" title="编译目标"></a>编译目标</h4><h5 id="all"><a href="#all" class="headerlink" title="all"></a>all</h5><ul>
+<li>这是一个Makefile的目标，表示默认目标，即在执行 make 命令时默认执行的任务。</li>
+</ul>
+<h5 id="自定义目标"><a href="#自定义目标" class="headerlink" title="自定义目标"></a>自定义目标</h5><ul>
+<li>如以下这个命令，代表在clean目标的具体命令<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> clean:</span><br><span class="line">make -C /lib/modules/<span class="variable">$(<span class="built_in">shell</span> uname -r)</span>/build M=<span class="variable">$(<span class="built_in">shell</span> pwd)</span> clean</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/05/20/Makefile%E8%AF%AD%E6%B3%95/" data-id="clwlwacy30007qkvc4gzeby1e" data-title="Makefile语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-常见的布局方法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/19/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%B8%83%E5%B1%80%E6%96%B9%E6%B3%95/" class="article-date">
@@ -678,6 +731,10 @@
       <ul>
         
           <li>
+            <a href="/2024/10/17/OPCUA%E6%8F%A1%E6%89%8B%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/">OPCUA握手的简单实现</a>
+          </li>
+        
+          <li>
             <a href="/2024/10/14/LeetCode%E5%91%A8%E8%B5%9B/">LeetCode周赛</a>
           </li>
         
@@ -691,10 +748,6 @@
         
           <li>
             <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全 &amp; HTTPS安全</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/09/OPCUA/">OPCUA简介</a>
           </li>
         
       </ul>
