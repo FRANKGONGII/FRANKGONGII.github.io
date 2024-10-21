@@ -69,6 +69,52 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Leetcode101-回溯-77" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-77/" class="article-date">
+  <time class="dt-published" datetime="2024-07-28T12:02:35.000Z" itemprop="datePublished">2024-07-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/LeetCode101/">LeetCode101</a>►<a class="article-category-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-77/">Leetcode101-回溯-77</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>给定两个整数 n 和 k，返回范围 [1, n] 中所有可能的 k 个数的组合。</li>
+<li>考虑当前的最大值 &#x2F; 如果是一组数，就可以把这个最大值换成最下标（其实现在也可以看成在选下标）<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] tmp;</span><br><span class="line">    <span class="type">int</span> <span class="variable">cnt</span> <span class="operator">=</span> <span class="number">0</span>;List&lt;List&lt;Integer&gt;&gt; res = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">combine</span><span class="params">(<span class="type">int</span> n, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        tmp = <span class="keyword">new</span> <span class="title class_">int</span>[k];</span><br><span class="line">        find(<span class="number">1</span>,k,n);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> nowmax,<span class="type">int</span> size,<span class="type">int</span> max)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(cnt==size)&#123;</span><br><span class="line">            List&lt;Integer&gt;newOne = <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> n:tmp)&#123;</span><br><span class="line">                newOne.add(n);</span><br><span class="line">            &#125;</span><br><span class="line">            res.add(newOne);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> nowmax;i&lt;=max;i++)&#123;</span><br><span class="line">            tmp[cnt] = i;</span><br><span class="line">            cnt++;</span><br><span class="line">            find(i+<span class="number">1</span>,size,max);</span><br><span class="line">            cnt--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-77/" data-id="clz5pqjos0000qkvcgo1kca3h" data-title="Leetcode101-回溯-77" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Leetcode101-回溯-46" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/07/28/Leetcode101-%E5%9B%9E%E6%BA%AF-46/" class="article-date">
@@ -632,53 +678,11 @@
 
 
   
-    <article id="post-再看动态规划" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="article-date">
-  <time class="dt-published" datetime="2024-05-21T06:53:02.000Z" itemprop="datePublished">2024-05-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">再看动态规划</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" data-id="clwlwacyd000uqkvcg7pldtoh" data-title="再看动态规划" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -717,6 +721,10 @@
       <ul>
         
           <li>
+            <a href="/2024/10/17/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/">数字签名</a>
+          </li>
+        
+          <li>
             <a href="/2024/10/17/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/">非对称加密算法原理</a>
           </li>
         
@@ -730,10 +738,6 @@
         
           <li>
             <a href="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/">OPCUA_open62541支持加密</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/12/SSL%20&%20TLS%20&%20openssl/">SSL &amp; TLS &amp; openssl</a>
           </li>
         
       </ul>

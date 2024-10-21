@@ -22,7 +22,7 @@
 <meta property="og:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/KEM%E8%BF%87%E7%A8%8B.png">
 <meta property="og:image" content="http://example.com/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/https%E7%9A%84%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B.png">
 <meta property="article:published_time" content="2024-10-09T08:50:36.000Z">
-<meta property="article:modified_time" content="2024-10-12T07:22:02.782Z">
+<meta property="article:modified_time" content="2024-10-17T08:26:05.258Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png">
@@ -203,7 +203,7 @@
 </ol>
 </li>
 </ul>
-<h4 id="签名：防止篡改-加密：防止泄密"><a href="#签名：防止篡改-加密：防止泄密" class="headerlink" title="签名：防止篡改 &amp; 加密：防止泄密"></a>签名：防止篡改 &amp; 加密：防止泄密</h4><ul>
+<h2 id="签名：防止篡改-加密：防止泄密"><a href="#签名：防止篡改-加密：防止泄密" class="headerlink" title="签名：防止篡改 &amp; 加密：防止泄密"></a>签名：防止篡改 &amp; 加密：防止泄密</h2><ul>
 <li>同时使用加密和签名？当用公钥加密后，还需要对明文做以下操作（这套算法保证明文改动会使得被私钥签名后的结果改动）：<ol>
 <li>用哈希算法抽取明文摘要（非对称算法很耗时，对大量数据加密需要很大算力）</li>
 <li>对这个明文摘要用私钥签名</li>
@@ -286,6 +286,10 @@
       <ul>
         
           <li>
+            <a href="/2024/10/17/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/">数字签名</a>
+          </li>
+        
+          <li>
             <a href="/2024/10/17/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/">非对称加密算法原理</a>
           </li>
         
@@ -299,10 +303,6 @@
         
           <li>
             <a href="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/">OPCUA_open62541支持加密</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/12/SSL%20&%20TLS%20&%20openssl/">SSL &amp; TLS &amp; openssl</a>
           </li>
         
       </ul>

@@ -4,13 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>Category: 科研 | Hexo</title>
+  <title>数字签名 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/categories/%E7%A7%91%E7%A0%94/index.html">
+  <meta name="description" content="简介数字签名的主要的作用是认证签署人身份，说得具体点，就是让所有人能够确认这个数字签名是不是由私钥的持有人创建的。数字签名是由签名算法去生成的，签名算法的输入有两个，一个是私钥，另一个是被签署的信息（一般是消息的一个摘要），输出的一个字符串就是数字签名了。签名到底是不是由私钥持有人签署的，要通过验证算法判断。验证算法有三个输入，一个是信息本身，另外一个是数字签名，第三个是公钥，输出的结果就是验证成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数字签名">
+<meta property="og:url" content="http://example.com/2024/10/17/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="简介数字签名的主要的作用是认证签署人身份，说得具体点，就是让所有人能够确认这个数字签名是不是由私钥的持有人创建的。数字签名是由签名算法去生成的，签名算法的输入有两个，一个是私钥，另一个是被签署的信息（一般是消息的一个摘要），输出的一个字符串就是数字签名了。签名到底是不是由私钥持有人签署的，要通过验证算法判断。验证算法有三个输入，一个是信息本身，另外一个是数字签名，第三个是公钥，输出的结果就是验证成">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-17T08:21:47.000Z">
+<meta property="article:modified_time" content="2024-10-17T08:46:04.697Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -67,39 +71,75 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2024" class="archive-year">2024</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2024/05/22/Paper/" class="archive-article-date">
-  <time class="dt-published" datetime="2024-05-22T14:43:56.000Z" itemprop="datePublished">May 22</time>
+        <section id="main"><article id="post-数字签名" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/17/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/" class="article-date">
+  <time class="dt-published" datetime="2024-10-17T08:21:47.000Z" itemprop="datePublished">2024-10-17</time>
 </a>
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/05/22/Paper/">Paper~</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      数字签名
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>数字签名的主要的作用是认证签署人身份，说得具体点，就是让所有人能够确认这个数字签名是不是由私钥的持有人创建的。数字签名是由签名算法去生成的，签名算法的输入有两个，一个是私钥，另一个是被签署的信息（一般是消息的一个摘要），输出的一个字符串就是数字签名了。签名到底是不是由私钥持有人签署的，要通过验证算法判断。验证算法有三个输入，一个是信息本身，另外一个是数字签名，第三个是公钥，输出的结果就是验证成功或者验证失败。数字签名过程中，私钥是“签名 key”，公钥是“验证 key”。</p>
+<h2 id="流程原理"><a href="#流程原理" class="headerlink" title="流程原理"></a>流程原理</h2><ol>
+<li>用hash函数取出要签名信息的摘要(digest)</li>
+<li>用发送方的私钥加密这个摘要</li>
+<li>接受方收到信息之后，先用公钥解密摘要，再对原文使用hash函数生成摘要</li>
+<li>对比解密摘要和新生成的摘要</li>
+</ol>
+<h3 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h3><ol>
+<li>为什么可以用私钥加密，公钥解密？<br>A：以一个非对称加密算法为例，加密和解密的过程其实是可逆的，关键在于用什么秘钥加密，希望让什么秘钥能解密</li>
+<li>有被伪造的风险吗？公钥就可以解密，摘要是完全暴露的<br>A：这就要依靠hash函数，虽然hash值是暴露的，但是基于hash值伪造一个</li>
+</ol>
+<h2 id="签名：防止篡改-加密：防止泄密"><a href="#签名：防止篡改-加密：防止泄密" class="headerlink" title="签名：防止篡改 &amp; 加密：防止泄密"></a>签名：防止篡改 &amp; 加密：防止泄密</h2><ul>
+<li>同时使用加密和签名？当用公钥加密后，还需要对明文做以下操作（这套算法保证明文改动会使得被私钥签名后的结果改动）：<ol>
+<li>用哈希算法抽取明文摘要（非对称算法很耗时，对大量数据加密需要很大算力）</li>
+<li>对这个明文摘要用私钥签名</li>
+</ol>
+</li>
+<li>验签时，用私钥得到解密后的明文，用公钥得到解签后的摘要，从明文中抽取摘要对比即可</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/17/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/" data-id="cm2ibtc860000c0vc6ry07lpk" data-title="数字签名" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/10/17/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">非对称加密算法原理</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
 
 
 </section>
