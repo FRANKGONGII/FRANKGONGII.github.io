@@ -4,15 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>Archives: 2024 | Hexo</title>
+  <title>MVC | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/2024/page/4/index.html">
+  <meta name="description" content="传统的MVC结构： 分层  M - model 对象层，封装到 domain 里。 V - view 展示层，但因为目前都是前后端分离的项目，几乎不会在后端项目里写 JSP 文件了。 C - Controller 控制层，对外提供接口实现类。HTTP接口 DAO 算是单独拿出来用户处理数据库操作的层。 Service：功能方法，服务层逻辑的实现   调用流程：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MVC">
+<meta property="og:url" content="http://example.com/2024/10/22/MVC/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="传统的MVC结构： 分层  M - model 对象层，封装到 domain 里。 V - view 展示层，但因为目前都是前后端分离的项目，几乎不会在后端项目里写 JSP 文件了。 C - Controller 控制层，对外提供接口实现类。HTTP接口 DAO 算是单独拿出来用户处理数据库操作的层。 Service：功能方法，服务层逻辑的实现   调用流程：">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/10/22/MVC/MVC%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png">
+<meta property="article:published_time" content="2024-10-22T07:48:38.000Z">
+<meta property="article:modified_time" content="2024-10-22T09:15:02.712Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/10/22/MVC/MVC%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -67,121 +73,79 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2024" class="archive-year">2024</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2024/05/18/redis%E5%9F%BA%E7%A1%80/" class="archive-article-date">
-  <time class="dt-published" datetime="2024-05-18T05:25:21.000Z" itemprop="datePublished">May 18</time>
+        <section id="main"><article id="post-MVC" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/22/MVC/" class="article-date">
+  <time class="dt-published" datetime="2024-10-22T07:48:38.000Z" itemprop="datePublished">2024-10-22</time>
 </a>
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF%E6%A0%88/">分布式技术栈</a>►<a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF%E6%A0%88/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/05/18/redis%E5%9F%BA%E7%A1%80/">redis基础</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      MVC
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/" class="archive-article-date">
-  <time class="dt-published" datetime="2024-05-18T03:28:18.000Z" itemprop="datePublished">May 18</time>
-</a>
+    <div class="e-content article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/05/18/%E5%88%86%E6%B2%BB%E7%9A%84%E8%AE%A8%E8%AE%BA/">分治的讨论</a>
-    </h1>
-  
+        <h2 id="传统的MVC结构："><a href="#传统的MVC结构：" class="headerlink" title="传统的MVC结构："></a>传统的MVC结构：</h2><ul>
+<li><p>分层</p>
+<ol>
+<li>M - model 对象层，封装到 domain 里。</li>
+<li>V - view 展示层，但因为目前都是前后端分离的项目，几乎不会在后端项目里写 JSP 文件了。</li>
+<li>C - Controller 控制层，对外提供接口实现类。HTTP接口</li>
+<li>DAO 算是单独拿出来用户处理数据库操作的层。</li>
+<li>Service：功能方法，服务层逻辑的实现</li>
+</ol>
+</li>
+<li><p>调用流程：<br><img src="/2024/10/22/MVC/MVC%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png"></p>
+</li>
+</ul>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/" class="archive-article-date">
-  <time class="dt-published" datetime="2024-05-18T03:22:19.000Z" itemprop="datePublished">May 18</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/05/18/%E7%AE%80%E5%8D%9501%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%9A%84%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E6%80%9D%E8%B7%AF/">简单01背包问题的一个通用思路</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2024/05/18/first/" class="archive-article-date">
-  <time class="dt-published" datetime="2024-05-18T02:23:08.000Z" itemprop="datePublished">May 18</time>
-</a>
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/22/MVC/" data-id="cm2la0nvz000034vchv9s9f78" data-title="MVC" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/05/18/first/">first</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2024/05/18/hello-world/" class="archive-article-date">
-  <time class="dt-published" datetime="2024-05-17T16:11:57.991Z" itemprop="datePublished">May 18</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2024/05/18/hello-world/">Hello World</a>
-    </h1>
-  
-
-    </header>
+      
+    </footer>
   </div>
-</article>
   
-  
-    </div></section>
-  
-
-
-  <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/archives/2024/page/3/">&laquo; Prev</a><a class="page-number" href="/archives/2024/">1</a><a class="page-number" href="/archives/2024/page/2/">2</a><a class="page-number" href="/archives/2024/page/3/">3</a><span class="page-number current">4</span>
-  </nav>
+<nav id="article-nav">
+  
+    <a href="/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          OPUCA open62541加密原理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/10/21/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">IO多路复用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
 
 </section>
         

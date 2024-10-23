@@ -69,6 +69,231 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-OPCUA安全架构" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" class="article-date">
+  <time class="dt-published" datetime="2024-10-09T08:50:36.000Z" itemprop="datePublished">2024-10-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全 &amp; HTTPS安全</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>中文博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/mikasoi/article/details/84799078">https://blog.csdn.net/mikasoi/article/details/84799078</a></p>
+<h2 id="目标-–-保证信息安全"><a href="#目标-–-保证信息安全" class="headerlink" title="目标 – 保证信息安全"></a>目标 – 保证信息安全</h2><ol>
+<li>认证</li>
+<li>授权</li>
+<li>保密性：数据加密，保证在传输，存储时的安全性</li>
+<li>完整性：数据不应该有变化</li>
+<li>可审计性：系统的行动应该记录在案</li>
+<li>可用性</li>
+</ol>
+<h2 id="威胁"><a href="#威胁" class="headerlink" title="威胁"></a>威胁</h2><ul>
+<li>message flooding – 可用性<ul>
+<li>攻击者可以发送大量信息或包含大量请求的单个信息，目的是压垮 OPC UA 服务器或 CPU、TCP&#x2F;IP 栈、操作系统或文件系统等依赖组件。泛洪攻击可在多层进行，包括 OPC UA、SOAP、HTTP 或 TCP。 信息泛洪攻击既可以使用格式良好的信息，也可以使用格式不良的信息。在第一种情况下，攻击者可能是使用合法客户端向服务器发出大量请求的恶意人员。 有两种情况，一种是客户端没有与服务器建立会话，另一种是客户端与服务器建立了会话。信息泛滥可能会损害建立 OPC UA 会话或终止现有会话的能力。在第二种情况下，攻击者可以使用恶意客户端，向 OPC UA 服务器发送畸形信息，以耗尽服务器的资源。 一般来说，信息泛洪可能会损害与 OPC UA 实体的通信能力，并导致拒绝服务。 信息泛洪会影响可用性。</li>
+</ul>
+</li>
+<li>窃听 – 保密性</li>
+<li>消息伪造 – 完整性、可审计性和授权</li>
+<li>消息重放 – 授权</li>
+<li>畸形消息 – 完整性、可用性</li>
+</ul>
+<h2 id="消息安全协议"><a href="#消息安全协议" class="headerlink" title="消息安全协议"></a>消息安全协议</h2><h3 id="安全握手"><a href="#安全握手" class="headerlink" title="安全握手"></a>安全握手</h3><ul>
+<li><p>安全协议应该支持三种模式：无处理，签名，签名以及加密</p>
+<ul>
+<li>如果是无处理模式，仍然要提供一个逻辑上的信道和唯一的标识符</li>
+</ul>
+</li>
+<li><p>握手过程</p>
+<ul>
+<li><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png"><ol>
+<li>客户端请求打开安全信道：用客户端私钥签名，用服务端公钥加密</li>
+<li>服务端回复请求：用服务端私钥签名，用客户端公钥加密</li>
+<li>？客户端创建会话请求：用客户端签名的秘钥签名，用服务端加密的秘钥加密</li>
+<li>？服务端创建会话服务：用服务端签名的秘钥签名，用客户端加密的秘钥加密</li>
+</ol>
+</li>
+<li>一系列在安全握手中使用的安全算法被称为<strong>安全策略</strong>（Security Policy）</li>
+<li>每个安全协议映射指明了如何应用安全算法，以及如何使用安全策略的参数。</li>
+<li><strong>握手步骤详解</strong>：<ul>
+<li>OpenSecureChannel Requset：<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelRequest.png"><br>和秘钥有关的参数是clientCertificate（ApplicationInstance‌Certificate），这个证书指明了客户端身份，OpenSecureChannel请求需要用证书的私钥签名（证书公钥一般包含在证书中），也就是可以通过公钥验证证书合法性</li>
+<li>OpenSecureChannel Response：<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelResponse.png"></li>
+<li><strong>看到这里肯定有一个问题？客户端和服务端的加密公钥是怎么交换的？</strong><br>这里需要了解建立SecureChannel或者Session之前的事情<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/discoverProcess.png"><br>GetEndPoints服务返回服务端支持的所有EndPoints和需要建立连接所需的信息，注意：<strong>这个服务不需要message security，也就是不需要加密，但是仍然需要传输层安全</strong><br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/getEndPoints.png"><br>服务端证书就在EndPointDescription中了，证书格式和上面的客户端证书是一样的，客户端和服务端也就完成了秘钥的交换</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>OPCUA中的CS连接是一个嵌套结构：</p>
+<ol>
+<li>原始连接：通过打开与响应主机名和端口的TCP连接以及相应的HEL&#x2F;ACK握手创建原始连接</li>
+<li>SecureChannnel：SecureChannels是在原始TCP连接之上创建的。使用OpenSecureChannel请求和响应消息对建立SecureChannel。Channel即有前文提到的3个mode</li>
+<li>Session：在OpenSecureChannel上创建，确保不以明文发送凭据。建立Session需要两个消息交换：CreateSession和ActicateSession</li>
+</ol>
+</li>
+<li><p>SecureChannel:</p>
+<ul>
+<li>一个SecureChannel是一个在单客户端和单服务器间长期运行的逻辑连接，包含一组仅有客户端和服务端知晓的秘钥。这些秘钥用于网络上信息的验证和加密。SecureChannelService保证了CS之间可以安全地协商秘钥。</li>
+<li>SecureChannel的开放和关闭是由客户使用 SecureChannel Service</li>
+</ul>
+</li>
+<li><p>OPCUA中的安全算法</p>
+<ol>
+<li>（非）对称加密算法：用（非）对称秘钥加密的算法</li>
+<li>非对称秘钥加密算法（秘钥封装，Key Encapsulation）：用于使用非对称密钥加密密钥的算法。类似的有对称秘钥加密算法（秘钥包装，Key Wrapping）。这个名称不重要，说法比较多，关键是有对称还是非对称的秘钥进行对另一个秘钥的加密</li>
+<li>对称签名算法：用对称秘钥为消息签名</li>
+<li>秘钥衍生算法：用于加密的密钥长度由对称加密算法（SymmetricEncryptionAlgorithm）决定。用于创建对称签名的密钥长度取决于对称签名算法（SymmetricSignatureAlgorithm），可能与加密密钥长度不同。</li>
+<li>证书签名算法：用于签署用于非对称加密的证书。该算法是最低要求算法。允许使用更强的算法</li>
+</ol>
+</li>
+<li><p>OPCUA中的证书<br>OPC UA 应用程序使用证书来存储非对称加密操作所需的公钥。</p>
+<ul>
+<li>服务端证书和客户端证书在OpenSecureChannel中使用，是ApplicationInstance Certificate Data</li>
+<li>服务端软件证书和客户端软件证书在CreateSession和ActicateSession中使用，是SignedSoftwareCertificate<br>Data Type</li>
+</ul>
+</li>
+<li><p>OPCUA中的消息块结构<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/message%20chunk.png"></p>
+<ol>
+<li>message header：包含该消息块的一些基本信息，例如消息类型、消息大小、是否是最后一个消息块等</li>
+<li>security header：说明对报文进行了哪些加密操作。安全标头有两个版本，取决于应用于报文的安全类型（对称or非对称）</li>
+<li>sequence header：序列头可确保通过信道发送的每个信息的第一个加密块都以不同的数据开始（就是一个序列号）</li>
+<li>padding</li>
+</ol>
+</li>
+<li><p>padding:</p>
+<ul>
+<li>如果使用能同时支持签名和加密的算法（认证加密），那就不需要padding，否则需要<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/OPCUA%E7%9A%84padding1.png"><br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/OPCUApadding2.png"><ul>
+<li>认证加密：AE（Authenticated Encryption，认证加密）算法结合了加密（Confidentiality）和认证（Authentication），确保数据在传输过程中不仅是加密的，而且没有被篡改。常见的AE算法包括：AES-GCM（Galois&#x2F;Counter Mode）AES-CCM（Counter with CBC-MAC）这些算法会在加密过程中生成消息认证码（MAC），从而提供认证和加密的双重保障。</li>
+</ul>
+</li>
+<li>PaddingSize &#x3D; PlainTextBlockSize – ((BytesToWrite + SignatureSize + 1) % PlainTextBlockSize);</li>
+<li></li>
+</ul>
+</li>
+</ul>
+<h3 id="对称与非对称加密，加密与签名，公钥安全"><a href="#对称与非对称加密，加密与签名，公钥安全" class="headerlink" title="对称与非对称加密，加密与签名，公钥安全"></a>对称与非对称加密，加密与签名，公钥安全</h3><p>参考：<br><a target="_blank" rel="noopener" href="https://thiscute.world/posts/practical-cryptography-basics-7-asymmetric-key-ciphers/">https://thiscute.world/posts/practical-cryptography-basics-7-asymmetric-key-ciphers/</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/boweiqiang/article/details/105737017">https://blog.csdn.net/boweiqiang/article/details/105737017</a></p>
+<h4 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h4><ul>
+<li>使用相同的秘钥进行加密和解密，也就是消息发出方和接受方需要持有相同的秘钥</li>
+<li>常见的对称加密算法：AES（AES-128、AES-192、AES-256）、ChaCha20、Twofish、IDEA、Serpent、Camelia、RC6、CAST </li>
+<li>对称加密往往是分组加密的，也就是每次只加密固定大小的块，只有少部分是流式加密，即将数据逐字节加密为密文流。</li>
+<li>单一使用对称加密往往不能满足全部的要求，例如真实性和完整性。一个完整的对称加密方案包括：秘钥派生算法，对称加密算法（分组密码工作模式（用于将分组密码转换为流密码，如 CBC 或 CTR）+ 消息填充算法（如 PKCS7） + 分组密码算法（如 AES）需要借助这两种算法，才能加密任意大小的数据）和消息认证算法等</li>
+</ul>
+<h4 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h4><ul>
+<li>非对称加密&#x2F;公钥密码学可以在不安全的信道上安全地进行密钥交换，第三方即使监听到通信过程，但是 （几乎）无法破解出密钥。每个人只需要公开自己的公钥，就可以跟其他任何人安全地通信。</li>
+<li>常见的非对称加密算法：RSA、ECC（椭圆曲线密码学）、ElGamal、Diffie-Hellman、ECDH、ECDSA 和 EdDSA。许多密码算法都是以这些密码系统为基础实现的，例如 RSA 签名、RSA 加密&#x2F;解密、ECDH 密钥交换以及 ECDSA 和 EdDSA 签名。</li>
+<li>非对称加密方案：<ol>
+<li>秘钥封装机制：KEM<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/KEM%E8%BF%87%E7%A8%8B.png"></li>
+<li>集成加密方案 (IES) 在密钥封装机制（KEM）的基础上，添加了密钥派生算法 KDF、消息认证算法 MAC 等其他密码学算法以达成更高的安全性。在 IES 方案中，非对称算法（如 RSA 或 ECC）跟 KEM 一样，都是用于加密或封装对称密钥，然后通过对称密钥（如 AES 或 Chacha20）来加密输入消息。</li>
+</ol>
+</li>
+</ul>
+<h2 id="签名：防止篡改-加密：防止泄密"><a href="#签名：防止篡改-加密：防止泄密" class="headerlink" title="签名：防止篡改 &amp; 加密：防止泄密"></a>签名：防止篡改 &amp; 加密：防止泄密</h2><ul>
+<li>同时使用加密和签名？当用公钥加密后，还需要对明文做以下操作（这套算法保证明文改动会使得被私钥签名后的结果改动）：<ol>
+<li>用哈希算法抽取明文摘要（非对称算法很耗时，对大量数据加密需要很大算力）</li>
+<li>对这个明文摘要用私钥签名</li>
+</ol>
+</li>
+<li>验签时，用私钥得到解密后的明文，用公钥得到解签后的摘要，从明文中抽取摘要对比即可</li>
+</ul>
+<h4 id="公钥获取-公钥安全：CA证书"><a href="#公钥获取-公钥安全：CA证书" class="headerlink" title="公钥获取 &amp; 公钥安全：CA证书"></a>公钥获取 &amp; 公钥安全：CA证书</h4><ul>
+<li>怎么获取到公钥？在公钥加密中，秘钥是可以明文传输或者直接通过公用储备库在硬件上存储的。但这是服务端公钥，客户端通过这些方法获取到服务端公钥之后，服务端如何获取到客户端公钥并进行回复呢？</li>
+<li>如何保证服务端公钥真实性？这就需要CA证书，证书是需要申请的，并由专门的数字证书认证机构(CA)通过非常严格的审核之后颁发的电子证书 (当然了是要钱的，安全级别越高价格越贵)。颁发证书的同时会产生一个私钥和公钥。私钥由服务端自己保存，不可泄漏。公钥则是附带在证书的信息中，可以公开的。证书本身也附带一个证书电子签名，这个签名用来验证证书的完整性和真实性，可以防止证书被篡改。<br><img src="/./OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/https%E7%9A%84%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B.png"></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" data-id="cm22znk0m0002dcvc3t9f5khw" data-title="OPCUA安全 &amp; HTTPS安全" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-OPCUA" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/09/OPCUA/" class="article-date">
+  <time class="dt-published" datetime="2024-10-09T02:41:39.000Z" itemprop="datePublished">2024-10-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/09/OPCUA/">OPCUA简介</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="名词定义"><a href="#名词定义" class="headerlink" title="名词定义"></a>名词定义</h2><ul>
+<li>AddressSpace：地址空间，OPC_UA服务器向客户暴露的数据集合。OPC UA 地址空间将其内容表示为一组由引用连接的节点。</li>
+<li>Aggregate：计算原始数据派生值的函数</li>
+<li>Alarm：一种一般需要确认的事件</li>
+<li>Attribute：Node的原始数据</li>
+<li>Condition：通用术语，是一种扩展的一个事件</li>
+<li>Communication Stack：应用程序和硬件之间的一套分层软件模块，提供各种功能，对发送的信息进行编码、加密和格式化，并对接收的信息进行解码、解密和解包</li>
+<li>Complex Data：包含不止一种原始数据的数据结构，如结构体</li>
+<li>Discovery：OPC UA 客户端获取 OPC UA 服务器信息（包括端点和安全信息）的过程</li>
+<li>MoniteredItem: 服务器中由客户定义的实体，用于监控属性或事件提示器的新值或事件发生情况，并为其生成通知</li>
+<li>Node: 地址空间的重要组成部分</li>
+<li>Profile：配置文件的特定功能集，服务器可声称支持这些功能集</li>
+<li>Object：对象节点，代表系统的物理或抽象元素</li>
+</ul>
+<h2 id="什么是-OPC-UA-规范-开放式产品通信统一架构，Open-Platform-Communications-Unified-Architecture"><a href="#什么是-OPC-UA-规范-开放式产品通信统一架构，Open-Platform-Communications-Unified-Architecture" class="headerlink" title="什么是 OPC_UA 规范 (开放式产品通信统一架构，Open Platform Communications Unified Architecture)"></a>什么是 OPC_UA 规范 (开放式产品通信统一架构，Open Platform Communications Unified Architecture)</h2><ul>
+<li>OPC UA 适用于现场设备、控制系统、制造执行系统和企业资源规划系统等应用领域的制造软件。这些系统旨在为工业流程交换信息并使用指令和控制。OPC UA 定义了一个通用基础架构模型，以促进这种信息交换</li>
+<li><strong>OPC UA 定义了服务器可提供的服务集，各个服务器向客户端说明它们支持哪些服务集</strong>。信息使用 OPC UA 定义的和供应商定义的数据类型进行传递，服务器定义了客户端可以动态发现的对象模型。 服务器可提供对当前数据和历史数据的访问，以及通知客户端重要变化的警报和事件。OPC UA 可以映射到各种通信协议上，数据可以用不同的方式编码，以权衡可移植性和效率。OPC UA是独立于平台的协议</li>
+<li><strong>OPC UA 提供了一致、集成的地址空间和服务模型</strong>。这样，单个 OPC UA 服务器就能将数据、警报和事件以及历史记录集成到其地址空间中，并使用一套集成服务对其进行访问。这些服务还包括一个集成的安全模型。 OPC UA 还允许服务器为客户端提供从地址空间访问对象的类型定义。这就允许使用信息模型来描述地址空间的内容。OPC UA 允许以多种不同格式（包括二进制结构和 XML 文档）公开数据。数据格式可由 OPC、其他标准组织或供应商定义。通过地址空间，客户端可以向服务器查询描述数据格式的元数据。在许多情况下，对数据格式没有预先编程知识的客户端能够在运行时确定格式并正确使用数据。 OPC UA 增加了对节点间多种关系的支持，而不仅仅局限于单一的层次结构。这样，OPC UA 服务器就可以根据一组客户端通常希望查看数据的方式，以各种层次结构呈现数据。这种灵活性加上对类型定义的支持，使 OPC UA 适用于各种问题领域</li>
+<li><strong>OPC UA 旨在提供发布数据的稳健性</strong>。所有 OPC 服务器的一个主要特点是能够发布数据和事件通知。OPC UA 为客户端提供了快速检测和恢复与这些传输相关的通信故障的机制，而无需等待底层协议。</li>
+<li><strong>OPC UA 规范是分层的，将核心设计与底层计算技术和网络传输隔离开来</strong>。这使得 OPC UA 可以根据需要映射到未来的技术，而不会否定基本设计 – 多种数据格式和传输协议可以被支持</li>
+<li><img src="/2024/10/09/OPCUA/1.png" alt="OPC_UA Server的结构"></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/09/OPCUA/" data-id="cm25l6xsw00007wvcd8fo66u7" data-title="OPCUA简介" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-vscode&amp;cmake配置c++项目构建环境" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/" class="article-date">
@@ -578,135 +803,6 @@
 
 
   
-    <article id="post-并发的简单实现-OS大作业" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/" class="article-date">
-  <time class="dt-published" datetime="2024-05-31T11:04:30.000Z" itemprop="datePublished">2024-05-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/">并发的简单实现-OS大作业</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="大文件支持"><a href="#大文件支持" class="headerlink" title="大文件支持"></a>大文件支持</h3><ul>
-<li>直接块变成11个，一个一级间接块，一个二级间接块</li>
-<li>修改NDIRECT，NINDIRECT这两个宏</li>
-<li>涉及的函数有fs中的iwalk和itrunc，mkfs中的iwalk</li>
-<li>目前我</li>
-</ul>
-<h3 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h3><h4 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h4><ul>
-<li>两个系统调用<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">mmap</span><span class="params">()</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">munmap</span><span class="params">(<span class="type">void</span> *addr)</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>分别是申请和释放一页共享内存，共享内存在fork时会被共享给子进程，也就是父子进程的这个虚拟地址映射到相同的物理地址。</li>
-<li>我们规定这种内存的虚拟地址都在USR_MEM以上(注意我们的USR_MEM定义为0xc0000000，这个地址往上的空间可以用于mmap映射)，这样处理起来可能比较方便，对物理页维护引用计数是解决这个问题的好方法。同时，只有fork之前的mmap会被共享。</li>
-<li>如何实现？<ol>
-<li>toy os的地址回顾：<br>  <strong>QEMU一共有128MiB的物理内存，即[0, 0x08000000)即[0, PHY_MEM)</strong></li>
-</ol>
-<ul>
-<li>[KER_MEM, PHY_MEM)这块区域我们称为内核的堆区，意思是类比我们一般程序的堆区——程序开始运行的时候不用，但后面需要的时候可以随时取用。<br>  我们记0x00200000为KER_MEM，意思是往下的内存内核自己要用，往上的内存内核自己现在不用，可以分配给用户程序或别的什么用。</li>
-<li>我们约定用户程序的栈在虚拟内存的[0xbffff000, 0xc0000000)即[USR_MEM-PGSIZE, USR_MEM)，映射到物理内存的哪里，还是操作系统说了算。  </li>
-<li>[KER_MEM-PGSIZE, KER_MEM)这段内存是给内核栈用的</li>
-<li>[USR_MEM, 0xFFFFFFFF)是没有用的内存，我们应该在这里分配空间，并且在[KER_MEM, PHY_MEM)建对应页表</li>
-</ul>
-<ol start="2">
-<li>分页机制回顾</li>
-</ol>
-<ul>
-<li>PD：页目录，可以看做1024个PDE（页目录项）的数组。一个PD大小为4KB，按页对齐</li>
-<li>PE：页表，可以看做1024个PTE（页表项）的数组。大小也是4KB，按页对齐</li>
-<li>我们的os中：高10位为页目录号，中间10位为页表号，低12位为页内偏移量</li>
-</ul>
-<ol start="3">
-<li>我们页目录的设计</li>
-</ol>
-<ul>
-<li>为了降低难度，这里我们采用一个比相对简单的设计：不论是内核页目录还是用户页目录，都将虚拟内存[0, PHY_MEM)映射到物理内存[0, PHY_MEM)（恒等映射），同时保持kernel链接在0x00101000不变，这样我们在内核就能直接把物理地址当虚拟地址访问</li>
-<li>内核页目录kpd，内核页表kpt</li>
-<li>我们需要一些管理内核堆区的手段。具体地，可以学习用户程序堆区的管理制度：只有malloc分配出的堆区内存可以被使用，分配出的堆区内存在完事后可以通过free还给堆区；我们的kernel也可以设计两个API：kalloc和kfree，约定如果想使用堆区内存就必须通过调用kalloc来分配，完事后可以通过kfree释放.</li>
-</ul>
-<ol start="4">
-<li>因此这里我们要做的就是，把[USR_MEM, 0xFFFFFFFF)是没有用的内存作为虚拟页映射到内核堆区去</li>
-</ol>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="系统级线程"><a href="#系统级线程" class="headerlink" title="系统级线程"></a>系统级线程</h4>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/" data-id="clwzwe0oy0001okvca76r2pzd" data-title="并发的简单实现-OS大作业" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-常用算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" class="article-date">
-  <time class="dt-published" datetime="2024-05-26T03:20:30.000Z" itemprop="datePublished">2024-05-26</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="求一个数所有因子"><a href="#求一个数所有因子" class="headerlink" title="求一个数所有因子"></a>求一个数所有因子</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> num,ArrayList&lt;Integer&gt; arr)</span>&#123;</span><br><span class="line">    <span class="comment">//从1遍历到num的平方跟即可。</span></span><br><span class="line">    <span class="comment">//这时你可能会说，那后面的数呢，比如num本身，不是计算不到了嘛？</span></span><br><span class="line">    <span class="comment">//别急，看for循环里面的处理情况</span></span><br><span class="line">    <span class="keyword">for</span> ( <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span> ; i &lt;= Math.sqrt(num) ; i++ )&#123;</span><br><span class="line">        <span class="comment">//如果能被num整除，那肯定是num的因子，毫无疑问</span></span><br><span class="line">        <span class="keyword">if</span> ( num % i == <span class="number">0</span> )&#123;</span><br><span class="line">            arr.add(i);</span><br><span class="line">            <span class="comment">//重点的部分在这里！！！</span></span><br><span class="line">            <span class="comment">//当i能被num整除的情况下，此时i是相对较小的因子，用i求出num另一个较大的因子n</span></span><br><span class="line">            <span class="comment">//因为当i能被num整除时，那么数&quot;num/i&quot;也一定能被num整除</span></span><br><span class="line">            <span class="comment">//不需要再进行重复的计算，这样算法的运行时间大大降低</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> num / i;</span><br><span class="line">            <span class="comment">//但用i算出另一个较大的因子时，会出现重复的情况</span></span><br><span class="line">            <span class="comment">//例如num = 4,当遍历到2时，算出另一个较大的因子也是2，这就重复了，要判断一下</span></span><br><span class="line">            <span class="keyword">if</span> ( n != i )&#123;    </span><br><span class="line">                arr.add(n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" data-id="clwp591aq0000x8vcczfhaulo" data-title="常用算法" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -722,7 +818,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF%E6%A0%88/">分布式技术栈</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF%E6%A0%88/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -750,6 +846,14 @@
       <ul>
         
           <li>
+            <a href="/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/">OPUCA open62541加密原理</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/22/MVC/">MVC</a>
+          </li>
+        
+          <li>
             <a href="/2024/10/21/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">IO多路复用</a>
           </li>
         
@@ -759,14 +863,6 @@
         
           <li>
             <a href="/2024/10/17/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/">数字签名</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/17/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/">非对称加密算法原理</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/17/OPCUA%E6%8F%A1%E6%89%8B%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0/">OPCUA握手的简单实现</a>
           </li>
         
       </ul>
