@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>OPCUA open62541-多节点订阅 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="open62541配置 打开MULTITHREADING_DEFAULT，设置为100 注意区分是release还是debug包，相关的宏开关是CMAKE_BUILD_TYPE  server.c123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OPCUA open62541-多节点订阅">
+<meta property="og:url" content="http://example.com/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="open62541配置 打开MULTITHREADING_DEFAULT，设置为100 注意区分是release还是debug包，相关的宏开关是CMAKE_BUILD_TYPE  server.c123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%851.png">
+<meta property="article:published_time" content="2024-10-29T07:19:36.000Z">
+<meta property="article:modified_time" content="2024-10-29T07:26:49.625Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%851.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-OPCUA-open62541多节点订阅" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/" class="article-date">
+  <time class="dt-published" datetime="2024-10-29T07:19:36.000Z" itemprop="datePublished">2024-10-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      OPCUA open62541-多节点订阅
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="open62541配置"><a href="#open62541配置" class="headerlink" title="open62541配置"></a>open62541配置</h2><ol>
+<li>打开MULTITHREADING_DEFAULT，设置为100</li>
+<li>注意区分是release还是debug包，相关的宏开关是CMAKE_BUILD_TYPE</li>
+</ol>
+<h2 id="server-c"><a href="#server-c" class="headerlink" title="server.c"></a>server.c</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// server.c</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* This work is licensed under a Creative Commons CCZero 1.0 Universal License.</span></span><br><span class="line"><span class="comment"> * See http://creativecommons.org/publicdomain/zero/1.0/ for more information. */</span></span><br><span class="line"></span><br><span class="line">#include &lt;signal.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">#include <span class="string">&quot;open62541.h&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="type">UA_Boolean</span> <span class="variable">running</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">uint32_t *nodeValues;</span><br><span class="line"><span class="type">int</span> <span class="variable">nodeCount</span> <span class="operator">=</span> <span class="number">1000</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">interval</span> <span class="operator">=</span> <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">stopHandler</span><span class="params">(<span class="type">int</span> sign)</span> &#123;</span><br><span class="line">    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, <span class="string">&quot;received ctrl-c&quot;</span>);</span><br><span class="line">    running = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">typedef struct container &#123;</span><br><span class="line">	UA_Server * ptr1;</span><br><span class="line">	UA_NodeId * ptr2;</span><br><span class="line">&#125; container_t;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> *thr_fn(<span class="keyword">void</span> *arg)</span><br><span class="line">&#123;</span><br><span class="line">    container_t *pContainer = (container_t*)arg;</span><br><span class="line">    UA_Server *server = pContainer-&gt;ptr1;</span><br><span class="line">    UA_NodeId *targetNodeIds = pContainer-&gt;ptr2;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span> ; i &lt; nodeCount; i++) &#123;</span><br><span class="line">            nodeValues[i]++;</span><br><span class="line">            <span class="type">uint32_t</span> <span class="variable">value</span> <span class="operator">=</span> nodeValues[i];</span><br><span class="line">            UA_Variant myVar;</span><br><span class="line">            UA_Variant_init(&amp;myVar);</span><br><span class="line">            UA_Variant_setScalar(&amp;myVar, &amp;value, &amp;UA_TYPES[UA_TYPES_INT32]);</span><br><span class="line">            UA_Server_writeValue(server, targetNodeIds[i], myVar);</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span> </span><br><span class="line">&#123;    </span><br><span class="line">    signal(SIGINT, stopHandler);</span><br><span class="line">    signal(SIGTERM, stopHandler);</span><br><span class="line"></span><br><span class="line">    nodeCount = atoi(argv[<span class="number">1</span>]);</span><br><span class="line">    interval = atoi(argv[<span class="number">2</span>]);</span><br><span class="line">    nodeValues = (uint32_t*)malloc(nodeCount * sizeof(uint32_t));</span><br><span class="line"></span><br><span class="line">    UA_Server *server = UA_Server_new();</span><br><span class="line">    UA_ServerConfig_setDefault(UA_Server_getConfig(server));</span><br><span class="line">    </span><br><span class="line">    UA_NodeId targetNodeIds[nodeCount];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nodeCount; i++) &#123;</span><br><span class="line">        <span class="comment">/* Define the attribute of the myInteger variable node */</span></span><br><span class="line">        <span class="type">UA_VariableAttributes</span> <span class="variable">attr</span> <span class="operator">=</span> UA_VariableAttributes_default;</span><br><span class="line">        <span class="type">UA_Int32</span> <span class="variable">myInteger</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="type">char</span> name[<span class="number">20</span>];</span><br><span class="line">        snprintf(name, sizeof(name), <span class="string">&quot;Node-%d&quot;</span>, i);</span><br><span class="line">        UA_Variant_setScalar(&amp;attr.value, &amp;myInteger, &amp;UA_TYPES[UA_TYPES_INT32]);</span><br><span class="line">        attr.description = UA_LOCALIZEDTEXT(<span class="string">&quot;en-US&quot;</span>, name);</span><br><span class="line">        attr.displayName = UA_LOCALIZEDTEXT(<span class="string">&quot;en-US&quot;</span>, name);</span><br><span class="line">        attr.dataType = UA_TYPES[UA_TYPES_INT32].typeId;</span><br><span class="line">        attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;</span><br><span class="line">        <span class="comment">/* Add the variable node to the information model */</span></span><br><span class="line">        <span class="type">UA_NodeId</span> <span class="variable">theAnswerNodeId</span> <span class="operator">=</span> UA_NODEID_STRING(<span class="number">1</span>, name);</span><br><span class="line">        <span class="type">UA_QualifiedName</span> <span class="variable">myIntegerName</span> <span class="operator">=</span> UA_QUALIFIEDNAME(<span class="number">1</span>, name);</span><br><span class="line">        <span class="type">UA_NodeId</span> <span class="variable">parentNodeId</span> <span class="operator">=</span> UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_OBJECTSFOLDER);</span><br><span class="line">        <span class="type">UA_NodeId</span> <span class="variable">parentReferenceNodeId</span> <span class="operator">=</span> UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_ORGANIZES);</span><br><span class="line">        UA_Server_addVariableNode(server, theAnswerNodeId, parentNodeId,</span><br><span class="line">            parentReferenceNodeId, myIntegerName,</span><br><span class="line">            UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_BASEDATAVARIABLETYPE), attr, NULL, &amp;targetNodeIds[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">container_t</span> <span class="variable">cont</span> <span class="operator">=</span> &#123;server, targetNodeIds&#125;;</span><br><span class="line">    pthread_t tid;</span><br><span class="line">    <span class="type">int</span> <span class="variable">err</span> <span class="operator">=</span> pthread_create(&amp;tid, NULL, thr_fn, &amp;cont);</span><br><span class="line">    <span class="keyword">if</span> (err != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        UA_LOG_ERROR(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, <span class="string">&quot;Create thread Fail.&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">UA_StatusCode</span> <span class="variable">retval</span> <span class="operator">=</span> UA_Server_run(server, &amp;running);</span><br><span class="line">    </span><br><span class="line">    UA_Server_delete(server);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对应的client要注意一下创建UA_NodeId的namespace，可以先用browser订阅+监视看一下是多少</li>
+</ul>
+<h2 id="测试结果-T3"><a href="#测试结果-T3" class="headerlink" title="测试结果(T3)"></a>测试结果(T3)</h2><p><img src="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%851.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/" data-id="cm2wsgkvo00006cvcdq8b4pcr" data-title="OPCUA open62541-多节点订阅" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/10/28/JVM/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JVM</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF%E6%A0%88/">分布式技术栈</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF%E6%A0%88/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/">OPCUA open62541-多节点订阅</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/28/JVM/">JVM</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/26/JAVA/">JAVA</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/24/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">Linux常用命令</a>
+          </li>
+        
+          <li>
+            <a href="/2024/10/23/%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">开发技巧</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

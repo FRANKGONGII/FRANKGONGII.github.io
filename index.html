@@ -69,6 +69,57 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-OPCUA-open62541多节点订阅" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/" class="article-date">
+  <time class="dt-published" datetime="2024-10-29T07:19:36.000Z" itemprop="datePublished">2024-10-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/">OPCUA open62541-多节点订阅</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="open62541配置"><a href="#open62541配置" class="headerlink" title="open62541配置"></a>open62541配置</h2><ol>
+<li>打开MULTITHREADING_DEFAULT，设置为100</li>
+<li>注意区分是release还是debug包，相关的宏开关是CMAKE_BUILD_TYPE</li>
+</ol>
+<h2 id="server-c"><a href="#server-c" class="headerlink" title="server.c"></a>server.c</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// server.c</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* This work is licensed under a Creative Commons CCZero 1.0 Universal License.</span></span><br><span class="line"><span class="comment"> * See http://creativecommons.org/publicdomain/zero/1.0/ for more information. */</span></span><br><span class="line"></span><br><span class="line">#include &lt;signal.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">#include <span class="string">&quot;open62541.h&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="type">UA_Boolean</span> <span class="variable">running</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">uint32_t *nodeValues;</span><br><span class="line"><span class="type">int</span> <span class="variable">nodeCount</span> <span class="operator">=</span> <span class="number">1000</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">interval</span> <span class="operator">=</span> <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">stopHandler</span><span class="params">(<span class="type">int</span> sign)</span> &#123;</span><br><span class="line">    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, <span class="string">&quot;received ctrl-c&quot;</span>);</span><br><span class="line">    running = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">typedef struct container &#123;</span><br><span class="line">	UA_Server * ptr1;</span><br><span class="line">	UA_NodeId * ptr2;</span><br><span class="line">&#125; container_t;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> *thr_fn(<span class="keyword">void</span> *arg)</span><br><span class="line">&#123;</span><br><span class="line">    container_t *pContainer = (container_t*)arg;</span><br><span class="line">    UA_Server *server = pContainer-&gt;ptr1;</span><br><span class="line">    UA_NodeId *targetNodeIds = pContainer-&gt;ptr2;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        sleep(<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span> ; i &lt; nodeCount; i++) &#123;</span><br><span class="line">            nodeValues[i]++;</span><br><span class="line">            <span class="type">uint32_t</span> <span class="variable">value</span> <span class="operator">=</span> nodeValues[i];</span><br><span class="line">            UA_Variant myVar;</span><br><span class="line">            UA_Variant_init(&amp;myVar);</span><br><span class="line">            UA_Variant_setScalar(&amp;myVar, &amp;value, &amp;UA_TYPES[UA_TYPES_INT32]);</span><br><span class="line">            UA_Server_writeValue(server, targetNodeIds[i], myVar);</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> NULL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span> </span><br><span class="line">&#123;    </span><br><span class="line">    signal(SIGINT, stopHandler);</span><br><span class="line">    signal(SIGTERM, stopHandler);</span><br><span class="line"></span><br><span class="line">    nodeCount = atoi(argv[<span class="number">1</span>]);</span><br><span class="line">    interval = atoi(argv[<span class="number">2</span>]);</span><br><span class="line">    nodeValues = (uint32_t*)malloc(nodeCount * sizeof(uint32_t));</span><br><span class="line"></span><br><span class="line">    UA_Server *server = UA_Server_new();</span><br><span class="line">    UA_ServerConfig_setDefault(UA_Server_getConfig(server));</span><br><span class="line">    </span><br><span class="line">    UA_NodeId targetNodeIds[nodeCount];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nodeCount; i++) &#123;</span><br><span class="line">        <span class="comment">/* Define the attribute of the myInteger variable node */</span></span><br><span class="line">        <span class="type">UA_VariableAttributes</span> <span class="variable">attr</span> <span class="operator">=</span> UA_VariableAttributes_default;</span><br><span class="line">        <span class="type">UA_Int32</span> <span class="variable">myInteger</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="type">char</span> name[<span class="number">20</span>];</span><br><span class="line">        snprintf(name, sizeof(name), <span class="string">&quot;Node-%d&quot;</span>, i);</span><br><span class="line">        UA_Variant_setScalar(&amp;attr.value, &amp;myInteger, &amp;UA_TYPES[UA_TYPES_INT32]);</span><br><span class="line">        attr.description = UA_LOCALIZEDTEXT(<span class="string">&quot;en-US&quot;</span>, name);</span><br><span class="line">        attr.displayName = UA_LOCALIZEDTEXT(<span class="string">&quot;en-US&quot;</span>, name);</span><br><span class="line">        attr.dataType = UA_TYPES[UA_TYPES_INT32].typeId;</span><br><span class="line">        attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;</span><br><span class="line">        <span class="comment">/* Add the variable node to the information model */</span></span><br><span class="line">        <span class="type">UA_NodeId</span> <span class="variable">theAnswerNodeId</span> <span class="operator">=</span> UA_NODEID_STRING(<span class="number">1</span>, name);</span><br><span class="line">        <span class="type">UA_QualifiedName</span> <span class="variable">myIntegerName</span> <span class="operator">=</span> UA_QUALIFIEDNAME(<span class="number">1</span>, name);</span><br><span class="line">        <span class="type">UA_NodeId</span> <span class="variable">parentNodeId</span> <span class="operator">=</span> UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_OBJECTSFOLDER);</span><br><span class="line">        <span class="type">UA_NodeId</span> <span class="variable">parentReferenceNodeId</span> <span class="operator">=</span> UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_ORGANIZES);</span><br><span class="line">        UA_Server_addVariableNode(server, theAnswerNodeId, parentNodeId,</span><br><span class="line">            parentReferenceNodeId, myIntegerName,</span><br><span class="line">            UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_BASEDATAVARIABLETYPE), attr, NULL, &amp;targetNodeIds[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">container_t</span> <span class="variable">cont</span> <span class="operator">=</span> &#123;server, targetNodeIds&#125;;</span><br><span class="line">    pthread_t tid;</span><br><span class="line">    <span class="type">int</span> <span class="variable">err</span> <span class="operator">=</span> pthread_create(&amp;tid, NULL, thr_fn, &amp;cont);</span><br><span class="line">    <span class="keyword">if</span> (err != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        UA_LOG_ERROR(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, <span class="string">&quot;Create thread Fail.&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">UA_StatusCode</span> <span class="variable">retval</span> <span class="operator">=</span> UA_Server_run(server, &amp;running);</span><br><span class="line">    </span><br><span class="line">    UA_Server_delete(server);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对应的client要注意一下创建UA_NodeId的namespace，可以先用browser订阅+监视看一下是多少</li>
+</ul>
+<h2 id="测试结果-T3"><a href="#测试结果-T3" class="headerlink" title="测试结果(T3)"></a>测试结果(T3)</h2><p><img src="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%851.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/" data-id="cm2wsgkvo00006cvcdq8b4pcr" data-title="OPCUA open62541-多节点订阅" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-JVM" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/28/JVM/" class="article-date">
@@ -285,7 +336,7 @@
 
 
   
-    <article id="opcua-OPCUA-open62541加密原理" class="h-entry article article-type-opcua" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+    <article id="post-OPCUA-open62541加密原理" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/" class="article-date">
   <time class="dt-published" datetime="2024-10-23T02:48:45.000Z" itemprop="datePublished">2024-10-23</time>
@@ -311,7 +362,8 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="加密通信相关代码"><a href="#加密通信相关代码" class="headerlink" title="加密通信相关代码"></a>加密通信相关代码</h2><h3 id="securityPolicy"><a href="#securityPolicy" class="headerlink" title="securityPolicy"></a>securityPolicy</h3><p>+ </p>
+        <h2 id="加密流程"><a href="#加密流程" class="headerlink" title="加密流程"></a>加密流程</h2><p><img src="/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/opcua%E5%8A%A0%E5%AF%86.png" alt="alt text"></p>
+<h2 id="加密通信相关代码"><a href="#加密通信相关代码" class="headerlink" title="加密通信相关代码"></a>加密通信相关代码</h2><h3 id="securityPolicy"><a href="#securityPolicy" class="headerlink" title="securityPolicy"></a>securityPolicy</h3><p>+ </p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">UA_SecurityPolicy</span> &#123;</span></span><br><span class="line">    <span class="comment">/* Additional data */</span></span><br><span class="line">    <span class="type">void</span> *policyContext;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* The policy uri that identifies the implemented algorithms */</span></span><br><span class="line">    UA_String policyUri;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Value indicating the crypto strength of the policy, with zero for deprecated or none */</span></span><br><span class="line">    UA_Byte securityLevel;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* The local certificate is specific for each SecurityPolicy since it</span></span><br><span class="line"><span class="comment">     * depends on the used key length. */</span></span><br><span class="line">    UA_ByteString localCertificate;</span><br><span class="line"></span><br><span class="line">    UA_NodeId certificateGroupId;</span><br><span class="line">    UA_NodeId certificateTypeId;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Function pointers grouped into modules */</span></span><br><span class="line">    UA_SecurityPolicyAsymmetricModule asymmetricModule; <span class="comment">// 包括证书指纹生成算法，加密算法，签名算法等等</span></span><br><span class="line">    UA_SecurityPolicySymmetricModule symmetricModule;</span><br><span class="line">    UA_SecurityPolicySignatureAlgorithm certificateSigningAlgorithm;</span><br><span class="line">    UA_SecurityPolicyChannelModule channelModule;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> UA_Logger *logger;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Updates the ApplicationInstanceCertificate and the corresponding private</span></span><br><span class="line"><span class="comment">     * key at runtime. */</span></span><br><span class="line">    UA_StatusCode (*updateCertificateAndPrivateKey)(UA_SecurityPolicy *policy,</span><br><span class="line">                                                    <span class="type">const</span> UA_ByteString newCertificate,</span><br><span class="line">                                                    <span class="type">const</span> UA_ByteString newPrivateKey);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Creates a PKCS #10 DER encoded certificate request signed with the server&#x27;s</span></span><br><span class="line"><span class="comment">     * private key.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * @param securityPolicy The securityPolicy to work on.</span></span><br><span class="line"><span class="comment">     * @param subjectName The subject name to use in the Certificate Request.</span></span><br><span class="line"><span class="comment">     *                    If not specified the SubjectName from the current Certificate is used.</span></span><br><span class="line"><span class="comment">     * @param nonce Additional entropy that the caller can provide.</span></span><br><span class="line"><span class="comment">     *              It shall be at least 32 bytes long.</span></span><br><span class="line"><span class="comment">     * @param params A KeyVaue list that can be used for additional parameters later.</span></span><br><span class="line"><span class="comment">     * @param csr Returns the created CSR. If the passed byte string is not empty, nothing is created.</span></span><br><span class="line"><span class="comment">     * @param newPrivateKey Returns the private key if a new one needs to be generated.</span></span><br><span class="line"><span class="comment">     *                      Alternatively, an existing key can be provided,</span></span><br><span class="line"><span class="comment">     *                      which will be used as the CSR key in the security policy.</span></span><br><span class="line"><span class="comment">     *                      This is necessary if the CSR was created under a different security policy</span></span><br><span class="line"><span class="comment">     *                      and the current one only requires an update.</span></span><br><span class="line"><span class="comment">     * @return If the CSR creation was successful, UA_STATUSCODE_GOOD is returned. */</span></span><br><span class="line">    UA_StatusCode (*createSigningRequest)(UA_SecurityPolicy *securityPolicy,</span><br><span class="line">                                          <span class="type">const</span> UA_String *subjectName,</span><br><span class="line">                                          <span class="type">const</span> UA_ByteString *nonce,</span><br><span class="line">                                          <span class="type">const</span> UA_KeyValueMap *params,</span><br><span class="line">                                          UA_ByteString *csr,</span><br><span class="line">                                          UA_ByteString *newPrivateKey);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Deletes the dynamic content of the policy */</span></span><br><span class="line">    <span class="type">void</span> (*clear)(UA_SecurityPolicy *policy);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 
@@ -363,7 +415,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/22/MVC/">MVC</a>
+      <a class="p-name article-title" href="/2024/10/22/MVC/">MVC &amp; DDD</a>
     </h1>
   
 
@@ -384,11 +436,15 @@
 <li><p>调用流程：<br><img src="/2024/10/22/MVC/MVC%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png"></p>
 </li>
 </ul>
+<h2 id="DDD"><a href="#DDD" class="headerlink" title="DDD"></a>DDD</h2><ul>
+<li>什么是DDD：DDD 是一种软件设计方法。也就是说 DDD 是指导我们做软件工程设计的一种手段，它提供了用切割工程模型的各类技巧</li>
+<li></li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/22/MVC/" data-id="cm2la0nvz000034vchv9s9f78" data-title="MVC" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/10/22/MVC/" data-id="cm2la0nvz000034vchv9s9f78" data-title="MVC &amp; DDD" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -637,72 +693,6 @@
 
 
   
-    <article id="post-非对称加密算法原理" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/17/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/" class="article-date">
-  <time class="dt-published" datetime="2024-10-17T06:59:54.000Z" itemprop="datePublished">2024-10-17</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/17/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/">非对称加密算法原理</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h2><p>参考：</p>
-<ol>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/48249182">https://zhuanlan.zhihu.com/p/48249182</a></li>
-<li><a target="_blank" rel="noopener" href="https://ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html">https://ruanyifeng.com/blog/2013/06/rsa_algorithm_part_one.html</a></li>
-</ol>
-<ul>
-<li>欧拉定理<br><img src="/2024/10/17/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/%7B297162E5-5F03-4740-A429-7DB33A5DDC51%7D.png"></li>
-<li>欧拉函数<br>f(n)是指1-n范围内和n互质的整数的个数</li>
-<li>模反函数<br>如果两个正整数a和n互质，那么一定可以找到整数b，使得ab-1被n整除，或者说ab被n除的余数是1。<br>b是a的模反函数</li>
-<li>秘钥生成过程</li>
-</ul>
-<ol>
-<li>选择两个不相等质数p，q</li>
-<li>计算p * q &#x3D; n，n的长度是秘钥长度，一般1024位即可</li>
-<li>计算n的欧拉函数f(n)</li>
-<li>随机选一个整数e，满足1 &lt; e &lt; f(n)，且e和f(n)互质，这个值一般就是65537</li>
-<li>计算e关于f(n)的模反函数d</li>
-<li>ne封装为公钥，nd封装为私钥</li>
-</ol>
-<ul>
-<li>加密&amp;解密</li>
-<li>加密就是计算 m^e ≡ c (mod n) (m &lt; n)</li>
-<li>解密就是计算 c^d ≡ m (mod n)</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/17/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/" data-id="cm2d10me300005cvccp61f7oz" data-title="非对称加密算法原理" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -746,6 +736,10 @@
       <ul>
         
           <li>
+            <a href="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/">OPCUA open62541-多节点订阅</a>
+          </li>
+        
+          <li>
             <a href="/2024/10/28/JVM/">JVM</a>
           </li>
         
@@ -759,10 +753,6 @@
         
           <li>
             <a href="/2024/10/23/%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">开发技巧</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/">OPUCA open62541加密原理</a>
           </li>
         
       </ul>

@@ -6,17 +6,19 @@
   
   <title>OPUCA open62541加密原理 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="加密通信相关代码securityPolicy+  123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657struct UA_SecurityPolicy &#123;    &#x2F;* Additional data *&#x2F;    void *poli">
+  <meta name="description" content="加密流程 加密通信相关代码securityPolicy+  123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657struct UA_SecurityPolicy &#123;    &#x2F;* Additional data *&#x2F;    void">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OPUCA open62541加密原理">
 <meta property="og:url" content="http://example.com/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="加密通信相关代码securityPolicy+  123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657struct UA_SecurityPolicy &#123;    &#x2F;* Additional data *&#x2F;    void *poli">
+<meta property="og:description" content="加密流程 加密通信相关代码securityPolicy+  123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657struct UA_SecurityPolicy &#123;    &#x2F;* Additional data *&#x2F;    void">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/opcua%E5%8A%A0%E5%AF%86.png">
 <meta property="article:published_time" content="2024-10-23T02:48:45.000Z">
-<meta property="article:modified_time" content="2024-10-23T03:25:19.203Z">
+<meta property="article:modified_time" content="2024-10-29T07:19:52.367Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/opcua%E5%8A%A0%E5%AF%86.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -71,7 +73,7 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="opcua-OPCUA-open62541加密原理" class="h-entry article article-type-opcua" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-OPCUA-open62541加密原理" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/" class="article-date">
   <time class="dt-published" datetime="2024-10-23T02:48:45.000Z" itemprop="datePublished">2024-10-23</time>
@@ -97,7 +99,8 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="加密通信相关代码"><a href="#加密通信相关代码" class="headerlink" title="加密通信相关代码"></a>加密通信相关代码</h2><h3 id="securityPolicy"><a href="#securityPolicy" class="headerlink" title="securityPolicy"></a>securityPolicy</h3><p>+ </p>
+        <h2 id="加密流程"><a href="#加密流程" class="headerlink" title="加密流程"></a>加密流程</h2><p><img src="/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/opcua%E5%8A%A0%E5%AF%86.png" alt="alt text"></p>
+<h2 id="加密通信相关代码"><a href="#加密通信相关代码" class="headerlink" title="加密通信相关代码"></a>加密通信相关代码</h2><h3 id="securityPolicy"><a href="#securityPolicy" class="headerlink" title="securityPolicy"></a>securityPolicy</h3><p>+ </p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">UA_SecurityPolicy</span> &#123;</span></span><br><span class="line">    <span class="comment">/* Additional data */</span></span><br><span class="line">    <span class="type">void</span> *policyContext;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* The policy uri that identifies the implemented algorithms */</span></span><br><span class="line">    UA_String policyUri;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Value indicating the crypto strength of the policy, with zero for deprecated or none */</span></span><br><span class="line">    UA_Byte securityLevel;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* The local certificate is specific for each SecurityPolicy since it</span></span><br><span class="line"><span class="comment">     * depends on the used key length. */</span></span><br><span class="line">    UA_ByteString localCertificate;</span><br><span class="line"></span><br><span class="line">    UA_NodeId certificateGroupId;</span><br><span class="line">    UA_NodeId certificateTypeId;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Function pointers grouped into modules */</span></span><br><span class="line">    UA_SecurityPolicyAsymmetricModule asymmetricModule; <span class="comment">// 包括证书指纹生成算法，加密算法，签名算法等等</span></span><br><span class="line">    UA_SecurityPolicySymmetricModule symmetricModule;</span><br><span class="line">    UA_SecurityPolicySignatureAlgorithm certificateSigningAlgorithm;</span><br><span class="line">    UA_SecurityPolicyChannelModule channelModule;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> UA_Logger *logger;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Updates the ApplicationInstanceCertificate and the corresponding private</span></span><br><span class="line"><span class="comment">     * key at runtime. */</span></span><br><span class="line">    UA_StatusCode (*updateCertificateAndPrivateKey)(UA_SecurityPolicy *policy,</span><br><span class="line">                                                    <span class="type">const</span> UA_ByteString newCertificate,</span><br><span class="line">                                                    <span class="type">const</span> UA_ByteString newPrivateKey);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Creates a PKCS #10 DER encoded certificate request signed with the server&#x27;s</span></span><br><span class="line"><span class="comment">     * private key.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * @param securityPolicy The securityPolicy to work on.</span></span><br><span class="line"><span class="comment">     * @param subjectName The subject name to use in the Certificate Request.</span></span><br><span class="line"><span class="comment">     *                    If not specified the SubjectName from the current Certificate is used.</span></span><br><span class="line"><span class="comment">     * @param nonce Additional entropy that the caller can provide.</span></span><br><span class="line"><span class="comment">     *              It shall be at least 32 bytes long.</span></span><br><span class="line"><span class="comment">     * @param params A KeyVaue list that can be used for additional parameters later.</span></span><br><span class="line"><span class="comment">     * @param csr Returns the created CSR. If the passed byte string is not empty, nothing is created.</span></span><br><span class="line"><span class="comment">     * @param newPrivateKey Returns the private key if a new one needs to be generated.</span></span><br><span class="line"><span class="comment">     *                      Alternatively, an existing key can be provided,</span></span><br><span class="line"><span class="comment">     *                      which will be used as the CSR key in the security policy.</span></span><br><span class="line"><span class="comment">     *                      This is necessary if the CSR was created under a different security policy</span></span><br><span class="line"><span class="comment">     *                      and the current one only requires an update.</span></span><br><span class="line"><span class="comment">     * @return If the CSR creation was successful, UA_STATUSCODE_GOOD is returned. */</span></span><br><span class="line">    UA_StatusCode (*createSigningRequest)(UA_SecurityPolicy *securityPolicy,</span><br><span class="line">                                          <span class="type">const</span> UA_String *subjectName,</span><br><span class="line">                                          <span class="type">const</span> UA_ByteString *nonce,</span><br><span class="line">                                          <span class="type">const</span> UA_KeyValueMap *params,</span><br><span class="line">                                          UA_ByteString *csr,</span><br><span class="line">                                          UA_ByteString *newPrivateKey);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Deletes the dynamic content of the policy */</span></span><br><span class="line">    <span class="type">void</span> (*clear)(UA_SecurityPolicy *policy);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 
@@ -141,7 +144,7 @@
   
     <a href="/2024/10/22/MVC/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">MVC</div>
+      <div class="article-nav-title">MVC &amp; DDD</div>
     </a>
   
 </nav>
@@ -186,6 +189,10 @@
       <ul>
         
           <li>
+            <a href="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/">OPCUA open62541-多节点订阅</a>
+          </li>
+        
+          <li>
             <a href="/2024/10/28/JVM/">JVM</a>
           </li>
         
@@ -199,10 +206,6 @@
         
           <li>
             <a href="/2024/10/23/%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">开发技巧</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/23/OPCUA-open62541%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86/">OPUCA open62541加密原理</a>
           </li>
         
       </ul>
