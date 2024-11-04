@@ -14,7 +14,7 @@
 <meta property="og:description" content="一些概念 condition：通用术语，是事件的延伸  代表系统或其某个组件的状态。但是，在某些情况下，还必须保持仍需关注的先前状态。引入 ConditionBranchches 就是为了满足这一要求，并区分当前状态和先前状态。每个 ConditionBranch 都有一个 BranchId，用于将其与同一 Condition 实例的其他分支区分开来。代表条件当前状态的条件分支（主干）的 Bran">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-11-01T01:59:46.000Z">
-<meta property="article:modified_time" content="2024-11-01T05:42:46.769Z">
+<meta property="article:modified_time" content="2024-11-04T01:37:25.576Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -133,7 +133,7 @@
 </li>
 </ul>
 <h2 id="编码相关"><a href="#编码相关" class="headerlink" title="编码相关"></a>编码相关</h2><ul>
-<li>首先，需要定义事件类型，所有自定义的事件类型都必须以BaseEventType作为抽象基类，我们创建的新事件类型就是它的子类型，</li>
+<li>首先，需要定义事件类型，所有自定义的事件类型都必须以BaseEventType作为抽象基类，我们创建的新事件类型就是它的子类型<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> UA_NodeId eventType;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> UA_StatusCode <span class="title function_">addNewEventType</span><span class="params">(UA_Server *server)</span> </span><br><span class="line">&#123;</span><br><span class="line">    UA_ObjectTypeAttributes attr = UA_ObjectTypeAttributes_default;</span><br><span class="line">    attr.displayName = UA_LOCALIZEDTEXT(<span class="string">&quot;en-US&quot;</span>, <span class="string">&quot;SimpleEventType&quot;</span>);</span><br><span class="line">    attr.description = UA_LOCALIZEDTEXT(<span class="string">&quot;en-US&quot;</span>, <span class="string">&quot;The simple event type we created&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> UA_Server_addObjectTypeNode(server, UA_NODEID_NULL,</span><br><span class="line">                                      UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_BASEEVENTTYPE),</span><br><span class="line">                                      UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_HASSUBTYPE),</span><br><span class="line">                                      UA_QUALIFIEDNAME(<span class="number">0</span>, <span class="string">&quot;SimpleEventType&quot;</span>),</span><br><span class="line">                                      attr, <span class="literal">NULL</span>, &amp;eventType);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 
       
