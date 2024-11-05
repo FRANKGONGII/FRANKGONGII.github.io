@@ -69,6 +69,70 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-OPCUA" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/09/OPCUA/" class="article-date">
+  <time class="dt-published" datetime="2024-10-09T02:41:39.000Z" itemprop="datePublished">2024-10-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/09/OPCUA/">OPCUA简介</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="名词定义"><a href="#名词定义" class="headerlink" title="名词定义"></a>名词定义</h2><ul>
+<li>AddressSpace：地址空间，OPC_UA服务器向客户暴露的数据集合。OPC UA 地址空间将其内容表示为一组由引用连接的节点。</li>
+<li>Aggregate：计算原始数据派生值的函数</li>
+<li>Alarm：一种一般需要确认的事件</li>
+<li>Attribute：Node的原始数据</li>
+<li>Condition：通用术语，是一种扩展的一个事件</li>
+<li>Communication Stack：应用程序和硬件之间的一套分层软件模块，提供各种功能，对发送的信息进行编码、加密和格式化，并对接收的信息进行解码、解密和解包</li>
+<li>Complex Data：包含不止一种原始数据的数据结构，如结构体</li>
+<li>Discovery：OPC UA 客户端获取 OPC UA 服务器信息（包括端点和安全信息）的过程</li>
+<li>MoniteredItem: 服务器中由客户定义的实体，用于监控属性或事件提示器的新值或事件发生情况，并为其生成通知</li>
+<li>Node: 地址空间的重要组成部分</li>
+<li>Profile：配置文件的特定功能集，服务器可声称支持这些功能集</li>
+<li>Object：对象节点，代表系统的物理或抽象元素</li>
+</ul>
+<h2 id="什么是-OPC-UA-规范-开放式产品通信统一架构，Open-Platform-Communications-Unified-Architecture"><a href="#什么是-OPC-UA-规范-开放式产品通信统一架构，Open-Platform-Communications-Unified-Architecture" class="headerlink" title="什么是 OPC_UA 规范 (开放式产品通信统一架构，Open Platform Communications Unified Architecture)"></a>什么是 OPC_UA 规范 (开放式产品通信统一架构，Open Platform Communications Unified Architecture)</h2><ul>
+<li>OPC UA 适用于现场设备、控制系统、制造执行系统和企业资源规划系统等应用领域的制造软件。这些系统旨在为工业流程交换信息并使用指令和控制。OPC UA 定义了一个通用基础架构模型，以促进这种信息交换</li>
+<li><strong>OPC UA 定义了服务器可提供的服务集，各个服务器向客户端说明它们支持哪些服务集</strong>。信息使用 OPC UA 定义的和供应商定义的数据类型进行传递，服务器定义了客户端可以动态发现的对象模型。 服务器可提供对当前数据和历史数据的访问，以及通知客户端重要变化的警报和事件。OPC UA 可以映射到各种通信协议上，数据可以用不同的方式编码，以权衡可移植性和效率。OPC UA是独立于平台的协议</li>
+<li><strong>OPC UA 提供了一致、集成的地址空间和服务模型</strong>。这样，单个 OPC UA 服务器就能将数据、警报和事件以及历史记录集成到其地址空间中，并使用一套集成服务对其进行访问。这些服务还包括一个集成的安全模型。 OPC UA 还允许服务器为客户端提供从地址空间访问对象的类型定义。这就允许使用信息模型来描述地址空间的内容。OPC UA 允许以多种不同格式（包括二进制结构和 XML 文档）公开数据。数据格式可由 OPC、其他标准组织或供应商定义。通过地址空间，客户端可以向服务器查询描述数据格式的元数据。在许多情况下，对数据格式没有预先编程知识的客户端能够在运行时确定格式并正确使用数据。 OPC UA 增加了对节点间多种关系的支持，而不仅仅局限于单一的层次结构。这样，OPC UA 服务器就可以根据一组客户端通常希望查看数据的方式，以各种层次结构呈现数据。这种灵活性加上对类型定义的支持，使 OPC UA 适用于各种问题领域</li>
+<li><strong>OPC UA 旨在提供发布数据的稳健性</strong>。所有 OPC 服务器的一个主要特点是能够发布数据和事件通知。OPC UA 为客户端提供了快速检测和恢复与这些传输相关的通信故障的机制，而无需等待底层协议。</li>
+<li><strong>OPC UA 规范是分层的，将核心设计与底层计算技术和网络传输隔离开来</strong>。这使得 OPC UA 可以根据需要映射到未来的技术，而不会否定基本设计 – 多种数据格式和传输协议可以被支持</li>
+<li><img src="/2024/10/09/OPCUA/1.png" alt="OPC_UA Server的结构"></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/09/OPCUA/" data-id="cm25l6xsw00007wvcd8fo66u7" data-title="OPCUA简介" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-vscode&amp;cmake配置c++项目构建环境" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/" class="article-date">
@@ -663,53 +727,6 @@
 
 
   
-    <article id="post-常用算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" class="article-date">
-  <time class="dt-published" datetime="2024-05-26T03:20:30.000Z" itemprop="datePublished">2024-05-26</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="求一个数所有因子"><a href="#求一个数所有因子" class="headerlink" title="求一个数所有因子"></a>求一个数所有因子</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">fun</span><span class="params">(<span class="type">int</span> num,ArrayList&lt;Integer&gt; arr)</span>&#123;</span><br><span class="line">    <span class="comment">//从1遍历到num的平方跟即可。</span></span><br><span class="line">    <span class="comment">//这时你可能会说，那后面的数呢，比如num本身，不是计算不到了嘛？</span></span><br><span class="line">    <span class="comment">//别急，看for循环里面的处理情况</span></span><br><span class="line">    <span class="keyword">for</span> ( <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span> ; i &lt;= Math.sqrt(num) ; i++ )&#123;</span><br><span class="line">        <span class="comment">//如果能被num整除，那肯定是num的因子，毫无疑问</span></span><br><span class="line">        <span class="keyword">if</span> ( num % i == <span class="number">0</span> )&#123;</span><br><span class="line">            arr.add(i);</span><br><span class="line">            <span class="comment">//重点的部分在这里！！！</span></span><br><span class="line">            <span class="comment">//当i能被num整除的情况下，此时i是相对较小的因子，用i求出num另一个较大的因子n</span></span><br><span class="line">            <span class="comment">//因为当i能被num整除时，那么数&quot;num/i&quot;也一定能被num整除</span></span><br><span class="line">            <span class="comment">//不需要再进行重复的计算，这样算法的运行时间大大降低</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> num / i;</span><br><span class="line">            <span class="comment">//但用i算出另一个较大的因子时，会出现重复的情况</span></span><br><span class="line">            <span class="comment">//例如num = 4,当遍历到2时，算出另一个较大的因子也是2，这就重复了，要判断一下</span></span><br><span class="line">            <span class="keyword">if</span> ( n != i )&#123;    </span><br><span class="line">                arr.add(n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="回文串判断-–-马拉车"><a href="#回文串判断-–-马拉车" class="headerlink" title="回文串判断 – 马拉车"></a>回文串判断 – 马拉车</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用前要先预处理字符串，每两个字符之间加一个特殊字符，头尾加两个不同的特殊字符</span></span><br><span class="line"><span class="comment">// 定义一个奇回文串的回文半径=(长度+1)/2，即保留回文中心，去掉一侧后的剩余字符串的长度</span></span><br><span class="line"><span class="comment">// halfLen[i] 表示在 t 上的以 t[i] 为回文中心的最长回文子串的回文半径</span></span><br><span class="line"><span class="comment">// 即 [i-halfLen[i]+1,i+halfLen[i]-1] 是 t 上的一个回文子串</span></span><br><span class="line">    <span class="type">int</span>[] halfLen = <span class="keyword">new</span> <span class="title class_">int</span>[t.length - <span class="number">2</span>];</span><br><span class="line">    halfLen[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// boxR 表示当前右边界下标最大的回文子串的右边界下标+1</span></span><br><span class="line">    <span class="comment">// boxM 为该回文子串的中心位置，二者的关系为 r=mid+halfLen[mid]</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">boxM</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">boxR</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i &lt; halfLen.length; i++) &#123; <span class="comment">// 循环的起止位置对应着原串的首尾字符</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">hl</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (i &lt; boxR) &#123;</span><br><span class="line">            <span class="comment">// 记 i 关于 boxM 的对称位置 i&#x27;=boxM*2-i</span></span><br><span class="line">            <span class="comment">// 若以 i&#x27; 为中心的最长回文子串范围超出了以 boxM 为中心的回文串的范围（即 i+halfLen[i&#x27;] &gt;= boxR）</span></span><br><span class="line">            <span class="comment">// 则 halfLen[i] 应先初始化为已知的回文半径 boxR-i，然后再继续暴力匹配</span></span><br><span class="line">            <span class="comment">// 否则 halfLen[i] 与 halfLen[i&#x27;] 相等</span></span><br><span class="line">            hl = Math.min(halfLen[boxM * <span class="number">2</span> - i], boxR - i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 暴力扩展</span></span><br><span class="line">        <span class="comment">// 算法的复杂度取决于这部分执行的次数</span></span><br><span class="line">        <span class="comment">// 由于扩展之后 boxR 必然会更新（右移），且扩展的的次数就是 boxR 右移的次数</span></span><br><span class="line">        <span class="comment">// 因此算法的复杂度 = O(len(t)) = O(n)</span></span><br><span class="line">        <span class="keyword">while</span> (t[i - hl] == t[i + hl]) &#123;</span><br><span class="line">            hl++;</span><br><span class="line">            boxM = i;</span><br><span class="line">            boxR = i + hl;</span><br><span class="line">        &#125;</span><br><span class="line">        halfLen[i] = hl;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h2 id="GCD-LCM-最大公约数和最小公倍数"><a href="#GCD-LCM-最大公约数和最小公倍数" class="headerlink" title="GCD &amp;&amp; LCM 最大公约数和最小公倍数"></a>GCD &amp;&amp; LCM 最大公约数和最小公倍数</h2><ul>
-<li>a * b &#x3D; gcd(a, b) * lcm(a, b)<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">long</span> <span class="title function_">gcd</span><span class="params">(<span class="type">long</span> a, <span class="type">long</span> b)</span> &#123;</span><br><span class="line">    <span class="keyword">while</span> (a != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">tmp</span> <span class="operator">=</span> a;</span><br><span class="line">        a = b % a;</span><br><span class="line">        b = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">long</span> <span class="title function_">lcm</span><span class="params">(<span class="type">long</span> a, <span class="type">long</span> b)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a / gcd(a, b) * b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/26/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/" data-id="clwp591aq0000x8vcczfhaulo" data-title="常用算法" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -753,6 +770,10 @@
       <ul>
         
           <li>
+            <a href="/2024/11/05/OPCUA-open62541%E8%AE%A2%E9%98%85%E5%8E%9F%E7%90%86/">open62541-订阅监视</a>
+          </li>
+        
+          <li>
             <a href="/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">Spring-Bean&amp;依赖注入</a>
           </li>
         
@@ -765,11 +786,7 @@
           </li>
         
           <li>
-            <a href="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/">OPCUA open62541-多节点订阅</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/28/JVM/">JVM</a>
+            <a href="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/">OPCUA open62541-多节点订阅实现</a>
           </li>
         
       </ul>
