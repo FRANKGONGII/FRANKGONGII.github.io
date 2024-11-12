@@ -69,6 +69,360 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-OPCUA-open62541支持加密" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/" class="article-date">
+  <time class="dt-published" datetime="2024-10-12T07:03:06.000Z" itemprop="datePublished">2024-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/">OPCUA open62541-支持加密</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="前置背景"><a href="#前置背景" class="headerlink" title="前置背景"></a>前置背景</h2><ul>
+<li>使用open62541时，在browser里面选择none的Channel Mode的时候可以连上，选其他加密或者签名的模式就不行<br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B44223EAE-8801-420c-B0BE-616880056EF6%7D.png"><br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7BF7CD931D-E0B4-4021-BBAA-7A3E02B41FB0%7D.png"><br>可以看到如果是None模式，在GetEndPoints时Server的返回值里的EndPoint都没有带上证书（Missing）<br>如果选择加密或者加密&amp;签名，结果如下，显示服务器不支持，同时抓包结果证书也是空，因此初步判断是服务器上缺少了证书之类的连接所需配置：<br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B97A893F3-51D1-4e47-868A-65C608B9D183%7D.png"></li>
+</ul>
+<h2 id="使用browser的实现"><a href="#使用browser的实现" class="headerlink" title="使用browser的实现"></a>使用browser的实现</h2><p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/whahu1989/article/details/107281639">https://blog.csdn.net/whahu1989/article/details/107281639</a></p>
+<h3 id="CMake配置"><a href="#CMake配置" class="headerlink" title="CMake配置"></a>CMake配置</h3><ul>
+<li>在根目录下的CMakeLists.txt中，找到UA_ENABLE_AMALGAMATION配置，改成ON</li>
+<li>同样的找到UA_ENABLE_ENCRYPTION 和 UA_ENABLE_ENCRYPTION_OPENSSL，前者改成”OPENSSL”，后者改成”ON”。前者的值可能根据open62541的版本有所不同，低版本改成”ON”<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># security provider</span></span><br><span class="line"><span class="keyword">set</span>(UA_ENCRYPTION_PLUGINS <span class="string">&quot;MBEDTLS&quot;</span> <span class="string">&quot;OPENSSL&quot;</span> <span class="string">&quot;LIBRESSL&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(UA_ENABLE_ENCRYPTION <span class="string">&quot;OPENSSL&quot;</span> CACHE <span class="keyword">STRING</span> <span class="string">&quot;Encryption support (LibreSSL EXPERIMENTAL)&quot;</span>)</span><br><span class="line"><span class="keyword">SET_PROPERTY</span>(CACHE UA_ENABLE_ENCRYPTION PROPERTY STRINGS <span class="string">&quot;OFF&quot;</span> <span class="variable">$&#123;UA_ENCRYPTION_PLUGINS&#125;</span>)</span><br><span class="line"><span class="keyword">option</span>(UA_ENABLE_ENCRYPTION_OPENSSL <span class="string">&quot;Deprecated: Enable encryption support (uses openssl)&quot;</span> <span class="keyword">ON</span>)</span><br><span class="line"><span class="keyword">mark_as_advanced</span>(UA_ENABLE_ENCRYPTION_OPENSSL)</span><br><span class="line"><span class="keyword">option</span>(UA_ENABLE_ENCRYPTION_MBEDTLS <span class="string">&quot;Deprecated: Enable encryption support (uses mbedTLS)&quot;</span> <span class="keyword">OFF</span>)</span><br><span class="line"><span class="keyword">mark_as_advanced</span>(UA_ENABLE_ENCRYPTION_MBEDTLS)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="编译open62541"><a href="#编译open62541" class="headerlink" title="编译open62541"></a>编译open62541</h3><ul>
+<li>操作步骤<ol>
+<li>创建build目录: <code>mkdir build &amp;&amp; cd build</code></li>
+<li>编译: <code>cmake .. &amp; make</code></li>
+<li>获取到open62541.h 和 open62541.c, 备用</li>
+</ol>
+</li>
+<li>可能存在的问题 (在open62541,v1.40下)<ol>
+<li>没有生成出open62541.c和open62541.h, 手动执行<code>make open62541-amalgamation</code></li>
+</ol>
+</li>
+</ul>
+<h3 id="生成证书"><a href="#生成证书" class="headerlink" title="生成证书"></a>生成证书</h3><ul>
+<li>在open62541的项目目录下的tool&#x2F;certs内有一个python脚本，用它生成两组私钥和证书，分别给客户端和服务端用<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成Server的证书和私匙，使用默认参数</span></span><br><span class="line">python3 create_self-signed.py .  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成Client的证书和私匙，自定义URI参数和名称</span></span><br><span class="line">python3 create_self-signed.py -u urn:open62541.client.application -c client .</span><br></pre></td></tr></table></figure></li>
+<li>需要记录一下URI，如果你使用上面的代码，结果应该是<code>urn:open62541.server.application</code>和<code>urn:open62541.client.application</code></li>
+<li>如果需要其他生成证书的方法：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45662588/article/details/116981657">https://blog.csdn.net/qq_45662588/article/details/116981657</a></li>
+</ul>
+<h3 id="验证加密通信"><a href="#验证加密通信" class="headerlink" title="验证加密通信"></a>验证加密通信</h3><p>目录结构如下：<br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B036241D9-5F41-43c2-93B9-739E5DC88A7C%7D.png"></p>
+<h4 id="本地编译Sevrer-client"><a href="#本地编译Sevrer-client" class="headerlink" title="本地编译Sevrer &amp; client"></a>本地编译Sevrer &amp; client</h4><ul>
+<li><p>server.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* This work is licensed under a Creative Commons CCZero 1.0 Universal License.</span></span><br><span class="line"><span class="comment"> * See http://creativecommons.org/publicdomain/zero/1.0/ for more information.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *    Copyright 2019 (c) Kalycito Infotech Private Limited</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;common.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">UA_Boolean running = <span class="literal">true</span>;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">stopHandler</span><span class="params">(<span class="type">int</span> sig)</span> &#123;</span><br><span class="line">    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, <span class="string">&quot;received ctrl-c&quot;</span>);</span><br><span class="line">    running = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span> &#123;</span><br><span class="line">    signal(SIGINT, stopHandler);</span><br><span class="line">    signal(SIGTERM, stopHandler);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(argc &lt; <span class="number">3</span>) &#123;</span><br><span class="line">        UA_LOG_FATAL(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,</span><br><span class="line">                     <span class="string">&quot;Missing arguments. Arguments are &quot;</span></span><br><span class="line">                     <span class="string">&quot;&lt;server-certificate.der&gt; &lt;private-key.der&gt; &quot;</span></span><br><span class="line">                     <span class="string">&quot;[&lt;trustlist1.der&gt;, ...]&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> EXIT_FAILURE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 加载server的证书和私匙 */</span></span><br><span class="line">    UA_ByteString certificate = loadFile(argv[<span class="number">1</span>]);</span><br><span class="line">    UA_ByteString privateKey  = loadFile(argv[<span class="number">2</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 加载trustlist */</span></span><br><span class="line">    <span class="type">size_t</span> trustListSize = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(argc &gt; <span class="number">3</span>)</span><br><span class="line">        trustListSize = (<span class="type">size_t</span>)argc<span class="number">-3</span>;</span><br><span class="line">    UA_STACKARRAY(UA_ByteString, trustList, trustListSize);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; trustListSize; i++)</span><br><span class="line">        trustList[i] = loadFile(argv[i+<span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Loading of a issuer list, not used in this application */</span></span><br><span class="line">    <span class="type">size_t</span> issuerListSize = <span class="number">0</span>;</span><br><span class="line">    UA_ByteString *issuerList = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Loading of a revocation list currently unsupported */</span></span><br><span class="line">    UA_ByteString *revocationList = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="type">size_t</span> revocationListSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    UA_Server *server = UA_Server_new();</span><br><span class="line">    UA_ServerConfig *config = UA_Server_getConfig(server);</span><br><span class="line"></span><br><span class="line">    UA_StatusCode retval =</span><br><span class="line">        UA_ServerConfig_setDefaultWithSecurityPolicies(config, <span class="number">4840</span>,</span><br><span class="line">                                                       &amp;certificate, &amp;privateKey,</span><br><span class="line">                                                       trustList, trustListSize,</span><br><span class="line">                                                       issuerList, issuerListSize,</span><br><span class="line">                                                       revocationList, revocationListSize);</span><br><span class="line">      </span><br><span class="line">    <span class="comment">// 填坑的地方，非常重要，URI需要保证和证书里的URI一致</span></span><br><span class="line">    <span class="keyword">if</span> (&amp;config-&gt;applicationDescription.applicationUri != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        UA_String_clear(&amp;config-&gt;applicationDescription.applicationUri);</span><br><span class="line">    &#125;                               </span><br><span class="line">    config-&gt;applicationDescription.applicationUri = UA_STRING_ALLOC(<span class="string">&quot;urn:open62541.server.application&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; config-&gt;endpointsSize; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (&amp;config-&gt;endpoints[i].server.applicationUri != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            UA_String_clear(&amp;config-&gt;endpoints[i].server.applicationUri);</span><br><span class="line">        &#125;</span><br><span class="line">        config-&gt;endpoints[i].server.applicationUri = UA_String_fromChars(<span class="string">&quot;urn:open62541.server.application&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    UA_ByteString_clear(&amp;certificate);</span><br><span class="line">    UA_ByteString_clear(&amp;privateKey);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; trustListSize; i++)</span><br><span class="line">        UA_ByteString_clear(&amp;trustList[i]);</span><br><span class="line">    <span class="keyword">if</span>(retval != UA_STATUSCODE_GOOD)</span><br><span class="line">        <span class="keyword">goto</span> cleanup;</span><br><span class="line"></span><br><span class="line">    retval = UA_Server_run(server, &amp;running);</span><br><span class="line"></span><br><span class="line"> cleanup:</span><br><span class="line">    UA_Server_delete(server);</span><br><span class="line">    <span class="keyword">return</span> retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>client.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* This work is licensed under a Creative Commons CCZero 1.0 Universal License.</span></span><br><span class="line"><span class="comment"> * See http://creativecommons.org/publicdomain/zero/1.0/ for more information. */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;common.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MIN_ARGS 4</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(argc &lt; MIN_ARGS) &#123;</span><br><span class="line">        UA_LOG_FATAL(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,</span><br><span class="line">                     <span class="string">&quot;Arguments are missing. The required arguments are &quot;</span></span><br><span class="line">                     <span class="string">&quot;&lt;opc.tcp://host:port&gt; &quot;</span></span><br><span class="line">                     <span class="string">&quot;&lt;client-certificate.der&gt; &lt;client-private-key.der&gt; &quot;</span></span><br><span class="line">                     <span class="string">&quot;[&lt;trustlist1.der&gt;, ...]&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> EXIT_FAILURE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *endpointUrl = argv[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 加载client的证书和私匙 */</span></span><br><span class="line">    UA_ByteString certificate = loadFile(argv[<span class="number">2</span>]);</span><br><span class="line">    UA_ByteString privateKey  = loadFile(argv[<span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 加载trustList. revocationList目前还不支持 */</span></span><br><span class="line">    <span class="type">size_t</span> trustListSize = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(argc &gt; MIN_ARGS)</span><br><span class="line">        trustListSize = (<span class="type">size_t</span>)argc-MIN_ARGS;</span><br><span class="line">    UA_STACKARRAY(UA_ByteString, trustList, trustListSize);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">size_t</span> trustListCount = <span class="number">0</span>; trustListCount &lt; trustListSize; trustListCount++)</span><br><span class="line">        trustList[trustListCount] = loadFile(argv[trustListCount+<span class="number">4</span>]);</span><br><span class="line"></span><br><span class="line">    UA_ByteString *revocationList = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="type">size_t</span> revocationListSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    UA_Client *client = UA_Client_new();</span><br><span class="line">    UA_ClientConfig *cc = UA_Client_getConfig(client);</span><br><span class="line"></span><br><span class="line">    cc-&gt;securityPolicyUri = UA_STRING_ALLOC(<span class="string">&quot;http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256&quot;</span>);</span><br><span class="line">    cc-&gt;securityMode = UA_MESSAGESECURITYMODE_SIGNANDENCRYPT;</span><br><span class="line">    UA_ClientConfig_setDefaultEncryption(cc, certificate, privateKey,</span><br><span class="line">                                         trustList, trustListSize,</span><br><span class="line">                                         revocationList, revocationListSize);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 给安全策略None添加证书信息，去除运行时不匹配的警告</span></span><br><span class="line">    UA_SecurityPolicy_None(cc-&gt;securityPolicies, certificate, cc-&gt;logging);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 填坑的地方，非常重要，URI需要保证和证书里的URI一致</span></span><br><span class="line">    <span class="keyword">if</span> (&amp;cc-&gt;clientDescription.applicationUri != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        UA_String_clear(&amp;cc-&gt;clientDescription.applicationUri);</span><br><span class="line">    &#125;</span><br><span class="line">    cc-&gt;clientDescription.applicationUri = UA_STRING_ALLOC(<span class="string">&quot;urn:open62541.client.application&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    UA_ByteString_clear(&amp;certificate);</span><br><span class="line">    UA_ByteString_clear(&amp;privateKey);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">size_t</span> deleteCount = <span class="number">0</span>; deleteCount &lt; trustListSize; deleteCount++) &#123;</span><br><span class="line">        UA_ByteString_clear(&amp;trustList[deleteCount]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Secure client connect */</span></span><br><span class="line">    UA_StatusCode retval = UA_Client_connect(client, endpointUrl);</span><br><span class="line">    <span class="keyword">if</span>(retval != UA_STATUSCODE_GOOD) &#123;</span><br><span class="line">        UA_Client_delete(client);</span><br><span class="line">        <span class="keyword">return</span> EXIT_FAILURE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    UA_Variant value;</span><br><span class="line">    UA_Variant_init(&amp;value);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* NodeId of the variable holding the current time */</span></span><br><span class="line">    <span class="type">const</span> UA_NodeId nodeId = UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_SERVER_SERVERSTATUS_CURRENTTIME);</span><br><span class="line">    retval = UA_Client_readValueAttribute(client, nodeId, &amp;value);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(retval == UA_STATUSCODE_GOOD &amp;&amp;</span><br><span class="line">       UA_Variant_hasScalarType(&amp;value, &amp;UA_TYPES[UA_TYPES_DATETIME])) &#123;</span><br><span class="line">        UA_DateTime raw_date  = *(UA_DateTime *) value.data;</span><br><span class="line">        UA_DateTimeStruct dts = UA_DateTime_toStruct(raw_date);</span><br><span class="line">        UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, <span class="string">&quot;date is: %u-%u-%u %u:%u:%u.%03u\n&quot;</span>,</span><br><span class="line">                    dts.day, dts.month, dts.year, dts.hour, dts.min, dts.sec, dts.milliSec);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* Clean up */</span></span><br><span class="line">    UA_Variant_clear(&amp;value);</span><br><span class="line">    UA_Client_delete(client);</span><br><span class="line">    <span class="keyword">return</span> retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>CMakeLists.txt</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">project</span>(encryption_openssl)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> (EXECUTABLE_OUTPUT_PATH  <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/bin)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_definitions</span>(-std=c99)</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_directories</span>(<span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/open62541)</span><br><span class="line"><span class="keyword">include_directories</span>(<span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/src)</span><br><span class="line"></span><br><span class="line"><span class="keyword">find_package</span>(OpenSSL REQUIRED)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(server <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/src/server.c <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/open62541/open62541.c)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(server <span class="variable">$&#123;OPENSSL_LIBRARIES&#125;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(client <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/src/client.c <span class="variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/open62541/open62541.c)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(client <span class="variable">$&#123;OPENSSL_LIBRARIES&#125;</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>common.h</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* This work is licensed under a Creative Commons CCZero 1.0 Universal License.</span></span><br><span class="line"><span class="comment"> * See http://creativecommons.org/publicdomain/zero/1.0/ for more information. */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;open62541.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* loadFile parses the certificate file.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * @param  path               specifies the file name given in argv[]</span></span><br><span class="line"><span class="comment"> * @return Returns the file content after parsing */</span></span><br><span class="line"><span class="type">static</span> UA_INLINE UA_ByteString <span class="title function_">loadFile</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *<span class="type">const</span> path)</span> </span><br><span class="line">&#123;</span><br><span class="line">    UA_ByteString fileContents = UA_STRING_NULL;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Open the file */</span></span><br><span class="line">    FILE *fp = fopen(path, <span class="string">&quot;rb&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(!fp) &#123;</span><br><span class="line">        errno = <span class="number">0</span>; <span class="comment">/* We read errno also from the tcp layer... */</span></span><br><span class="line">        <span class="keyword">return</span> fileContents;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Get the file length, allocate the data and read */</span></span><br><span class="line">    fseek(fp, <span class="number">0</span>, SEEK_END);</span><br><span class="line">    fileContents.length = (<span class="type">size_t</span>)ftell(fp);</span><br><span class="line">    fileContents.data = (UA_Byte *)UA_malloc(fileContents.length * <span class="keyword">sizeof</span>(UA_Byte));</span><br><span class="line">    <span class="keyword">if</span>(fileContents.data) &#123;</span><br><span class="line">        fseek(fp, <span class="number">0</span>, SEEK_SET);</span><br><span class="line">        <span class="type">size_t</span> read = fread(fileContents.data, <span class="keyword">sizeof</span>(UA_Byte), fileContents.length, fp);</span><br><span class="line">        <span class="keyword">if</span>(read != fileContents.length)</span><br><span class="line">            UA_ByteString_clear(&amp;fileContents);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        fileContents.length = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    fclose(fp);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> fileContents;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>make时，open62541.c 可能存在一些重复定义问题方法或结构体，直接修改一下即可，重复定义的方法我检查了一下内容是完全一致的</p>
+</li>
+</ul>
+<h4 id="本地测试"><a href="#本地测试" class="headerlink" title="本地测试"></a>本地测试</h4><p>在bin目录下运行以下命令，结果应该是能看到客户端显示服务端日期然后断开连接</p>
+<ul>
+<li><code>./server ../certs/server_cert.der ../certs/server_key.der ../certs/client_cert.der</code></li>
+<li><code>./client opc.tcp://127.0.0.1:4840 ../certs/client_cert.der ../certs/client_key.der ../certs/server_cert.der</code></li>
+<li>参考经验的server代码会dump&#x2F;段错误，我排查了一下是UA_String_delete的问题（原本是UA_String_deleteMember, 但是编译之后连这个函数都没有），改成了UA_String_clear，其实直接删掉就能跑起来，就是可能内存泄露而已（:</li>
+</ul>
+<h3 id="使用prosys客户端测试"><a href="#使用prosys客户端测试" class="headerlink" title="使用prosys客户端测试"></a>使用prosys客户端测试</h3><ul>
+<li>先把客户端的证书复制到certs目录，因为要加入服务端的信任列表<br><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7B9EA172C0-D73A-40f8-B26E-F7B60017F434%7D.png"><br>在文件夹打开然后复制证书，在server的启动命令后加入对应证书文件目录即可</li>
+<li>然后连接时不选None模式，选Sign&#x2F;Sign&amp;Encrypt然后连接即可</li>
+</ul>
+<h3 id="使用客户证书进行连接认证"><a href="#使用客户证书进行连接认证" class="headerlink" title="使用客户证书进行连接认证"></a>使用客户证书进行连接认证</h3><p><img src="/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/%7BD2E954E7-5400-476a-9748-F03A87E9411A%7D.png"><br>按照上述方法执行后，客户认证选择匿名是可以成功连接，也确实是加密通信，现在尝试实现通过证书的客户认证。但是初步尝试没啥效果（生成一组新的私钥-证书对，并加入服务端的授信列表后，还是不能成功连接：显示用户identityToken有效但服务端拒绝。具体的报错代码在activateSession中，抛出<code>Bad_IdentityTokenRejected (0x80210000) &quot;The user identity token is valid but the server has rejected it.&quot;  Failed to activate Session.</code>）</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><ul>
+<li>最终排查发现open62541在activateSession中检查证书时如果证书不是用户证书，就会拒绝。而我一开始使用的openssl生成的x509证书没有指明是不是用户证书。</li>
+<li>使用以下方法生成用户证书，在prosys的客户端中的用户认证中输入证书+私钥+私钥密码，然后在上述server demo启动路径中加上证书即可<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -aes256 -out private_key.key 2048</span><br><span class="line">openssl req -new -key private_key.pem -out user.csr</span><br><span class="line">openssl x509 -req -<span class="keyword">in</span> user.csr -signkey private_key.pem -out user_cert.pem -days 365 -extensions v3_req -extfile &lt;(<span class="built_in">echo</span> <span class="string">&quot;[v3_req]&quot;</span>; <span class="built_in">echo</span> <span class="string">&quot;basicConstraints=CA:FALSE&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/12/OPCUA-open62541%E6%94%AF%E6%8C%81%E5%8A%A0%E5%AF%86/" data-id="cm28op5d50000u8vc4lngc9lv" data-title="OPCUA open62541-支持加密" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-SSL &amp; TLS &amp; openssl" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/12/SSL%20&%20TLS%20&%20openssl/" class="article-date">
+  <time class="dt-published" datetime="2024-10-12T03:18:15.000Z" itemprop="datePublished">2024-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/12/SSL%20&%20TLS%20&%20openssl/">SSL &amp; TLS &amp; openssl</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="安装（linux）"><a href="#安装（linux）" class="headerlink" title="安装（linux）"></a>安装（linux）</h2>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install openssl</span><br><span class="line">openssl version</span><br></pre></td></tr></table></figure>
+
+<h2 id="SSL-TLS"><a href="#SSL-TLS" class="headerlink" title="SSL &#x2F; TLS"></a>SSL &#x2F; TLS</h2><ul>
+<li>SSL(Secure Socket Layer)安全套接层，是1994年由Netscape公司设计的一套协议，并与1995年发布了3.0版本。</li>
+<li>TLS(Transport Layer Security)传输层安全是IETF在SSL3.0基础上设计的协议，实际上相当于SSL的后续版本。</li>
+<li>SSL&#x2F;TLS是一个安全通信框架，上面可以承载HTTP协议或者SMTP&#x2F;POP3协议等。</li>
+</ul>
+<h3 id="SSL-TLS-流程"><a href="#SSL-TLS-流程" class="headerlink" title="SSL &#x2F; TLS 流程"></a>SSL &#x2F; TLS 流程</h3><ul>
+<li><img src="/2024/10/12/SSL%20&%20TLS%20&%20openssl/SSL%E8%BF%87%E7%A8%8B.png"><ol>
+<li>client hello: 可用版本号，当前时间，客户端随机数(用于生成对称秘钥)，会话ID，可用的密码套件清单，可用的压缩方式清单</li>
+<li>server hello: 使用的版本号，当前时间，服务器随机数，会话ID，使用的密码套件，使用的压缩方式</li>
+<li>可选步骤: certificate: 服务器端发送自己的证书清单，因为证书可能是层级结构的，所以处理服务器自己的证书之外，还需要发送为服务器签名的证书。客户端将会对服务器端的证书进行验证。如果是以匿名的方式通信则不需要证书。</li>
+<li>可选步骤: ServerKeyExchange: 如果第三步的证书信息不足，则可以发送ServerKeyExchange用来构建加密通道。ServerKeyExchange的内容可能包含两种形式：</li>
+</ol>
+<ul>
+<li>如果选择的是RSA协议，那么传递的就是RSA构建公钥密码的参数（E，N）。</li>
+<li>如果选择的是Diff-Hellman密钥交换协议，那么传递的就是密钥交换的参数</li>
+</ul>
+<ol start="5">
+<li>可选步骤: CertificateRequest: 如果是在一个受限访问的环境，比如fabric中，服务器端也需要向客户端索要证书。如果并不需要客户端认证，则不需要此步骤。</li>
+<li>server hello done: 服务器端发送server hello done的消息告诉客户端自己的消息结束了。</li>
+<li>可选步骤: Certificate: 对步骤5的回应，客户端发送客户端证书给服务器</li>
+<li>ClientKeyExchange: 还是分两种情况：</li>
+</ol>
+<ul>
+<li>如果是公钥或者RSA模式情况下，客户端将根据客户端生成的随机数和服务器端生成的随机数，生成预备主密码，通过该公钥进行加密，返送给服务器端。</li>
+<li>如果使用的是Diff-Hellman密钥交换协议，则客户端会发送自己这一方要生成Diff-Hellman密钥而需要公开的值。这样服务器端可以根据这个公开值计算出预备主密码。</li>
+</ul>
+<ol start="9">
+<li>可选步骤: CertificateVerify: 客户端向服务器端证明自己是客户端证书的持有者。</li>
+<li>ChangeCipherSpec(准备切换密码): ChangeCipherSpec是密码规格变更协议的消息，表示后面的消息将会以前面协商过的密钥进行加密。</li>
+<li>finished(握手协议结束): 客户端告诉服务器端握手协议结束了。</li>
+<li>ChangeCipherSpec(准备切换密码): 服务器端告诉客户端自己要切换密码了。</li>
+<li>finished(握手协议结束): 服务器端告诉客户端，握手协议结束了。</li>
+<li>切换到应用数据协议, 这之后服务器和客户端就是以加密的方式进行沟通了。</li>
+</ol>
+</li>
+</ul>
+<h2 id="OpenSSL-常用接口"><a href="#OpenSSL-常用接口" class="headerlink" title="OpenSSL 常用接口"></a>OpenSSL 常用接口</h2><ul>
+<li><p>创建SSL上下文</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SSL_CTX *ssl_ctx = <span class="built_in">SSL_CTX_new</span>(<span class="built_in">TLS_client_method</span>());</span><br><span class="line"><span class="keyword">if</span> (ssl_ctx == <span class="literal">NULL</span>) &#123;</span><br><span class="line">  <span class="comment">// 处理错误</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>建立SSL会话</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SSL *ssl = <span class="built_in">SSL_new</span>(ssl_ctx);</span><br><span class="line"><span class="built_in">SSL_set_fd</span>(ssl, socket_fd);</span><br><span class="line"><span class="type">int</span> ret = <span class="built_in">SSL_connect</span>(ssl);</span><br><span class="line"><span class="keyword">if</span> (ret != <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">// 处理连接错误</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>SSL_new()创建了一个新的SSL结构，代表了一个具体的SSL会话</li>
+<li>SSL_set_fd()把一个会话和具体的TCP套接字关联起来，例如socket</li>
+<li>SSL_connect()启动了SSL握手流程</li>
+</ul>
+</li>
+<li></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/12/SSL%20&%20TLS%20&%20openssl/" data-id="cm25t6qeq0000ogvcgapmasxm" data-title="SSL &amp; TLS &amp; openssl" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-OPCUA安全架构" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" class="article-date">
+  <time class="dt-published" datetime="2024-10-09T08:50:36.000Z" itemprop="datePublished">2024-10-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全 &amp; HTTPS安全</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>中文博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/mikasoi/article/details/84799078">https://blog.csdn.net/mikasoi/article/details/84799078</a></p>
+<h2 id="目标-–-保证信息安全"><a href="#目标-–-保证信息安全" class="headerlink" title="目标 – 保证信息安全"></a>目标 – 保证信息安全</h2><ol>
+<li>认证</li>
+<li>授权</li>
+<li>保密性：数据加密，保证在传输，存储时的安全性</li>
+<li>完整性：数据不应该有变化</li>
+<li>可审计性：系统的行动应该记录在案</li>
+<li>可用性</li>
+</ol>
+<h2 id="威胁"><a href="#威胁" class="headerlink" title="威胁"></a>威胁</h2><ul>
+<li>message flooding – 可用性<ul>
+<li>攻击者可以发送大量信息或包含大量请求的单个信息，目的是压垮 OPC UA 服务器或 CPU、TCP&#x2F;IP 栈、操作系统或文件系统等依赖组件。泛洪攻击可在多层进行，包括 OPC UA、SOAP、HTTP 或 TCP。 信息泛洪攻击既可以使用格式良好的信息，也可以使用格式不良的信息。在第一种情况下，攻击者可能是使用合法客户端向服务器发出大量请求的恶意人员。 有两种情况，一种是客户端没有与服务器建立会话，另一种是客户端与服务器建立了会话。信息泛滥可能会损害建立 OPC UA 会话或终止现有会话的能力。在第二种情况下，攻击者可以使用恶意客户端，向 OPC UA 服务器发送畸形信息，以耗尽服务器的资源。 一般来说，信息泛洪可能会损害与 OPC UA 实体的通信能力，并导致拒绝服务。 信息泛洪会影响可用性。</li>
+</ul>
+</li>
+<li>窃听 – 保密性</li>
+<li>消息伪造 – 完整性、可审计性和授权</li>
+<li>消息重放 – 授权</li>
+<li>畸形消息 – 完整性、可用性</li>
+</ul>
+<h2 id="消息安全协议"><a href="#消息安全协议" class="headerlink" title="消息安全协议"></a>消息安全协议</h2><h3 id="安全握手"><a href="#安全握手" class="headerlink" title="安全握手"></a>安全握手</h3><ul>
+<li><p>安全协议应该支持三种模式：无处理，签名，签名以及加密</p>
+<ul>
+<li>如果是无处理模式，仍然要提供一个逻辑上的信道和唯一的标识符</li>
+</ul>
+</li>
+<li><p>握手过程</p>
+<ul>
+<li><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png"><ol>
+<li>客户端请求打开安全信道：用客户端私钥签名，用服务端公钥加密</li>
+<li>服务端回复请求：用服务端私钥签名，用客户端公钥加密</li>
+<li>？客户端创建会话请求：用客户端签名的秘钥签名，用服务端加密的秘钥加密</li>
+<li>？服务端创建会话服务：用服务端签名的秘钥签名，用客户端加密的秘钥加密</li>
+</ol>
+</li>
+<li>一系列在安全握手中使用的安全算法被称为<strong>安全策略</strong>（Security Policy）</li>
+<li>每个安全协议映射指明了如何应用安全算法，以及如何使用安全策略的参数。</li>
+<li><strong>握手步骤详解</strong>：<ul>
+<li>OpenSecureChannel Requset：<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelRequest.png"><br>和秘钥有关的参数是clientCertificate（ApplicationInstance‌Certificate），这个证书指明了客户端身份，OpenSecureChannel请求需要用证书的私钥签名（证书公钥一般包含在证书中），也就是可以通过公钥验证证书合法性</li>
+<li>OpenSecureChannel Response：<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelResponse.png"></li>
+<li><strong>看到这里肯定有一个问题？客户端和服务端的加密公钥是怎么交换的？</strong><br>这里需要了解建立SecureChannel或者Session之前的事情<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/discoverProcess.png"><br>GetEndPoints服务返回服务端支持的所有EndPoints和需要建立连接所需的信息，注意：<strong>这个服务不需要message security，也就是不需要加密，但是仍然需要传输层安全</strong><br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/getEndPoints.png"><br>服务端证书就在EndPointDescription中了，证书格式和上面的客户端证书是一样的，客户端和服务端也就完成了秘钥的交换</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>OPCUA中的CS连接是一个嵌套结构：</p>
+<ol>
+<li>原始连接：通过打开与响应主机名和端口的TCP连接以及相应的HEL&#x2F;ACK握手创建原始连接</li>
+<li>SecureChannnel：SecureChannels是在原始TCP连接之上创建的。使用OpenSecureChannel请求和响应消息对建立SecureChannel。Channel即有前文提到的3个mode</li>
+<li>Session：在OpenSecureChannel上创建，确保不以明文发送凭据。建立Session需要两个消息交换：CreateSession和ActicateSession</li>
+</ol>
+</li>
+<li><p>SecureChannel:</p>
+<ul>
+<li>一个SecureChannel是一个在单客户端和单服务器间长期运行的逻辑连接，包含一组仅有客户端和服务端知晓的秘钥。这些秘钥用于网络上信息的验证和加密。SecureChannelService保证了CS之间可以安全地协商秘钥。</li>
+<li>SecureChannel的开放和关闭是由客户使用 SecureChannel Service</li>
+</ul>
+</li>
+<li><p>OPCUA中的安全算法</p>
+<ol>
+<li>（非）对称加密算法：用（非）对称秘钥加密的算法</li>
+<li>非对称秘钥加密算法（秘钥封装，Key Encapsulation）：用于使用非对称密钥加密密钥的算法。类似的有对称秘钥加密算法（秘钥包装，Key Wrapping）。这个名称不重要，说法比较多，关键是有对称还是非对称的秘钥进行对另一个秘钥的加密</li>
+<li>对称签名算法：用对称秘钥为消息签名</li>
+<li>秘钥衍生算法：用于加密的密钥长度由对称加密算法（SymmetricEncryptionAlgorithm）决定。用于创建对称签名的密钥长度取决于对称签名算法（SymmetricSignatureAlgorithm），可能与加密密钥长度不同。</li>
+<li>证书签名算法：用于签署用于非对称加密的证书。该算法是最低要求算法。允许使用更强的算法</li>
+</ol>
+</li>
+<li><p>OPCUA中的证书<br>OPC UA 应用程序使用证书来存储非对称加密操作所需的公钥。</p>
+<ul>
+<li>服务端证书和客户端证书在OpenSecureChannel中使用，是ApplicationInstance Certificate Data</li>
+<li>服务端软件证书和客户端软件证书在CreateSession和ActicateSession中使用，是SignedSoftwareCertificate<br>Data Type</li>
+</ul>
+</li>
+<li><p>OPCUA中的消息块结构<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/message%20chunk.png"></p>
+<ol>
+<li>message header：包含该消息块的一些基本信息，例如消息类型、消息大小、是否是最后一个消息块等</li>
+<li>security header：说明对报文进行了哪些加密操作。安全标头有两个版本，取决于应用于报文的安全类型（对称or非对称）</li>
+<li>sequence header：序列头可确保通过信道发送的每个信息的第一个加密块都以不同的数据开始（就是一个序列号）</li>
+<li>padding</li>
+</ol>
+</li>
+<li><p>padding:</p>
+<ul>
+<li>如果使用能同时支持签名和加密的算法（认证加密），那就不需要padding，否则需要<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/OPCUA%E7%9A%84padding1.png"><br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/OPCUApadding2.png"><ul>
+<li>认证加密：AE（Authenticated Encryption，认证加密）算法结合了加密（Confidentiality）和认证（Authentication），确保数据在传输过程中不仅是加密的，而且没有被篡改。常见的AE算法包括：AES-GCM（Galois&#x2F;Counter Mode）AES-CCM（Counter with CBC-MAC）这些算法会在加密过程中生成消息认证码（MAC），从而提供认证和加密的双重保障。</li>
+</ul>
+</li>
+<li>PaddingSize &#x3D; PlainTextBlockSize – ((BytesToWrite + SignatureSize + 1) % PlainTextBlockSize);</li>
+<li></li>
+</ul>
+</li>
+</ul>
+<h3 id="对称与非对称加密，加密与签名，公钥安全"><a href="#对称与非对称加密，加密与签名，公钥安全" class="headerlink" title="对称与非对称加密，加密与签名，公钥安全"></a>对称与非对称加密，加密与签名，公钥安全</h3><p>参考：<br><a target="_blank" rel="noopener" href="https://thiscute.world/posts/practical-cryptography-basics-7-asymmetric-key-ciphers/">https://thiscute.world/posts/practical-cryptography-basics-7-asymmetric-key-ciphers/</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/boweiqiang/article/details/105737017">https://blog.csdn.net/boweiqiang/article/details/105737017</a></p>
+<h4 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h4><ul>
+<li>使用相同的秘钥进行加密和解密，也就是消息发出方和接受方需要持有相同的秘钥</li>
+<li>常见的对称加密算法：AES（AES-128、AES-192、AES-256）、ChaCha20、Twofish、IDEA、Serpent、Camelia、RC6、CAST </li>
+<li>对称加密往往是分组加密的，也就是每次只加密固定大小的块，只有少部分是流式加密，即将数据逐字节加密为密文流。</li>
+<li>单一使用对称加密往往不能满足全部的要求，例如真实性和完整性。一个完整的对称加密方案包括：秘钥派生算法，对称加密算法（分组密码工作模式（用于将分组密码转换为流密码，如 CBC 或 CTR）+ 消息填充算法（如 PKCS7） + 分组密码算法（如 AES）需要借助这两种算法，才能加密任意大小的数据）和消息认证算法等</li>
+</ul>
+<h4 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h4><ul>
+<li>非对称加密&#x2F;公钥密码学可以在不安全的信道上安全地进行密钥交换，第三方即使监听到通信过程，但是 （几乎）无法破解出密钥。每个人只需要公开自己的公钥，就可以跟其他任何人安全地通信。</li>
+<li>常见的非对称加密算法：RSA、ECC（椭圆曲线密码学）、ElGamal、Diffie-Hellman、ECDH、ECDSA 和 EdDSA。许多密码算法都是以这些密码系统为基础实现的，例如 RSA 签名、RSA 加密&#x2F;解密、ECDH 密钥交换以及 ECDSA 和 EdDSA 签名。</li>
+<li>非对称加密方案：<ol>
+<li>秘钥封装机制：KEM<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/KEM%E8%BF%87%E7%A8%8B.png"></li>
+<li>集成加密方案 (IES) 在密钥封装机制（KEM）的基础上，添加了密钥派生算法 KDF、消息认证算法 MAC 等其他密码学算法以达成更高的安全性。在 IES 方案中，非对称算法（如 RSA 或 ECC）跟 KEM 一样，都是用于加密或封装对称密钥，然后通过对称密钥（如 AES 或 Chacha20）来加密输入消息。</li>
+</ol>
+</li>
+</ul>
+<h2 id="签名：防止篡改-加密：防止泄密"><a href="#签名：防止篡改-加密：防止泄密" class="headerlink" title="签名：防止篡改 &amp; 加密：防止泄密"></a>签名：防止篡改 &amp; 加密：防止泄密</h2><ul>
+<li>同时使用加密和签名？当用公钥加密后，还需要对明文做以下操作（这套算法保证明文改动会使得被私钥签名后的结果改动）：<ol>
+<li>用哈希算法抽取明文摘要（非对称算法很耗时，对大量数据加密需要很大算力）</li>
+<li>对这个明文摘要用私钥签名</li>
+</ol>
+</li>
+<li>验签时，用私钥得到解密后的明文，用公钥得到解签后的摘要，从明文中抽取摘要对比即可</li>
+</ul>
+<h4 id="公钥获取-公钥安全：CA证书"><a href="#公钥获取-公钥安全：CA证书" class="headerlink" title="公钥获取 &amp; 公钥安全：CA证书"></a>公钥获取 &amp; 公钥安全：CA证书</h4><ul>
+<li>怎么获取到公钥？在公钥加密中，秘钥是可以明文传输或者直接通过公用储备库在硬件上存储的。但这是服务端公钥，客户端通过这些方法获取到服务端公钥之后，服务端如何获取到客户端公钥并进行回复呢？</li>
+<li>如何保证服务端公钥真实性？这就需要CA证书，证书是需要申请的，并由专门的数字证书认证机构(CA)通过非常严格的审核之后颁发的电子证书 (当然了是要钱的，安全级别越高价格越贵)。颁发证书的同时会产生一个私钥和公钥。私钥由服务端自己保存，不可泄漏。公钥则是附带在证书的信息中，可以公开的。证书本身也附带一个证书电子签名，这个签名用来验证证书的完整性和真实性，可以防止证书被篡改。<br><img src="/./OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/https%E7%9A%84%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B.png"></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" data-id="cm22znk0m0002dcvc3t9f5khw" data-title="OPCUA安全 &amp; HTTPS安全" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-OPCUA" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/09/OPCUA/" class="article-date">
@@ -545,188 +899,6 @@
 
 
   
-    <article id="post-Leetcode101-深度优先搜索-695" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-695/" class="article-date">
-  <time class="dt-published" datetime="2024-07-27T16:20:28.000Z" itemprop="datePublished">2024-07-28</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/LeetCode101/">LeetCode101</a>►<a class="article-category-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-695/">Leetcode101-深度优先搜索-695</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <ul>
-<li>给定一个二维的矩阵，其中表示海洋，表示陆地。单独的或相邻的陆地可以形成岛屿，每个格子只与其上下左右四个格子相邻。求最大的岛屿面积。<ul>
-<li>输入输出样例</li>
-<li>输入是一个二维数组，输出是一个整数，表示最大的岛屿面积。</li>
-</ul>
-</li>
-<li>思路比较简单，BFS就是每次放入四个方向，DFS就是分别朝着四个方向深入，必须用vis加速<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BFS</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] pos = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;-<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,-<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="type">boolean</span>[][] vis;</span><br><span class="line">    <span class="type">int</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> m,n;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxAreaOfIsland</span><span class="params">(<span class="type">int</span>[][] grid)</span> &#123;</span><br><span class="line">        m = grid.length;</span><br><span class="line">        n = grid[<span class="number">0</span>].length;</span><br><span class="line">        vis = <span class="keyword">new</span> <span class="title class_">boolean</span>[m][n];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;j&lt;n;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(!vis[i][j]&amp;&amp;grid[i][j]==<span class="number">1</span>)bfs(vis,grid,i,j);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bfs</span><span class="params">(<span class="type">boolean</span>[][] vis,<span class="type">int</span>[][] grid,<span class="type">int</span> i,<span class="type">int</span> j)</span>&#123;</span><br><span class="line">        Queue&lt;<span class="type">int</span>[]&gt; q = <span class="keyword">new</span> <span class="title class_">LinkedList</span>();</span><br><span class="line">        <span class="type">int</span> <span class="variable">isize</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        q.offer(<span class="keyword">new</span> <span class="title class_">int</span>[]&#123;i,j&#125;);</span><br><span class="line">        <span class="keyword">while</span>(!q.isEmpty())&#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> q.size();</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> <span class="number">0</span>;s&lt;size;s++)&#123;</span><br><span class="line">                <span class="type">int</span>[] tpos = q.poll();</span><br><span class="line">                <span class="type">int</span> <span class="variable">X</span> <span class="operator">=</span> tpos[<span class="number">0</span>];</span><br><span class="line">                <span class="type">int</span> <span class="variable">Y</span> <span class="operator">=</span> tpos[<span class="number">1</span>];</span><br><span class="line">                vis[X][Y] = <span class="literal">true</span>;</span><br><span class="line">                <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">p</span> <span class="operator">=</span> <span class="number">0</span>;p&lt;<span class="number">4</span>;p++)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(X+pos[p]&gt;=<span class="number">0</span>&amp;&amp;X+pos[p]&lt;m&amp;&amp;Y+pos[p+<span class="number">1</span>]&gt;=<span class="number">0</span>&amp;&amp;Y+pos[p+<span class="number">1</span>]&lt;n&amp;&amp;</span><br><span class="line">                    grid[X+pos[p]][Y+pos[p+<span class="number">1</span>]]==<span class="number">1</span>&amp;&amp;!vis[X+pos[p]][Y+pos[p+<span class="number">1</span>]])&#123;</span><br><span class="line">                        q.offer(<span class="keyword">new</span> <span class="title class_">int</span>[]&#123;X+pos[p],Y+pos[p+<span class="number">1</span>]&#125;);</span><br><span class="line">                        vis[X+pos[p]][Y+pos[p+<span class="number">1</span>]] = <span class="literal">true</span>;</span><br><span class="line">                        isize++;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        max = Math.max(max,isize);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//DFS</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="type">int</span>[][] visited;</span><br><span class="line">    <span class="type">int</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">now</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxAreaOfIsland</span><span class="params">(<span class="type">int</span>[][] grid)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">m</span> <span class="operator">=</span> grid.length;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> grid[<span class="number">0</span>].length;</span><br><span class="line">        visited = <span class="keyword">new</span> <span class="title class_">int</span>[m][n];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;j&lt;n;j++)&#123;</span><br><span class="line">                max = Math.max(dfs(grid,i,j,<span class="number">0</span>),max);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span>[][] grid,<span class="type">int</span> i,<span class="type">int</span> j,<span class="type">int</span> size)</span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>(i&lt;<span class="number">0</span>||j&lt;<span class="number">0</span>||i&gt;=grid.length||j&gt;=grid[<span class="number">0</span>].length)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(visited[i][j]==<span class="number">1</span>)<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        visited[i][j] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(grid[i][j]==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            size++;</span><br><span class="line">            max = Math.max(size,max);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> + dfs(grid,i-<span class="number">1</span>,j,size) + dfs(grid,i+<span class="number">1</span>,j,size)</span><br><span class="line">        + dfs(grid,i,j-<span class="number">1</span>,size) + dfs(grid,i,j+<span class="number">1</span>,size);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/07/28/Leetcode101-%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2-695/" data-id="clz4ckqoy000054vc8jh0dvqp" data-title="Leetcode101-深度优先搜索-695" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-软件设计模式" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/06/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="article-date">
-  <time class="dt-published" datetime="2024-06-01T07:24:50.000Z" itemprop="datePublished">2024-06-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a>►<a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/06/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">软件设计模式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="软件设计模式部分"><a href="#软件设计模式部分" class="headerlink" title="软件设计模式部分"></a>软件设计模式部分</h1><h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><ol>
-<li>单一职责原则：一个对象只有单一的职责，也就是一个类只有一个引起他变化的原因。职责：数据职责，行为职责。单一职责原则是实现高内聚，低耦合的指导方针。</li>
-<li>开闭原则：对拓展开放，对修改关闭。一个模块应该可以在不修改代码的情况下改变行为</li>
-<li></li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/06/01/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" data-id="clwzwe0ow0000okvcf5f7fky9" data-title="软件设计模式" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-并发的简单实现-OS大作业" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/" class="article-date">
-  <time class="dt-published" datetime="2024-05-31T11:04:30.000Z" itemprop="datePublished">2024-05-31</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/">并发的简单实现-OS大作业</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="大文件支持"><a href="#大文件支持" class="headerlink" title="大文件支持"></a>大文件支持</h3><ul>
-<li>直接块变成11个，一个一级间接块，一个二级间接块</li>
-<li>修改NDIRECT，NINDIRECT这两个宏</li>
-<li>涉及的函数有fs中的iwalk和itrunc，mkfs中的iwalk</li>
-<li>目前我</li>
-</ul>
-<h3 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h3><h4 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h4><ul>
-<li>两个系统调用<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> *<span class="title function_">mmap</span><span class="params">()</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">munmap</span><span class="params">(<span class="type">void</span> *addr)</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>分别是申请和释放一页共享内存，共享内存在fork时会被共享给子进程，也就是父子进程的这个虚拟地址映射到相同的物理地址。</li>
-<li>我们规定这种内存的虚拟地址都在USR_MEM以上(注意我们的USR_MEM定义为0xc0000000，这个地址往上的空间可以用于mmap映射)，这样处理起来可能比较方便，对物理页维护引用计数是解决这个问题的好方法。同时，只有fork之前的mmap会被共享。</li>
-<li>如何实现？<ol>
-<li>toy os的地址回顾：<br>  <strong>QEMU一共有128MiB的物理内存，即[0, 0x08000000)即[0, PHY_MEM)</strong></li>
-</ol>
-<ul>
-<li>[KER_MEM, PHY_MEM)这块区域我们称为内核的堆区，意思是类比我们一般程序的堆区——程序开始运行的时候不用，但后面需要的时候可以随时取用。<br>  我们记0x00200000为KER_MEM，意思是往下的内存内核自己要用，往上的内存内核自己现在不用，可以分配给用户程序或别的什么用。</li>
-<li>我们约定用户程序的栈在虚拟内存的[0xbffff000, 0xc0000000)即[USR_MEM-PGSIZE, USR_MEM)，映射到物理内存的哪里，还是操作系统说了算。  </li>
-<li>[KER_MEM-PGSIZE, KER_MEM)这段内存是给内核栈用的</li>
-<li>[USR_MEM, 0xFFFFFFFF)是没有用的内存，我们应该在这里分配空间，并且在[KER_MEM, PHY_MEM)建对应页表</li>
-</ul>
-<ol start="2">
-<li>分页机制回顾</li>
-</ol>
-<ul>
-<li>PD：页目录，可以看做1024个PDE（页目录项）的数组。一个PD大小为4KB，按页对齐</li>
-<li>PE：页表，可以看做1024个PTE（页表项）的数组。大小也是4KB，按页对齐</li>
-<li>我们的os中：高10位为页目录号，中间10位为页表号，低12位为页内偏移量</li>
-</ul>
-<ol start="3">
-<li>我们页目录的设计</li>
-</ol>
-<ul>
-<li>为了降低难度，这里我们采用一个比相对简单的设计：不论是内核页目录还是用户页目录，都将虚拟内存[0, PHY_MEM)映射到物理内存[0, PHY_MEM)（恒等映射），同时保持kernel链接在0x00101000不变，这样我们在内核就能直接把物理地址当虚拟地址访问</li>
-<li>内核页目录kpd，内核页表kpt</li>
-<li>我们需要一些管理内核堆区的手段。具体地，可以学习用户程序堆区的管理制度：只有malloc分配出的堆区内存可以被使用，分配出的堆区内存在完事后可以通过free还给堆区；我们的kernel也可以设计两个API：kalloc和kfree，约定如果想使用堆区内存就必须通过调用kalloc来分配，完事后可以通过kfree释放.</li>
-</ul>
-<ol start="4">
-<li>因此这里我们要做的就是，把[USR_MEM, 0xFFFFFFFF)是没有用的内存作为虚拟页映射到内核堆区去</li>
-</ol>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="系统级线程"><a href="#系统级线程" class="headerlink" title="系统级线程"></a>系统级线程</h4>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/31/%E5%B9%B6%E5%8F%91%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0-OS%E5%A4%A7%E4%BD%9C%E4%B8%9A/" data-id="clwzwe0oy0001okvca76r2pzd" data-title="并发的简单实现-OS大作业" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -742,7 +914,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF%E6%A0%88/">分布式技术栈</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF%E6%A0%88/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF%E6%A0%88/">分布式技术栈</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF%E6%A0%88/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -770,23 +942,23 @@
       <ul>
         
           <li>
-            <a href="/2024/11/05/OPCUA-open62541%E8%AE%A2%E9%98%85%E5%8E%9F%E7%90%86/">open62541-订阅监视</a>
+            <a href="/2024/11/12/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a>
+          </li>
+        
+          <li>
+            <a href="/2024/11/09/Mybatis/">Mybatis</a>
+          </li>
+        
+          <li>
+            <a href="/2024/11/07/OPCUA-open62541%E5%8C%85%E6%8E%A5%E6%94%B6%E6%B5%81%E7%A8%8B/">OPCUA open62541-包接收流程</a>
+          </li>
+        
+          <li>
+            <a href="/2024/11/05/OPCUA-open62541%E8%AE%A2%E9%98%85%E5%8E%9F%E7%90%86/">OCPUA open62541-订阅监视</a>
           </li>
         
           <li>
             <a href="/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">Spring-Bean&amp;依赖注入</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/01/%E7%AE%80%E5%8E%86%E5%86%85%E5%AE%B9/">简历内容</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/01/OPCUA%E4%BA%8B%E4%BB%B6/">OPCUA事件</a>
-          </li>
-        
-          <li>
-            <a href="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/">OPCUA open62541-多节点订阅实现</a>
           </li>
         
       </ul>
