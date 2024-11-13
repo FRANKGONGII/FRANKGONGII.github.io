@@ -69,6 +69,48 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Spring-事务注解" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1%E6%B3%A8%E8%A7%A3/" class="article-date">
+  <time class="dt-published" datetime="2024-11-13T01:26:57.000Z" itemprop="datePublished">2024-11-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Spring/">Spring</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1%E6%B3%A8%E8%A7%A3/">Spring-事务注解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1%E6%B3%A8%E8%A7%A3/" data-id="cm3f7bmkn0000v0vc4ewo2xzt" data-title="Spring-事务注解" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-单调栈" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/11/12/%E5%8D%95%E8%B0%83%E6%A0%88/" class="article-date">
@@ -95,7 +137,11 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id><a href="#" class="headerlink" title></a></h2>
+        <h2 id="未解决-1793-456"><a href="#未解决-1793-456" class="headerlink" title="未解决 - 1793 456"></a>未解决 - 1793 456</h2><h2 id="1124-表现良好的最长时间段"><a href="#1124-表现良好的最长时间段" class="headerlink" title="1124 表现良好的最长时间段"></a>1124 表现良好的最长时间段</h2><ul>
+<li>给你一份工作时间表 hours，上面记录着某一位员工每天的工作小时数。<br>我们认为当员工一天中的工作小时数大于 8 小时的时候，那么这一天就是「劳累的一天」。<br>所谓「表现良好的时间段」，意味在这段时间内，「劳累的天数」是严格 大于「不劳累的天数」。<br>请你返回「表现良好时间段」的最大长度。</li>
+<li>思路：本质上是-1，1串，求和大于0的最大长度。也就是：找到两个下标 i 和 j，满足 j &lt; i 且 s[j]&lt; s[i]，最大化 i−j 的值。还是之前那个思路，栈是半成品。我们要找到递减序列，这个原理可以这么思考：假设栈已经存在，那么什么情况下应该入栈？显然是大的不要，因为肯定不会形成更长的段，小的有可能，所有入栈。然后倒序遍历+弹栈。  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">longestWPI</span><span class="params">(<span class="type">int</span>[] hours)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> hours.length, ans = <span class="number">0</span>;</span><br><span class="line">        <span class="type">var</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">int</span>[n + <span class="number">1</span>]; <span class="comment">// 前缀和</span></span><br><span class="line">        <span class="type">var</span> <span class="variable">st</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;Integer&gt;();</span><br><span class="line">        st.push(<span class="number">0</span>); <span class="comment">// s[0]</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">1</span>; j &lt;= n; ++j) &#123;</span><br><span class="line">            s[j] = s[j - <span class="number">1</span>] + (hours[j - <span class="number">1</span>] &gt; <span class="number">8</span> ? <span class="number">1</span> : -<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (s[j] &lt; s[st.peek()]) st.push(j); <span class="comment">// 感兴趣的 j</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> n; i &gt; <span class="number">0</span>; --i)</span><br><span class="line">            <span class="keyword">while</span> (!st.isEmpty() &amp;&amp; s[i] &gt; s[st.peek()])</span><br><span class="line">                ans = Math.max(ans, i - st.pop()); <span class="comment">// [栈顶,i) 可能是最长子数组</span></span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
@@ -159,17 +205,6 @@
 </ul>
 </li>
 <li><code>&lt;select&gt;</code>：要检索数据，使用“SELECT”映射器语句。</li>
-<li><code>&lt;foreach&gt;</code>：用于在 SQL 语句中循环遍历集合（如 List 或 Map），并生成多个参数值或 SQL 片段。它在批量插入、批量更新、构建 IN 查询条件等场景中非常常用。<ul>
-<li>例子：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insertList&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;java.util.List&quot;</span>&gt;</span></span><br><span class="line">    INSERT INTO employee(employee_number, employee_name, employee_level, employee_title, create_time, update_time)</span><br><span class="line">    VALUES</span><br><span class="line">    <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">item</span>=<span class="string">&quot;item&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span>&gt;</span></span><br><span class="line">        (#&#123;item.employeeNumber&#125;, #&#123;item.employeeName&#125;, #&#123;item.employeeLevel&#125;, #&#123;item.employeeTitle&#125;, now(), now())</span><br><span class="line">    <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br></pre></td></tr></table></figure>
-生成的SQL语句：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> employee (employee_number, employee_name, employee_level, employee_title, create_time, update_time)</span><br><span class="line"><span class="keyword">VALUES</span></span><br><span class="line">    (#&#123;item0.employeeNumber&#125;, #&#123;item0.employeeName&#125;, #&#123;item0.employeeLevel&#125;, #&#123;item0.employeeTitle&#125;, now(), now()),</span><br><span class="line">    (#&#123;item1.employeeNumber&#125;, #&#123;item1.employeeName&#125;, #&#123;item1.employeeLevel&#125;, #&#123;item1.employeeTitle&#125;, now(), now()),</span><br><span class="line">    (#&#123;item2.employeeNumber&#125;, #&#123;item2.employeeName&#125;, #&#123;item2.employeeLevel&#125;, #&#123;item2.employeeTitle&#125;, now(), now());</span><br></pre></td></tr></table></figure></li>
-<li>属性：<ol>
-<li>collection：定需要遍历的集合，可以是 List、Map、数组等。</li>
-<li>item：定义每次遍历的元素名称。假设设置为 “item”，表示集合中的每个元素会被命名为 item，供循环体内部引用。</li>
-<li>separator：指定循环生成的 SQL 片段之间的分隔符。这里的 separator&#x3D;”,”，表示每次循环生成的 (#{item.employeeNumber}, #{item.employeeName}, …) 会以逗号分隔。</li>
-</ol>
-</li>
-</ul>
-</li>
 <li><code>&lt;insert&gt;</code>：要将值插入表中，我们必须配置插入映射查询。<ul>
 <li>属性：<ol>
 <li>id：语句的唯一标识</li>
@@ -189,11 +224,36 @@
 </li>
 <li><code>&lt;update&gt;</code>：要使用MyBatis更新现有记录的值，需要配置映射查询更新。更新映射查询的属性与插入映射查询的属性相同，同样是id和parametertype。</li>
 <li><code>&lt;delete&gt;</code>：要使用MyBatis删除现有记录的值，需要配置映射查询“delete”。“delete”映射查询的属性与插入和更新映射查询相同。</li>
+<li><code>&lt;foreach&gt;</code>：用于在 SQL 语句中循环遍历集合（如 List 或 Map），并生成多个参数值或 SQL 片段。它在批量插入、批量更新、构建 IN 查询条件等场景中非常常用。<ul>
+<li>例子：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insertList&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;java.util.List&quot;</span>&gt;</span></span><br><span class="line">    INSERT INTO employee(employee_number, employee_name, employee_level, employee_title, create_time, update_time)</span><br><span class="line">    VALUES</span><br><span class="line">    <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">item</span>=<span class="string">&quot;item&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span>&gt;</span></span><br><span class="line">        (#&#123;item.employeeNumber&#125;, #&#123;item.employeeName&#125;, #&#123;item.employeeLevel&#125;, #&#123;item.employeeTitle&#125;, now(), now())</span><br><span class="line">    <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br></pre></td></tr></table></figure>
+生成的SQL语句：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> employee (employee_number, employee_name, employee_level, employee_title, create_time, update_time)</span><br><span class="line"><span class="keyword">VALUES</span></span><br><span class="line">    (#&#123;item0.employeeNumber&#125;, #&#123;item0.employeeName&#125;, #&#123;item0.employeeLevel&#125;, #&#123;item0.employeeTitle&#125;, now(), now()),</span><br><span class="line">    (#&#123;item1.employeeNumber&#125;, #&#123;item1.employeeName&#125;, #&#123;item1.employeeLevel&#125;, #&#123;item1.employeeTitle&#125;, now(), now()),</span><br><span class="line">    (#&#123;item2.employeeNumber&#125;, #&#123;item2.employeeName&#125;, #&#123;item2.employeeLevel&#125;, #&#123;item2.employeeTitle&#125;, now(), now());</span><br></pre></td></tr></table></figure></li>
+<li>属性：<ol>
+<li>collection：定需要遍历的集合，可以是 List、Map、数组等。</li>
+<li>item：定义每次遍历的元素名称。假设设置为 “item”，表示集合中的每个元素会被命名为 item，供循环体内部引用。</li>
+<li>separator：指定循环生成的 SQL 片段之间的分隔符。这里的 separator&#x3D;”,”，表示每次循环生成的 (#{item.employeeNumber}, #{item.employeeName}, …) 会以逗号分隔。</li>
+</ol>
+</li>
 </ul>
-<h3 id="Mapper注解"><a href="#Mapper注解" class="headerlink" title="@Mapper注解"></a>@Mapper注解</h3><ul>
-<li>@Mapper 注解是 MyBatis 提供的一个注解，用于标识一个接口为 MyBatis 的 Mapper 接口，使其能够被 MyBatis 框架扫描和识别。添加了 @Mapper 注解的接口会被 MyBatis 自动生成实现类，用于执行对应的 SQL 操作。</li>
-<li>在 Spring 项目中使用 @Mapper，可以让 Spring 自动管理这些 Mapper 的生命周期，无需手动实例化。例如，可以直接使用 @Autowired 注入 Mapper 接口。</li>
-<li>在运行时，MyBatis 会自动为接口生成代理实现类，并将接口方法与对应的 SQL 语句关联。这样，调用接口方法就会执行对应的 SQL。（生成的代理类里面的方法实现就是xml里面的SQL语句对应的方法）。在运行时，MyBatis 生成的这个代理类看起来像是接口的“实现类”，因为它实现了接口的所有方法，并且执行了实际的逻辑（即 SQL 操作），但这个代理类并不是用户手写的，而是 MyBatis 在运行时自动生成的，因此称为“动态代理实现”。<strong>也就是通过接口方法，可以直接完成数据库操作</strong></li>
+</li>
+<li><code>&lt;if&gt;</code>：条件标签，用于动态SQL。属性是test，属性值是条件<ul>
+<li>例子：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectAllWebsite&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;myResult&quot;</span>&gt;</span></span><br><span class="line">            select id,name,url from website</span><br><span class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;name != null&quot;</span>&gt;</span></span><br><span class="line">                where name like #&#123;name&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">    ```  </span><br><span class="line">+ `<span class="tag">&lt;<span class="name">choose</span>&gt;</span> <span class="tag">&lt;<span class="name">when</span>&gt;</span> <span class="tag">&lt;<span class="name">otherwise</span>&gt;</span>`：效果等同于if-else</span><br><span class="line">  + 例子：</span><br><span class="line">    ```xml</span><br><span class="line">    <span class="tag">&lt;<span class="name">choose</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">when</span> <span class="attr">test</span>=<span class="string">&quot;判断条件1&quot;</span>&gt;</span></span><br><span class="line">            SQL语句1</span><br><span class="line">        <span class="tag">&lt;/<span class="name">when</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">when</span> <span class="attr">test</span>=<span class="string">&quot;判断条件2&quot;</span>&gt;</span></span><br><span class="line">            SQL语句2</span><br><span class="line">        <span class="tag">&lt;/<span class="name">when</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">when</span> <span class="attr">test</span>=<span class="string">&quot;判断条件3&quot;</span>&gt;</span></span><br><span class="line">            SQL语句3</span><br><span class="line">        <span class="tag">&lt;/<span class="name">when</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">otherwise</span>&gt;</span></span><br><span class="line">            SQL语句4</span><br><span class="line">        <span class="tag">&lt;/<span class="name">otherwise</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">choose</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><code>&lt;where&gt;</code>：多个if标签的情况下减少判断，自动处理AND\OR避免SQL语法错误<ul>
+<li>例子：if 语句中判断条件为 true 时，where 关键字才会加入到组装的 SQL 里面，否则就不加入。where 会检索语句，它会将 where 后的第一个 SQL 条件语句的 AND 或者 OR 关键词去掉。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">where</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;判断条件&quot;</span>&gt;</span></span><br><span class="line">        AND/OR ...</span><br><span class="line">    <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">where</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><code>&lt;set&gt;</code>：update 语句可以使用 set 标签动态更新列。set 标签可以为 SQL 语句动态的添加 set 关键字，剔除追加到条件末尾多余的逗号。</li>
+<li><code>&lt;bind&gt;</code>：每个数据库的拼接函数或连接符号都不同，例如 MySQL 的 concat 函数、Oracle 的连接符号“||”等。这样 SQL 映射文件就需要根据不同的数据库提供不同的实现，显然比较麻烦，且不利于代码的移植。幸运的是，MyBatis 提供了 bind 标签来解决这一问题。bind 标签可以通过 OGNL 表达式自定义一个上下文变量。<ul>
+<li>属性：<ol>
+<li>value：对应传入实体类的某个字段，可以进行字符串拼接等特殊处理。</li>
+<li>name：给对应参数取的别名。</li>
+</ol>
+</li>
+<li>例子：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">        <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectWebsite&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;net.biancheng.po.Website&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">bind</span> <span class="attr">name</span>=<span class="string">&quot;pattern&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&#x27;%&#x27;+_parameter+&#x27;%&#x27;&quot;</span> /&gt;</span></span><br><span class="line">            SELECT id,name,url,age,country</span><br><span class="line">            FROM website</span><br><span class="line">            WHERE name like #&#123;pattern&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">    ```  </span><br><span class="line">+ </span><br><span class="line">### @Mapper注解</span><br><span class="line">+ @Mapper 注解是 MyBatis 提供的一个注解，用于标识一个接口为 MyBatis 的 Mapper 接口，使其能够被 MyBatis 框架扫描和识别。添加了 @Mapper 注解的接口会被 MyBatis 自动生成实现类，用于执行对应的 SQL 操作。</span><br><span class="line">+ 在 Spring 项目中使用 @Mapper，可以让 Spring 自动管理这些 Mapper 的生命周期，无需手动实例化。例如，可以直接使用 @Autowired 注入 Mapper 接口。</span><br><span class="line">+ 在运行时，MyBatis 会自动为接口生成代理实现类，并将接口方法与对应的 SQL 语句关联。这样，调用接口方法就会执行对应的 SQL。（生成的代理类里面的方法实现就是xml里面的SQL语句对应的方法）。在运行时，MyBatis 生成的这个代理类看起来像是接口的“实现类”，因为它实现了接口的所有方法，并且执行了实际的逻辑（即 SQL 操作），但这个代理类并不是用户手写的，而是 MyBatis 在运行时自动生成的，因此称为“动态代理实现”。**也就是通过接口方法，可以直接完成数据库操作**</span><br><span class="line"></span><br><span class="line">## 分页</span><br><span class="line">+ MyBatis 的分页功能是基于内存的分页，即先查询出所有记录，再按起始位置和页面容量取出结果。</span><br><span class="line">+ Limit关键字分页：</span><br><span class="line">  ```xml</span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectByPageInfo&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;BaseResult&quot;</span>&gt;</span></span><br><span class="line">        select * from tb_user limit #&#123;pageNo&#125;, #&#123;pageSize&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>Interceptor</strong></li>
 </ul>
 
       
@@ -747,54 +807,6 @@
 
 
   
-    <article id="post-JAVA" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/26/JAVA/" class="article-date">
-  <time class="dt-published" datetime="2024-10-26T10:16:50.000Z" itemprop="datePublished">2024-10-26</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/JAVA/">JAVA</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/26/JAVA/">JAVA</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p>当对象被序列化时，被该对象持有的实例变量也会被序列化，所有被引用的对象也会被实例化，这些操作都是自动进行的</p>
-<ul>
-<li>要让类能被序列化，要实现Serializable接口</li>
-<li>如果要让实例变量不被序列化，<strong>用transient关键字修饰</strong></li>
-<li></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/26/JAVA/" data-id="cm2t8fzex0000dgvcha00cv3s" data-title="JAVA" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -838,6 +850,10 @@
       <ul>
         
           <li>
+            <a href="/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1%E6%B3%A8%E8%A7%A3/">Spring-事务注解</a>
+          </li>
+        
+          <li>
             <a href="/2024/11/12/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a>
           </li>
         
@@ -851,10 +867,6 @@
         
           <li>
             <a href="/2024/11/05/OPCUA-open62541%E8%AE%A2%E9%98%85%E5%8E%9F%E7%90%86/">OCPUA open62541-订阅监视</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">Spring-Bean&amp;依赖注入</a>
           </li>
         
       </ul>
