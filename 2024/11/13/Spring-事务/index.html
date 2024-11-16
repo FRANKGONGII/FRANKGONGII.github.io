@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>Spring-事务注解 | Hexo</title>
+  <title>Spring-事务 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Spring事务 ACID：原子性，一致性，隔离性，持久性 Spring事务指的是，在数据库支持事务的基础上，Spring可以通过简单的配置来控制事务的各个方面，最终达到我们业务上需要的效果。如果你把Spring去掉，手工使用jdbc去对接数据库，也能达到相同的效果，但是就需要大量额外的控制代码了  @Transactional注解 如果使用springboot，由于其自动配置机制，引用了star">
+  <meta name="description" content="Spring事务 ACID：原子性，一致性，隔离性，持久性 Spring事务指的是，在数据库支持事务的基础上，Spring可以通过简单的配置来控制事务的各个方面，最终达到我们业务上需要的效果。如果你把Spring去掉，手工使用jdbc去对接数据库，也能达到相同的效果，但是就需要大量额外的控制代码了 事务处理可以详见“数据库基础”  @Transactional注解 – 注解事务 如果使用sprin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring-事务注解">
-<meta property="og:url" content="http://example.com/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1%E6%B3%A8%E8%A7%A3/index.html">
+<meta property="og:title" content="Spring-事务">
+<meta property="og:url" content="http://example.com/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Spring事务 ACID：原子性，一致性，隔离性，持久性 Spring事务指的是，在数据库支持事务的基础上，Spring可以通过简单的配置来控制事务的各个方面，最终达到我们业务上需要的效果。如果你把Spring去掉，手工使用jdbc去对接数据库，也能达到相同的效果，但是就需要大量额外的控制代码了  @Transactional注解 如果使用springboot，由于其自动配置机制，引用了star">
+<meta property="og:description" content="Spring事务 ACID：原子性，一致性，隔离性，持久性 Spring事务指的是，在数据库支持事务的基础上，Spring可以通过简单的配置来控制事务的各个方面，最终达到我们业务上需要的效果。如果你把Spring去掉，手工使用jdbc去对接数据库，也能达到相同的效果，但是就需要大量额外的控制代码了 事务处理可以详见“数据库基础”  @Transactional注解 – 注解事务 如果使用sprin">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-11-13T01:26:57.000Z">
-<meta property="article:modified_time" content="2024-11-14T16:31:53.188Z">
+<meta property="article:modified_time" content="2024-11-16T09:18:40.407Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -71,9 +71,9 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-Spring-事务注解" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-Spring-事务" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1%E6%B3%A8%E8%A7%A3/" class="article-date">
+    <a href="/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1/" class="article-date">
   <time class="dt-published" datetime="2024-11-13T01:26:57.000Z" itemprop="datePublished">2024-11-13</time>
 </a>
     
@@ -89,7 +89,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      Spring-事务注解
+      Spring-事务
     </h1>
   
 
@@ -100,8 +100,9 @@
         <h2 id="Spring事务"><a href="#Spring事务" class="headerlink" title="Spring事务"></a>Spring事务</h2><ul>
 <li>ACID：原子性，一致性，隔离性，持久性</li>
 <li>Spring事务指的是，在数据库支持事务的基础上，Spring可以通过简单的配置来控制事务的各个方面，最终达到我们业务上需要的效果。如果你把Spring去掉，手工使用jdbc去对接数据库，也能达到相同的效果，但是就需要大量额外的控制代码了</li>
+<li>事务处理可以详见“数据库基础”</li>
 </ul>
-<h2 id="Transactional注解"><a href="#Transactional注解" class="headerlink" title="@Transactional注解"></a>@Transactional注解</h2><ul>
+<h2 id="Transactional注解-–-注解事务"><a href="#Transactional注解-–-注解事务" class="headerlink" title="@Transactional注解 – 注解事务"></a>@Transactional注解 – 注解事务</h2><ul>
 <li>如果使用springboot，由于其自动配置机制，引用了starter-jdbc等包的情况下，会自动向容器中添加事务管理器，所以允许不在主类上标注 @EnableTransactionManagement</li>
 <li>使用场景：<ol>
 <li>用在方法上此方法具有事务属性，只有public修饰的方法才生效。其余不生效也不抛出异常</li>
@@ -131,13 +132,42 @@
 <li>REPEATABLE_READ：保证同一事务中多次读取同一数据时，结果始终一致，可以避免脏读和不可重复读问题，但可能会出现幻读问题。</li>
 <li>SERIALIZABLE：最高的隔离级别，可以避免脏读、不可重复读和幻读问题，但会影响并发性能。</li>
 </ul>
+<ol start="4">
+<li>timeout：事务的超时时间，默认为-1</li>
+</ol>
+<ul>
+<li>注意超时时间只适用于REQUIRED 和 REQUIRES_NEW，其他传播规则只能设置超时时间为-1（永不超时），否则会抛出异常</li>
+<li>超时原理：事务开启时，会读取当前时间 和 timeout 的值，并将其相加得到事务“过期时间”，而在每次执行sql前则会获取到statement，此时才会判断当前时间是否已超期，超期才会抛出超时异常。也就是说，通俗的理解，只有在每次执行SQL前，才会判断下是否已超过事务限时。<strong>也就是判断最后一个SQL执行前是否超时</strong></li>
+</ul>
+<ol start="5">
+<li>readOnly：是否只读：</li>
+</ol>
+<ul>
+<li>这里的只读是对开发者的提示，并不意味着你标注只读就真的不能写更新语句。</li>
+</ul>
+<ol start="6">
+<li>rollBackFor、noRollBackFor：用于指定能&#x2F;不能够触发事务回滚的异常类型，可以指定多个异常类型。</li>
+</ol>
+<ul>
+<li>显式地指定什么异常需要回滚，什么异常不需要回滚。比方说我们有一种邮件通知异常，代表通知邮件发送失败，但这种异常无伤大雅，只是非核心功能，失败了不需要导致整个业务失败。此时我们可以指定这种异常不需要回滚事务。</li>
+</ul>
 </li>
+</ul>
+<h2 id="事务模版-–-编程事务"><a href="#事务模版-–-编程事务" class="headerlink" title="事务模版 – 编程事务"></a>事务模版 – 编程事务</h2><ul>
+<li>事务模版<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TransactionManagerAutoConfiguration</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> PlatformTransactionManager <span class="title function_">transactionManager</span><span class="params">(DataSource dataSource)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DataSourceTransactionManager</span>(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> TransactionTemplate <span class="title function_">transactionTemplate</span><span class="params">(PlatformTransactionManager transactionManager)</span> &#123;</span><br><span class="line">        <span class="type">TransactionTemplate</span> <span class="variable">transactionTemplate</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TransactionTemplate</span>(transactionManager);</span><br><span class="line">        transactionTemplate.setPropagationBehaviorName(<span class="string">&quot;PROPAGATION_REQUIRED&quot;</span>);</span><br><span class="line">        transactionTemplate.setTimeout(<span class="number">350</span>);</span><br><span class="line">        transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_DEFAULT);</span><br><span class="line">        <span class="keyword">return</span> transactionTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>使用事务模版<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> TransactionTemplate transactionTemplate;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insertEmployeeInfo</span><span class="params">(EmployeeInfoEntity employeeInfoEntity)</span> &#123;</span><br><span class="line">    transactionTemplate.execute(<span class="keyword">new</span> <span class="title class_">TransactionCallbackWithoutResult</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doInTransactionWithoutResult</span><span class="params">(TransactionStatus status)</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="type">EmployeePO</span> <span class="variable">employeePO</span> <span class="operator">=</span> EmployeePO.builder()</span><br><span class="line">                        .employeeNumber(employeeInfoEntity.getEmployeeNumber())</span><br><span class="line">                        .employeeName(employeeInfoEntity.getEmployeeName())</span><br><span class="line">                        .employeeLevel(employeeInfoEntity.getEmployeeLevel())</span><br><span class="line">                        .employeeTitle(employeeInfoEntity.getEmployeeTitle())</span><br><span class="line">                        .build();</span><br><span class="line">                employeeDAO.insert(employeePO);</span><br><span class="line">                <span class="type">EmployeeSalaryPO</span> <span class="variable">employeeSalaryPO</span> <span class="operator">=</span> EmployeeSalaryPO.builder()</span><br><span class="line">                        .employeeNumber(employeeInfoEntity.getEmployeeNumber())</span><br><span class="line">                        .salaryTotalAmount(employeeInfoEntity.getSalaryTotalAmount())</span><br><span class="line">                        .salaryMeritAmount(employeeInfoEntity.getSalaryMeritAmount())</span><br><span class="line">                        .salaryBaseAmount(employeeInfoEntity.getSalaryBaseAmount())</span><br><span class="line">                        .build();</span><br><span class="line">                employeeSalaryDAO.insert(employeeSalaryPO);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                status.setRollbackOnly();</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a>注意事项：</h2><ul>
+<li>将@Transactional放置在类级的声明中要慎重。放在类声明，会使得所有public方法都有事务。故@Transactional应该放在方法级别，不需要使用事务的方法，就不要放置事务，比如查询方法。否则对性能是有影响的。</li>
+<li>类外调用方法必须保证被调用的方法有@Transactional注解，也就是这个注解不是传递的，如果A方法调用B，B有注解而A没有，那么B的事务不会起作用</li>
+<li>spring的事务在抛异常的时候会回滚，如果是catch捕获了，事务无效。可以在catch里面加上throw new RuntimeException()</li>
+<li>由于Spring事务是通过AOP实现的，所以在方法执行之前会开启事务，之后会提交事务逻辑。而synchronized代码块执行是在事务之内执行的，可以推断在synchronized代码块执行完时，事务还未提交，其他线程进入synchronized代码块后，读取的数据不是最新的。<strong>所以必须使synchronized锁的范围大于事务控制的范围，把synchronized加到Controller层或者大于事务边界的调用层</strong></li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1%E6%B3%A8%E8%A7%A3/" data-id="cm3f7bmkn0000v0vc4ewo2xzt" data-title="Spring-事务注解" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1/" data-id="cm3jynjhv0000u8vc29q1e73t" data-title="Spring-事务" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -208,7 +238,7 @@
           </li>
         
           <li>
-            <a href="/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1%E6%B3%A8%E8%A7%A3/">Spring-事务注解</a>
+            <a href="/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1/">Spring-事务</a>
           </li>
         
           <li>
