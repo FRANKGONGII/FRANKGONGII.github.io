@@ -13,10 +13,17 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="传统的MVC结构： 分层  M - model 对象层，封装到 domain 里。 V - view 展示层，但因为目前都是前后端分离的项目，几乎不会在后端项目里写 JSP 文件了。 C - Controller 控制层，对外提供接口实现类。HTTP接口 DAO 算是单独拿出来用户处理数据库操作的层。 Service：功能方法，服务层逻辑的实现   调用流程：   DDD 什么是DDD：DDD 是">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/10/22/MVC&DDD/MVC%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://example.com/2024/10/22/MVC&DDD/%E5%85%85%E8%A1%80&%E8%B4%AB%E8%A1%80%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:image" content="http://example.com/2024/10/22/MVC&DDD/MVC%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://example.com/2024/10/22/MVC&DDD/MVC%E8%BF%81%E7%A7%BBDDD.png">
+<meta property="og:image" content="http://example.com/2024/10/22/MVC&DDD/DDD%E6%A8%A1%E5%9D%97.png">
+<meta property="og:image" content="http://example.com/2024/10/22/MVC&DDD/DDD%E6%A8%A1%E5%9D%972.png">
 <meta property="article:published_time" content="2024-10-22T07:48:38.000Z">
-<meta property="article:modified_time" content="2024-11-16T09:35:06.263Z">
+<meta property="article:modified_time" content="2024-11-16T09:39:30.532Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/10/22/MVC&DDD/MVC%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -107,12 +114,13 @@
 <li>Service：功能方法，服务层逻辑的实现</li>
 </ol>
 </li>
-<li><p>调用流程：</p>
+<li><p>调用流程：<br><img src="/2024/10/22/MVC&DDD/MVC%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png"></p>
 </li>
 </ul>
 <h2 id="DDD"><a href="#DDD" class="headerlink" title="DDD"></a>DDD</h2><ul>
 <li>什么是DDD：DDD 是一种软件设计方法。也就是说 DDD 是指导我们做软件工程设计的一种手段，它提供了用切割工程模型的各类技巧<ul>
 <li>充血模型：指将对象的属性信息与行为逻辑聚合到一个类中，常用的手段如在对象内提供属于当前对象的信息校验、拼装缓存Key、不含服务接口调用的逻辑处理等。</li>
+<li><img src="/2024/10/22/MVC&DDD/%E5%85%85%E8%A1%80&%E8%B4%AB%E8%A1%80%E6%A8%A1%E5%9E%8B.png"></li>
 <li>DDD最大的区别在于把原有的众多 Service + 数据模型的方式，拆分为独立的有边界的领域模块。每个领域内创建自身所属的；领域对象（实体、聚合、值对象）、仓储服务(DAO 操作)、工厂、端口适配器Port（调用外部接口的手段）等。   </li>
 <li>在原本的 Service + 贫血的数据模型开发指导下，Service 串联调用每一个功能模块。这些基础设施（对象、方法、接口）是被相互掉调用的。这也是因为贫血模型并没有面向对象的设计，所有的需求开发只有详细设计。  </li>
 <li>换到充血模型下，现在我们以一个领域功能为聚合，拆分一个领域内所需的 Service 为领域服务，VO、Req、Res 重新设计为领域对象，DAO、Redis 等持久化操作为仓储等。举例；一套账户服务中的，授信认证、开户、提额降额等，每一个都是一个独立的领域，在每个独立的领域内，创建自身领域所需的各项信息。</li>
@@ -123,9 +131,13 @@
 <li>DDD VS MVC<ul>
 <li>如果你接触过较大型且已经长期维护项目的 MVC 架构，你就会发现这里的 DAO、PO、VO 对象，在 Service 层相互调用。那么长期开发后，就导致了各个 PO 里的属性字段数量都被撑的特别大。这样的开发方式，将”状态”、“行为“分离到不同的对象中，代码的意图渐渐模糊，膨胀、臃肿和不稳定的架构，让迭代成本增加。</li>
 <li>而 DDD 架构首先以解决此类问题为主，将各个属于自己领域范围内的行为和逻辑封装到自己的领域包下处理。这也是 DDD 架构设计的精髓之一。它希望在分治层面合理切割问题空间为更小规模的若干子问题，而问题越小就容易被理解和处理，做到高内聚低耦合。这也是康威定律所提到的，解决复杂场景的设计主要分为：分治、抽象和知识。</li>
+<li><img src="/2024/10/22/MVC&DDD/MVC%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.png"></li>
+<li><img src="/2024/10/22/MVC&DDD/MVC%E8%BF%81%E7%A7%BBDDD.png"></li>
 </ul>
 </li>
 <li>DDD模块示例：<ul>
+<li><img src="/2024/10/22/MVC&DDD/DDD%E6%A8%A1%E5%9D%97.png"></li>
+<li><img src="/2024/10/22/MVC&DDD/DDD%E6%A8%A1%E5%9D%972.png"></li>
 <li>DDD分层解析：<ol>
 <li>领域层：一个领域层内可以有多个领域包，例如账户领域包，结算领域包。每一个 domain 下的领域包内，都包括：model 模型、仓储、接口、事件和服务的处理。</li>
 </ol>
