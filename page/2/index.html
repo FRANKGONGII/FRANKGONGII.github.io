@@ -69,6 +69,140 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-简历内容" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/11/01/%E7%AE%80%E5%8E%86%E5%86%85%E5%AE%B9/" class="article-date">
+  <time class="dt-published" datetime="2024-11-01T02:18:48.000Z" itemprop="datePublished">2024-11-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a>►<a class="article-category-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/11/01/%E7%AE%80%E5%8E%86%E5%86%85%E5%AE%B9/">简历内容</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="mt"><a href="#mt" class="headerlink" title="mt"></a>mt</h2><ol>
+<li>激励流水表写入优化：流水记录表状态不准确，影响到数据结果统计。一方面通过修改流水处理逻辑，细化资源发放状态和数据状态，添加分布式锁保证数据一致性，并根据场景做sql优化。对于回调信息，改为延迟消费5s并配置死信队列，保证系统的健壮性。</li>
+<li>激励流水单独迁移服务：通过kafka更新数据，流水服务通过rpc对外提供数据查询，实现系统解耦并提高了可拓展性。</li>
+<li>参与错误码治理及告警配置工作。采用AOP编程思想，通过优化错误码方案，设置告警维度，为告警配置添加动态阈值，同比环比对比，波动策略等方式，减少误报率50%以上。</li>
+<li>与跨部门团队协作，完成多个项目的需求分析和技术文档编写。</li>
+</ol>
+<h2 id="baosight"><a href="#baosight" class="headerlink" title="baosight"></a>baosight</h2><ol>
+<li>优化OPCUA服务器性能：通过..zip_tree，在多client订阅server上高频更新的多node的场景下，server cpu usage降低30%以上</li>
+<li>负责实现OPCUA服务器的加密通信：通过</li>
+<li>多订阅场景：<img src="/2024/11/01/%E7%AE%80%E5%8E%86%E5%86%85%E5%AE%B9/image-1.png" alt="alt text"><img src="/2024/11/01/%E7%AE%80%E5%8E%86%E5%86%85%E5%AE%B9/image.png" alt="alt text"></li>
+<li>用epoll代替select提高服务器IO的性能</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/11/01/%E7%AE%80%E5%8E%86%E5%86%85%E5%AE%B9/" data-id="cm31tgkom0002qovc72090fxh" data-title="简历内容" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-OPCUA事件" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/11/01/OPCUA%E4%BA%8B%E4%BB%B6/" class="article-date">
+  <time class="dt-published" datetime="2024-11-01T01:59:46.000Z" itemprop="datePublished">2024-11-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/11/01/OPCUA%E4%BA%8B%E4%BB%B6/">OPCUA事件</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="一些概念"><a href="#一些概念" class="headerlink" title="一些概念"></a>一些概念</h2><ul>
+<li><p>condition：通用术语，是事件的延伸</p>
+<ul>
+<li>代表系统或其某个组件的状态。但是，在某些情况下，还必须保持仍需关注的先前状态。引入 ConditionBranchches 就是为了满足这一要求，并区分当前状态和先前状态。每个 ConditionBranch 都有一个 BranchId，用于将其与同一 Condition 实例的其他分支区分开来。代表条件当前状态的条件分支（主干）的 BranchId 为空。服务器可为每个分支生成单独的事件通知。当某个 ConditionBranch 所代表的状态不需要进一步关注时，该分支的最终事件通知将把 Retain 属性设为 “假”。第 5.5 条提供了更多信息和用例。对于服务器来说，保留以前的状态和支持多个分支是可选的。</li>
+<li>如何处理以前的状态？有些系统要求将 “条件 ”的先前状态保留一段时间。一个常见的用例就是确认过程。在某些环境中，要求同时确认进入激活状态和非激活状态的转换。具有严格安全规则的系统有时要求必须确认每次进入激活状态的转换。在短时间内连续发生状态变化的情况下，可能会出现多个未确认状态，服务器会为所有之前的未确认状态保留条件分支（ConditionBranches）。这些分支将在确认后或达到最终状态时被删除。</li>
+<li>关于条件刷新（ConditionRefresh），应注意以下几点：<ol>
+<li>有些系统要求将条件的先前状态保留一段时间。有些服务器（尤其是需要确认先前状态的服务器）会为仍需关注的先前状态保留单独的 ConditionBranches。</li>
+<li>ConditionRefresh 应针对条件实例的所有相关状态（当前和以前）发布事件通知，因此客户机可以针对具有不同分支标识的条件实例接收多个事件。</li>
+<li>在某些情况下，服务器可能无法确保客户端与条件实例的当前状态完全同步。例如，如果服务器所代表的底层系统被重置或通信中断一段时间，服务器可能需要与底层系统重新同步。在这种情况下，服务器应发送 RefreshRequiredEventType 类型的事件，告知客户端可能需要刷新。接收到该特殊事件的客户机应按照本条款的规定启动条件刷新（ConditionRefresh）。</li>
+<li>为确保客户机始终得到通知，三种特殊事件类型（RefreshEndEventType、RefreshStartEventType 和 RefreshRequiredEventType）会忽略与订阅相关的事件内容过滤，并始终发送给客户。</li>
+<li>ConditionRefresh 适用于订阅。如果同一订阅中包含多个事件通知程序，则会刷新所有事件通知程序。</li>
+</ol>
+</li>
+<li>condition的三个重要变量：severity，quality，comment – 紧急程度，用户生成的描述字符串，条件所依据的数据值的质量。它们任何一个变化都会导致事件通知</li>
+</ul>
+</li>
+<li><p>alarm：与通常需要确认的状态条件相关联的事件类型</p>
+<ul>
+<li>active：alarm所代表的情况仍然存在</li>
+<li>alarmflood：alarm的频率超过了处理能力范围</li>
+<li>alarmsuppressiongroup：用于抑制其他警报的警报组。 </li>
+<li>警报是 AcknowledgeableConditions（可确认条件）的特化，在条件中添加了活动状态和其他状态（如搁置状态和抑制状态）的概念。</li>
+<li>处于激活状态的警报表示当前存在该条件所代表的情况。当警报处于非活动状态时，它所代表的情况已恢复到正常状态。<ul>
+<li>某些警报子类型引入了活动状态的子状态。例如，代表温度的警报可提供高电平状态和临界高电平状态。<ol>
+<li>搁置状态可由操作员通过 OPC UA 方法设置。由于系统的特殊原因，抑制状态由服务器内部设置。警报系统通常实施抑制、停止服务和搁置功能，通过限制操作员在当前警报显示屏上看到的警报数量，防止操作员在警报 “风暴 ”期间不知所措。具体做法是在二阶依赖性警报和&#x2F;或严重性较低的警报上设置抑制或搁置标志，从而使操作员集中精力处理最关键的问题。</li>
+<li>锁定状态（LatchedState）是一种添加到任何需要额外处理的报警中的状态，一旦激活，即使触发报警的值恢复正常，在明确重置之前也不会清除。这可能是警报发生后需要进行物理检查以确保其不再处于警报状态，也可能是需要进行一系列测试以确保警报不再处于活动状态或其他一些操作。通过添加此可选子状态，任何 AlarmType 都可以成为锁定报警。</li>
+<li>搁置、停止服务和抑制状态与禁用状态的不同之处在于，警报仍可完全正常工作，并可包含在向客户发送的订阅通知中。禁用的警报不会以任何方式处理，也不支持作为 ISA 18.2 中定义的活动警报模型的一部分。</li>
+</ol>
+</li>
+<li>警报遵循典型的时间轴。它们有一些相关的延迟时间和可能占据的一些状态。警报系统的目标是及时向操作员通报情况，并允许操作员在某些后果发生之前采取某些措施。这些后果可能是经济后果（产品无法使用，必须丢弃），可能是物理后果（储罐溢出），可能是安全后果（可能发生火灾或爆炸），也可能是其他各种可能性中的任何一种。通常情况下，如果在一段时间内没有采取任何与警报相关的措施，流程就会越过某个阈值，此时就会开始产生后果。OPC UA 警报模型描述了这些状态、延迟和行动。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="编码相关"><a href="#编码相关" class="headerlink" title="编码相关"></a>编码相关</h2><ul>
+<li>首先，需要定义事件类型，所有自定义的事件类型都必须以BaseEventType作为抽象基类，我们创建的新事件类型就是它的子类型<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> UA_NodeId eventType;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> UA_StatusCode <span class="title function_">addNewEventType</span><span class="params">(UA_Server *server)</span> </span><br><span class="line">&#123;</span><br><span class="line">    UA_ObjectTypeAttributes attr = UA_ObjectTypeAttributes_default;</span><br><span class="line">    attr.displayName = UA_LOCALIZEDTEXT(<span class="string">&quot;en-US&quot;</span>, <span class="string">&quot;SimpleEventType&quot;</span>);</span><br><span class="line">    attr.description = UA_LOCALIZEDTEXT(<span class="string">&quot;en-US&quot;</span>, <span class="string">&quot;The simple event type we created&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> UA_Server_addObjectTypeNode(server, UA_NODEID_NULL,</span><br><span class="line">                                      UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_BASEEVENTTYPE),</span><br><span class="line">                                      UA_NODEID_NUMERIC(<span class="number">0</span>, UA_NS0ID_HASSUBTYPE),</span><br><span class="line">                                      UA_QUALIFIEDNAME(<span class="number">0</span>, <span class="string">&quot;SimpleEventType&quot;</span>),</span><br><span class="line">                                      attr, <span class="literal">NULL</span>, &amp;eventType);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/11/01/OPCUA%E4%BA%8B%E4%BB%B6/" data-id="cm31tgkoj0001qovc1fjl5xpw" data-title="OPCUA事件" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-OPCUA-open62541多节点订阅" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/29/OPCUA-open62541%E5%A4%9A%E8%8A%82%E7%82%B9%E8%AE%A2%E9%98%85/" class="article-date">
@@ -595,157 +729,11 @@
 
 
   
-    <article id="post-IO模型" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/21/IO%E6%A8%A1%E5%9E%8B/" class="article-date">
-  <time class="dt-published" datetime="2024-10-21T07:30:43.000Z" itemprop="datePublished">2024-10-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>►<a class="article-category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/21/IO%E6%A8%A1%E5%9E%8B/">IO模型</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="IO背景"><a href="#IO背景" class="headerlink" title="IO背景"></a>IO背景</h2><ul>
-<li>发送一条消息的流程：<ol>
-<li>应用A把消息发送到TCP发送缓存区</li>
-<li>TCP缓存区发送消息，传递到B服务器的TCP接收缓存区</li>
-<li>应用B从TCP接收缓存区读取数据</li>
-</ol>
-</li>
-</ul>
-<h2 id="五种IO模型"><a href="#五种IO模型" class="headerlink" title="五种IO模型"></a>五种IO模型</h2><ul>
-<li>IO模型：<ol>
-<li>阻塞式IO，同步阻塞</li>
-<li>非阻塞式IO，同步非阻塞</li>
-<li>多路复用IO，同步非阻塞</li>
-<li>信号驱动IO，同步非阻塞</li>
-<li>异步IO，异步</li>
-</ol>
-</li>
-</ul>
-<h3 id="阻塞式IO"><a href="#阻塞式IO" class="headerlink" title="阻塞式IO"></a>阻塞式IO</h3><ul>
-<li>在应用调用recvfrom读取数据时，其系统调用知道数据包到达切被复制到应用缓冲区中或者发送错误时才返回，在此期间一直会等待，进程从调用到返回这段时间内都是被阻塞的成为阻塞IO；</li>
-<li><img src="/2024/10/21/IO%E6%A8%A1%E5%9E%8B/image.png"></li>
-</ul>
-<h3 id="非阻塞式IO"><a href="#非阻塞式IO" class="headerlink" title="非阻塞式IO"></a>非阻塞式IO</h3><ul>
-<li>非阻塞IO是在应用调用recvfrom读取数据时，如果该缓冲区没有数据的话，就会直接返回一个EWOULDBLOCK错误，不会让应用一直等待中。在没有数据的时候会即刻返回错误标识，那也意味着如果应用要读取数据就需要不断的调用recvfrom请求，直到读取到它数据要的数据为止。（轮询，中断）</li>
-<li>事实上，在非阻塞IO模型中，用户线程需要不断地询问内核数据是否就绪，也就说非阻塞IO不会交出CPU，而会一直占用CPU。</li>
-<li><img src="/2024/10/21/IO%E6%A8%A1%E5%9E%8B/image1.png" alt="alt text"></li>
-</ul>
-<h3 id="多路复用IO"><a href="#多路复用IO" class="headerlink" title="多路复用IO"></a>多路复用IO</h3><ul>
-<li>背景：如果在并发的环境下，可能会N个人向应用B发送消息，这种情况下我们的应用就必须创建多个线程去读取数据，每个线程都会自己调用recvfrom 去读取数据。并发情况下服务器很可能一瞬间会收到几十上百万的请求，这种情况下应用B就需要创建几十上百万的线程去读取数据，同时又因为应用线程是不知道什么时候会有数据读取，为了保证消息能及时读取到，那么这些线程自己必须不断的向内核发送recvfrom 请求来读取数据，这种方法会占用大量资源。</li>
-<li>进程通过将一个或多个fd传递给select（或者其他IO复用API），阻塞在select操作上，select帮我们侦测多个fd是否准备就绪，当有fd准备就绪时，select返回数据可读状态，应用程序再调用recvfrom读取数据。</li>
-<li>多路复用IO主要用于处理多个IO连接时候的场景。在多路复用IO模型中，会有一个线程不断去轮询多个socket的状态，只有当socket真正有读写事件时，才真正调用实际的IO读写操作。因为在多路复用IO模型中，只需要使用一个线程就可以管理多个socket，系统不需要建立新的进程或者线程，也不必维护这些线程和进程，并且只有在真正有socket读写事件进行时，才会使用IO资源，所以它大大减少了资源占用。也许有朋友会说，我可以采用多线程+ 阻塞IO 达到类似的效果，但是由于在多线程 + 阻塞IO 中，每个socket对应一个线程，这样会造成很大的资源占用，并且尤其是对于长连接来说，线程的资源一直不会释放，如果后面陆续有很多连接的话，就会造成性能上的瓶颈。而多路复用IO模式，通过一个线程就可以管理多个socket，只有当socket真正有读写事件发生才会占用资源来进行实际的读写操作。因此，多路复用IO比较适合连接数比较多的情况。另外多路复用IO为何比非阻塞IO模型的效率高是因为在非阻塞IO中，不断地询问socket状态时通过用户线程去进行的，而在多路复用IO中，轮询每个socket状态是内核在进行的，这个效率要比用户线程要高的多。</li>
-<li><img src="/2024/10/21/IO%E6%A8%A1%E5%9E%8B/image2.png" alt="alt text"></li>
-</ul>
-<h3 id="信号驱动IO"><a href="#信号驱动IO" class="headerlink" title="信号驱动IO"></a>信号驱动IO</h3><ul>
-<li>开启套接口信号驱动IO功能，并通过系统调用sigaction执行一个信号处理函数，此时请求即刻返回，当数据准备就绪时，就生成对应进程的SIGIO信号，通过信号回调通知映应用线程调用recvfrom来读取数据。</li>
-<li><img src="/2024/10/21/IO%E6%A8%A1%E5%9E%8B/image4.png" alt="alt text"></li>
-<li>对比多路复用：IO复用模型里面的select虽然可以监控多个fd了，但select其实现的本质上还是通过不断的轮询fd来监控数据状态， 因为大部分轮询请求其实都是无效的，所以信号驱动IO意在通过这种建立信号关联的方式，实现了发出请求后只需要等待数据就绪的通知即可，这样就可以避免大量无效的数据状态轮询操作。</li>
-</ul>
-<h3 id="异步IO"><a href="#异步IO" class="headerlink" title="异步IO"></a>异步IO</h3><ul>
-<li>不管是IO复用还是信号驱动，我们要读取一个数据总是要发起两阶段的请求，第一次发送select请求，询问数据状态是否准备好，第二次发送recevform请求读取数据。（这也就是为什么上面四种都是同步IO）。如果应用发送完指令后就不再参与过程了，只需要等待最终完成结果的通知，那么这就属于异步。</li>
-<li>应用告知内核启动某个操作，并让内核在整个操作完成之后，通知应用，这种模型与信号驱动模型的主要区别在于，信号驱动IO只是由内核通知我们合适可以开始下一个IO操作，而异步IO模型是由内核通知我们操作什么时候完成。</li>
-<li><img src="/2024/10/21/IO%E6%A8%A1%E5%9E%8B/image5.png" alt="alt text"></li>
-</ul>
-<h3 id="两种高性能IO设计模式：Reactor和Proactor"><a href="#两种高性能IO设计模式：Reactor和Proactor" class="headerlink" title="两种高性能IO设计模式：Reactor和Proactor"></a>两种高性能IO设计模式：Reactor和Proactor</h3>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/21/IO%E6%A8%A1%E5%9E%8B/" data-id="cm2irwt2s00012svc6y761ryd" data-title="IO模型" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-数字签名" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/17/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/" class="article-date">
-  <time class="dt-published" datetime="2024-10-17T08:21:47.000Z" itemprop="datePublished">2024-10-17</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/17/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/">数字签名</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>数字签名的主要的作用是认证签署人身份，说得具体点，就是让所有人能够确认这个数字签名是不是由私钥的持有人创建的。数字签名是由签名算法去生成的，签名算法的输入有两个，一个是私钥，另一个是被签署的信息（一般是消息的一个摘要），输出的一个字符串就是数字签名了。签名到底是不是由私钥持有人签署的，要通过验证算法判断。验证算法有三个输入，一个是信息本身，另外一个是数字签名，第三个是公钥，输出的结果就是验证成功或者验证失败。数字签名过程中，私钥是“签名 key”，公钥是“验证 key”。</p>
-<h2 id="流程原理"><a href="#流程原理" class="headerlink" title="流程原理"></a>流程原理</h2><ol>
-<li>用hash函数取出要签名信息的摘要(digest)</li>
-<li>用发送方的私钥加密这个摘要</li>
-<li>接受方收到信息之后，先用公钥解密摘要，再对原文使用hash函数生成摘要</li>
-<li>对比解密摘要和新生成的摘要</li>
-</ol>
-<h3 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h3><ol>
-<li>为什么可以用私钥加密，公钥解密？<br>A：以一个非对称加密算法为例，加密和解密的过程其实是可逆的，关键在于用什么秘钥加密，希望让什么秘钥能解密</li>
-<li>有被伪造的风险吗？公钥就可以解密，摘要是完全暴露的<br>A：这就要依靠hash函数，虽然hash值是暴露的，但是基于hash值伪造一个</li>
-</ol>
-<h2 id="签名：防止篡改-加密：防止泄密"><a href="#签名：防止篡改-加密：防止泄密" class="headerlink" title="签名：防止篡改 &amp; 加密：防止泄密"></a>签名：防止篡改 &amp; 加密：防止泄密</h2><ul>
-<li>同时使用加密和签名？当用公钥加密后，还需要对明文做以下操作（这套算法保证明文改动会使得被私钥签名后的结果改动）：<ol>
-<li>用哈希算法抽取明文摘要（非对称算法很耗时，对大量数据加密需要很大算力）</li>
-<li>对这个明文摘要用私钥签名</li>
-</ol>
-</li>
-<li>验签时，用私钥得到解密后的明文，用公钥得到解签后的摘要，从明文中抽取摘要对比即可</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/17/%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D/" data-id="cm2ibtc860000c0vc6ry07lpk" data-title="数字签名" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -756,7 +744,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -784,6 +772,14 @@
       <ul>
         
           <li>
+            <a href="/2024/11/17/JAVA%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
+          </li>
+        
+          <li>
+            <a href="/2024/11/17/RabbitMQ/">RabbitMQ</a>
+          </li>
+        
+          <li>
             <a href="/2024/11/16/Dubbo/">Dubbo</a>
           </li>
         
@@ -793,14 +789,6 @@
         
           <li>
             <a href="/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1/">Spring-事务</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/12/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/09/Mybatis/">Mybatis</a>
           </li>
         
       </ul>
