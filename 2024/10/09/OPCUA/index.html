@@ -14,8 +14,10 @@
 <meta property="og:description" content="名词定义 AddressSpace：地址空间，OPC_UA服务器向客户暴露的数据集合。OPC UA 地址空间将其内容表示为一组由引用连接的节点。 Aggregate：计算原始数据派生值的函数 Alarm：一种一般需要确认的事件 Attribute：Node的原始数据 Condition：通用术语，是一种扩展的一个事件 Communication Stack：应用程序和硬件之间的一套分层软件模块，提">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2024/10/09/OPCUA/1.png">
+<meta property="og:image" content="http://example.com/2024/10/09/OPCUA/opcuaNodeClass.png">
+<meta property="og:image" content="http://example.com/2024/10/09/OPCUA/node%E7%BB%84%E6%88%90.png">
 <meta property="article:published_time" content="2024-10-09T02:41:39.000Z">
-<meta property="article:modified_time" content="2024-10-12T07:21:53.298Z">
+<meta property="article:modified_time" content="2024-11-18T08:05:35.472Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2024/10/09/OPCUA/1.png">
@@ -120,6 +122,21 @@
 <li><strong>OPC UA 旨在提供发布数据的稳健性</strong>。所有 OPC 服务器的一个主要特点是能够发布数据和事件通知。OPC UA 为客户端提供了快速检测和恢复与这些传输相关的通信故障的机制，而无需等待底层协议。</li>
 <li><strong>OPC UA 规范是分层的，将核心设计与底层计算技术和网络传输隔离开来</strong>。这使得 OPC UA 可以根据需要映射到未来的技术，而不会否定基本设计 – 多种数据格式和传输协议可以被支持</li>
 <li><img src="/2024/10/09/OPCUA/1.png" alt="OPC_UA Server的结构"></li>
+</ul>
+<h2 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h2><ul>
+<li>什么是节点：<ul>
+<li>节点是 OPC UA 信息模型中的实体，用来表示各种类型的信息和功能。</li>
+<li>每个节点有一个唯一标识符（NodeId），并通过引用（References）与其他节点建立关系，形成一个有向图。</li>
+</ul>
+</li>
+<li>类型：<br><img src="/2024/10/09/OPCUA/opcuaNodeClass.png" alt="alt text"></li>
+<li>组成：<br><img src="/2024/10/09/OPCUA/node%E7%BB%84%E6%88%90.png" alt="alt text"></li>
+<li>关系：<ul>
+<li>HasComponent：表示组成关系，例如对象与其变量。</li>
+<li>HasProperty：表示属性关系，例如对象与其属性。</li>
+<li>Organizes：表示组织关系，例如文件夹和文件。</li>
+</ul>
+</li>
 </ul>
 
       

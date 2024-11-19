@@ -855,6 +855,21 @@
 <li><strong>OPC UA 规范是分层的，将核心设计与底层计算技术和网络传输隔离开来</strong>。这使得 OPC UA 可以根据需要映射到未来的技术，而不会否定基本设计 – 多种数据格式和传输协议可以被支持</li>
 <li><img src="/2024/10/09/OPCUA/1.png" alt="OPC_UA Server的结构"></li>
 </ul>
+<h2 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h2><ul>
+<li>什么是节点：<ul>
+<li>节点是 OPC UA 信息模型中的实体，用来表示各种类型的信息和功能。</li>
+<li>每个节点有一个唯一标识符（NodeId），并通过引用（References）与其他节点建立关系，形成一个有向图。</li>
+</ul>
+</li>
+<li>类型：<br><img src="/2024/10/09/OPCUA/opcuaNodeClass.png" alt="alt text"></li>
+<li>组成：<br><img src="/2024/10/09/OPCUA/node%E7%BB%84%E6%88%90.png" alt="alt text"></li>
+<li>关系：<ul>
+<li>HasComponent：表示组成关系，例如对象与其变量。</li>
+<li>HasProperty：表示属性关系，例如对象与其属性。</li>
+<li>Organizes：表示组织关系，例如文件夹和文件。</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
