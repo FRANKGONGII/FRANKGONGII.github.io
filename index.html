@@ -249,19 +249,6 @@
 </ul>
 <h2 id="CAS操作"><a href="#CAS操作" class="headerlink" title="CAS操作"></a>CAS操作</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cy973071263/article/details/104422594">https://blog.csdn.net/cy973071263/article/details/104422594</a></p>
 <ul>
-<li><strong>乐观锁与悲观锁</strong>：<ul>
-<li>悲观锁更新的方式认为：在更新数据的时候大概率会有其他线程去争夺共享资源<ul>
-<li>悲观锁的做法是：第一个获取资源的线程会将资源锁定起来，其他没争夺到资源的线程只能进入阻塞队列，等第一个获取资源的线程释放锁之后，这些线程才能有机会重新争夺资源。</li>
-<li>synchronized就是java中悲观锁的典型实现，synchronized使用起来非常简单方便，但是会使没争抢到资源的线程进入阻塞状态，线程在阻塞状态和Runnable状态之间切换效率较低（比较慢）。比如更新操作其实是非常快的，这种情况下还用synchronized将其他线程都锁住了，线程从Blocked状态切换回Runnable华的时间可能比更新操作的时间还要长。</li>
-</ul>
-</li>
-<li>乐观锁更新方式认为:在更新数据的时候其他线程争抢这个共享变量的概率非常小<ul>
-<li>乐观锁的做法是：更新数据的时候不会对共享数据加锁。但是在正式更新数据之前会检查数据是否被其他线程改变过，如果未被其他线程改变过就将共享变量更新成最新值，如果发现共享变量已经被其他线程更新过了，就重试，直到成功为止。</li>
-<li>CAS机制就是乐观锁的典型实现。</li>
-</ul>
-</li>
-</ul>
-</li>
 <li>CAS是compare and swap的简称，有三个核心参数<ul>
 <li>V内存中地址存放的实际值：通过对象内存地址和对象内目标变量偏移量获取</li>
 <li>O预期值</li>
@@ -343,8 +330,43 @@
 </ul>
 </li>
 </ul>
-<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><h2 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h2><p>+ </p>
-
+<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><h2 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h2><ul>
+<li>悲观锁更新的方式认为：在更新数据的时候大概率会有其他线程去争夺共享资源<ul>
+<li>悲观锁的做法是：第一个获取资源的线程会将资源锁定起来，其他没争夺到资源的线程只能进入阻塞队列，等第一个获取资源的线程释放锁之后，这些线程才能有机会重新争夺资源。</li>
+<li>synchronized就是java中悲观锁的典型实现，synchronized使用起来非常简单方便，但是会使没争抢到资源的线程进入阻塞状态，线程在阻塞状态和Runnable状态之间切换效率较低（比较慢）。比如更新操作其实是非常快的，这种情况下还用synchronized将其他线程都锁住了，线程从Blocked状态切换回Runnable华的时间可能比更新操作的时间还要长。 </li>
+<li>数据库查询时for update也是悲观锁</li>
+</ul>
+</li>
+<li>乐观锁更新方式认为:在更新数据的时候其他线程争抢这个共享变量的概率非常小<ul>
+<li>乐观锁的做法是：更新数据的时候不会对共享数据加锁。但是在正式更新数据之前会检查数据是否被其他线程改变过，如果未被其他线程改变过就将共享变量更新成最新值，如果发现共享变量已经被其他线程更新过了，就重试，直到成功为止。</li>
+<li>CAS机制就是乐观锁的典型实现。</li>
+</ul>
+</li>
+<li>一个乐观锁和悲观锁的例子<ul>
+<li>悲观锁：多个线程执行此方法，只有一个会成功，其余被阻塞<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">EntryObject</span> <span class="variable">entry</span> <span class="operator">=</span> query(<span class="string">&quot;select * from table1 where id = #&#123;id&#125; for update&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+<li>乐观锁：添加一个version字段，类似CAS<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">EntryObject</span> <span class="variable">entry</span> <span class="operator">=</span> query(<span class="string">&quot;select * from table1 where id = #&#123;id&#125; for update&quot;</span>);</span><br><span class="line"><span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> update(<span class="string">&quot;update table1 set name = #&#123;name&#125;, version = #&#123;version&#125; + 1 where id = #&#123;id&#125; and #&#123;version&#125;&quot;</span>)</span><br><span class="line"><span class="comment">// 通过count可以实现重试逻辑</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="公平锁和非公平锁"><a href="#公平锁和非公平锁" class="headerlink" title="公平锁和非公平锁"></a>公平锁和非公平锁</h2><ul>
+<li>公平锁：线程获取锁的顺序是根据请求时间决定的，先来先到</li>
+<li>非公平锁：不一定先到先得，允许抢占</li>
+<li>创建(非)公平锁：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ReentranLock</span> <span class="variable">pairLock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentranLock</span>(<span class="literal">true</span>); <span class="comment">// 公平锁</span></span><br><span class="line"><span class="type">ReentranLock</span> <span class="variable">pairLock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentranLock</span>(<span class="literal">false</span>); <span class="comment">// 非公平锁</span></span><br></pre></td></tr></table></figure></li>
+<li>公平锁会有额外的开销</li>
+</ul>
+<h2 id="独占锁和共享锁"><a href="#独占锁和共享锁" class="headerlink" title="独占锁和共享锁"></a>独占锁和共享锁</h2><ul>
+<li>独占锁：一次只有一个线程持有：悲观锁，ReentranLock</li>
+<li>共享锁：可以有多个线程持有：乐观锁，ReadWriteLock</li>
+</ul>
+<h2 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h2><ul>
+<li>当前持有锁的线程能不能再次获取锁</li>
+<li>内部维护一个标识，记录被那个线程占用已经占用次数，如果为0就就可以唤醒线程</li>
+</ul>
+<h2 id="自旋锁-1"><a href="#自旋锁-1" class="headerlink" title="自旋锁"></a>自旋锁</h2><ul>
+<li>获取不到锁的时候不马上阻塞自己，在不放弃CPU的情况下多次尝试获取锁</li>
+<li>可以避免用户态到内核态的切换挂起过程</li>
+</ul>
+<h1 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h1><h2 id><a href="#" class="headerlink" title></a></h2>
       
     </div>
     <footer class="article-footer">
