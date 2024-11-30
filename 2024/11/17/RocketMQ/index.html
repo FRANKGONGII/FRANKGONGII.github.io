@@ -4,24 +4,24 @@
   <meta charset="utf-8">
   
   
-  <title>RabbitMQ | Hexo</title>
+  <title>RocketMQ | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="什么是MQ MQ具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一 使用场景：异步处理，应用解耦，流量削峰和消息通讯 异步处理：例如把非核心，不互相依赖的业务流程以异步方式执行 消息解耦：把相互依赖的业务流程间加上一个消息队列，变成一个放，一个取的模式 流量削峰：类似消息解耦的模式，加上对流量的管理 消息通信：点对点或发布订阅   MQ比较  物理架构  组">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RabbitMQ">
-<meta property="og:url" content="http://example.com/2024/11/17/RabbitMQ/index.html">
+<meta property="og:title" content="RocketMQ">
+<meta property="og:url" content="http://example.com/2024/11/17/RocketMQ/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="什么是MQ MQ具有低耦合、可靠投递、广播、流量控制、最终一致性等一系列功能，成为异步RPC的主要手段之一 使用场景：异步处理，应用解耦，流量削峰和消息通讯 异步处理：例如把非核心，不互相依赖的业务流程以异步方式执行 消息解耦：把相互依赖的业务流程间加上一个消息队列，变成一个放，一个取的模式 流量削峰：类似消息解耦的模式，加上对流量的管理 消息通信：点对点或发布订阅   MQ比较  物理架构  组">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/11/17/RabbitMQ/rabbitMQ.png">
-<meta property="og:image" content="http://example.com/2024/11/17/RabbitMQ/rabbitMQ%E7%89%A9%E7%90%86%E6%9E%B6%E6%9E%84.png">
-<meta property="og:image" content="http://example.com/2024/11/17/RabbitMQ/MQ%E6%A6%82%E5%BF%B5%E6%A8%A1%E5%9E%8B.png">
-<meta property="og:image" content="http://example.com/2024/11/17/RabbitMQ/MQ%E5%88%86%E7%89%87.png">
+<meta property="og:image" content="http://example.com/2024/11/17/RocketMQ/rabbitMQ.png">
+<meta property="og:image" content="http://example.com/2024/11/17/RocketMQ/rabbitMQ%E7%89%A9%E7%90%86%E6%9E%B6%E6%9E%84.png">
+<meta property="og:image" content="http://example.com/2024/11/17/RocketMQ/MQ%E6%A6%82%E5%BF%B5%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:image" content="http://example.com/2024/11/17/RocketMQ/MQ%E5%88%86%E7%89%87.png">
 <meta property="article:published_time" content="2024-11-17T04:46:01.000Z">
-<meta property="article:modified_time" content="2024-11-29T06:43:02.317Z">
+<meta property="article:modified_time" content="2024-11-30T10:52:21.184Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/11/17/RabbitMQ/rabbitMQ.png">
+<meta name="twitter:image" content="http://example.com/2024/11/17/RocketMQ/rabbitMQ.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -76,14 +76,14 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-RabbitMQ" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-RocketMQ" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2024/11/17/RabbitMQ/" class="article-date">
+    <a href="/2024/11/17/RocketMQ/" class="article-date">
   <time class="dt-published" datetime="2024-11-17T04:46:01.000Z" itemprop="datePublished">2024-11-17</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>►<a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a>
+    <a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>►<a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a>
   </div>
 
   </div>
@@ -94,7 +94,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      RabbitMQ
+      RocketMQ
     </h1>
   
 
@@ -111,9 +111,9 @@
 <li>消息通信：点对点或发布订阅</li>
 </ul>
 </li>
-<li>MQ比较<br><img src="/2024/11/17/RabbitMQ/rabbitMQ.png" alt="alt text"></li>
+<li>MQ比较<br><img src="/2024/11/17/RocketMQ/rabbitMQ.png" alt="alt text"></li>
 </ul>
-<h2 id="物理架构"><a href="#物理架构" class="headerlink" title="物理架构"></a>物理架构</h2><p><img src="/2024/11/17/RabbitMQ/rabbitMQ%E7%89%A9%E7%90%86%E6%9E%B6%E6%9E%84.png" alt="alt text"></p>
+<h2 id="物理架构"><a href="#物理架构" class="headerlink" title="物理架构"></a>物理架构</h2><p><img src="/2024/11/17/RocketMQ/rabbitMQ%E7%89%A9%E7%90%86%E6%9E%B6%E6%9E%84.png" alt="alt text"></p>
 <ul>
 <li><p>组件：</p>
 <ol>
@@ -154,9 +154,9 @@
 </ol>
 </li>
 </ul>
-<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><h3 id="概念模型"><a href="#概念模型" class="headerlink" title="概念模型"></a>概念模型</h3><p><img src="/2024/11/17/RabbitMQ/MQ%E6%A6%82%E5%BF%B5%E6%A8%A1%E5%9E%8B.png" alt="alt text"></p>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><h3 id="概念模型"><a href="#概念模型" class="headerlink" title="概念模型"></a>概念模型</h3><p><img src="/2024/11/17/RocketMQ/MQ%E6%A6%82%E5%BF%B5%E6%A8%A1%E5%9E%8B.png" alt="alt text"></p>
 <h3 id="消息模型"><a href="#消息模型" class="headerlink" title="消息模型"></a>消息模型</h3><p>RocketMQ主要由 Producer、Broker、Consumer 三部分组成，其中Producer 负责生产消息，Consumer 负责消费消息，Broker 负责存储消息。Broker 在实际部署过程中对应一台服务器，每个 Broker 可以存储多个Topic的消息，每个Topic的消息也可以分片存储于不同的 Broker。Message Queue 用于存储消息的物理地址，每个Topic中的消息地址存储于多个 Message Queue 中。ConsumerGroup 由多个Consumer 实例构成。</p>
-<h3 id="消息队列-Message-Queue"><a href="#消息队列-Message-Queue" class="headerlink" title="消息队列 Message Queue"></a>消息队列 Message Queue</h3><p>简称 Queue 或 Q。消息物理管理单位。一个 Topic 将有若干个 Q。若一个 Topic 创建在不同的 Broker，则不同的 broker 上都有若干 Q，消息将物理地存储落在不同 Broker 结点上，具有水平扩展的能力。 无论生产者还是消费者，实际的生产和消费都是针对 Q 级别。例如 Producer 发送消息的时候，会预先选择（默认轮询）好该 Topic 下面的某一条 Q 发送；Consumer 消费的时候也会负载均衡地分配若干个 Q，只拉取对应 Q 的消息。 每一条 message queue 均对应一个文件，这个文件存储了实际消息的索引信息。并且即使文件被删除，也能通过实际纯粹的消息文件（commit log） 恢复回来。<br><img src="/2024/11/17/RabbitMQ/MQ%E5%88%86%E7%89%87.png" alt="alt text"><br><strong>一个Topic可以分布在多个Broker上，一个Broker可以配置多个Topic，是多对多的关系</strong></p>
+<h3 id="消息队列-Message-Queue"><a href="#消息队列-Message-Queue" class="headerlink" title="消息队列 Message Queue"></a>消息队列 Message Queue</h3><p>简称 Queue 或 Q。消息物理管理单位。一个 Topic 将有若干个 Q。若一个 Topic 创建在不同的 Broker，则不同的 broker 上都有若干 Q，消息将物理地存储落在不同 Broker 结点上，具有水平扩展的能力。 无论生产者还是消费者，实际的生产和消费都是针对 Q 级别。例如 Producer 发送消息的时候，会预先选择（默认轮询）好该 Topic 下面的某一条 Q 发送；Consumer 消费的时候也会负载均衡地分配若干个 Q，只拉取对应 Q 的消息。 每一条 message queue 均对应一个文件，这个文件存储了实际消息的索引信息。并且即使文件被删除，也能通过实际纯粹的消息文件（commit log） 恢复回来。<br><img src="/2024/11/17/RocketMQ/MQ%E5%88%86%E7%89%87.png" alt="alt text"><br><strong>一个Topic可以分布在多个Broker上，一个Broker可以配置多个Topic，是多对多的关系</strong></p>
 <h2 id="案例使用"><a href="#案例使用" class="headerlink" title="案例使用"></a>案例使用</h2><ul>
 <li>MQ配置在App层</li>
 <li>把MQ的消息发送放在基础层 – EventPublisher</li>
@@ -176,7 +176,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/11/17/RabbitMQ/" data-id="cm3lu7knk00010wvce38w7p12" data-title="RabbitMQ" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/11/17/RocketMQ/" data-id="cm44fjssa0000ykvc3f2n1eiu" data-title="RocketMQ" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -215,7 +215,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -243,6 +243,10 @@
       <ul>
         
           <li>
+            <a href="/2024/11/30/RabbitMQ/">RabbitMQ</a>
+          </li>
+        
+          <li>
             <a href="/2024/11/28/MySql/">MySql</a>
           </li>
         
@@ -251,15 +255,11 @@
           </li>
         
           <li>
-            <a href="/2024/11/17/RabbitMQ/">RabbitMQ</a>
+            <a href="/2024/11/17/RocketMQ/">RocketMQ</a>
           </li>
         
           <li>
             <a href="/2024/11/16/Dubbo/">Dubbo</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/">数据库基础</a>
           </li>
         
       </ul>
