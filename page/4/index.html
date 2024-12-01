@@ -69,6 +69,167 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-OPCUA安全架构" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" class="article-date">
+  <time class="dt-published" datetime="2024-10-09T08:50:36.000Z" itemprop="datePublished">2024-10-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/">OPCUA安全 &amp; HTTPS安全</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>中文博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/mikasoi/article/details/84799078">https://blog.csdn.net/mikasoi/article/details/84799078</a></p>
+<h2 id="目标-–-保证信息安全"><a href="#目标-–-保证信息安全" class="headerlink" title="目标 – 保证信息安全"></a>目标 – 保证信息安全</h2><ol>
+<li>认证</li>
+<li>授权</li>
+<li>保密性：数据加密，保证在传输，存储时的安全性</li>
+<li>完整性：数据不应该有变化</li>
+<li>可审计性：系统的行动应该记录在案</li>
+<li>可用性</li>
+</ol>
+<h2 id="威胁"><a href="#威胁" class="headerlink" title="威胁"></a>威胁</h2><ul>
+<li>message flooding – 可用性<ul>
+<li>攻击者可以发送大量信息或包含大量请求的单个信息，目的是压垮 OPC UA 服务器或 CPU、TCP&#x2F;IP 栈、操作系统或文件系统等依赖组件。泛洪攻击可在多层进行，包括 OPC UA、SOAP、HTTP 或 TCP。 信息泛洪攻击既可以使用格式良好的信息，也可以使用格式不良的信息。在第一种情况下，攻击者可能是使用合法客户端向服务器发出大量请求的恶意人员。 有两种情况，一种是客户端没有与服务器建立会话，另一种是客户端与服务器建立了会话。信息泛滥可能会损害建立 OPC UA 会话或终止现有会话的能力。在第二种情况下，攻击者可以使用恶意客户端，向 OPC UA 服务器发送畸形信息，以耗尽服务器的资源。 一般来说，信息泛洪可能会损害与 OPC UA 实体的通信能力，并导致拒绝服务。 信息泛洪会影响可用性。</li>
+</ul>
+</li>
+<li>窃听 – 保密性</li>
+<li>消息伪造 – 完整性、可审计性和授权</li>
+<li>消息重放 – 授权</li>
+<li>畸形消息 – 完整性、可用性</li>
+</ul>
+<h2 id="消息安全协议"><a href="#消息安全协议" class="headerlink" title="消息安全协议"></a>消息安全协议</h2><h3 id="安全握手"><a href="#安全握手" class="headerlink" title="安全握手"></a>安全握手</h3><ul>
+<li><p>安全协议应该支持三种模式：无处理，签名，签名以及加密</p>
+<ul>
+<li>如果是无处理模式，仍然要提供一个逻辑上的信道和唯一的标识符</li>
+</ul>
+</li>
+<li><p>握手过程</p>
+<ul>
+<li><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/cs%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B.png"><ol>
+<li>客户端请求打开安全信道：用客户端私钥签名，用服务端公钥加密</li>
+<li>服务端回复请求：用服务端私钥签名，用客户端公钥加密</li>
+<li>？客户端创建会话请求：用客户端签名的秘钥签名，用服务端加密的秘钥加密</li>
+<li>？服务端创建会话服务：用服务端签名的秘钥签名，用客户端加密的秘钥加密</li>
+</ol>
+</li>
+<li>一系列在安全握手中使用的安全算法被称为<strong>安全策略</strong>（Security Policy）</li>
+<li>每个安全协议映射指明了如何应用安全算法，以及如何使用安全策略的参数。</li>
+<li><strong>握手步骤详解</strong>：<ul>
+<li>OpenSecureChannel Requset：<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelRequest.png"><br>和秘钥有关的参数是clientCertificate（ApplicationInstance‌Certificate），这个证书指明了客户端身份，OpenSecureChannel请求需要用证书的私钥签名（证书公钥一般包含在证书中），也就是可以通过公钥验证证书合法性</li>
+<li>OpenSecureChannel Response：<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/openSecureChannelResponse.png"></li>
+<li><strong>看到这里肯定有一个问题？客户端和服务端的加密公钥是怎么交换的？</strong><br>这里需要了解建立SecureChannel或者Session之前的事情<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/discoverProcess.png"><br>GetEndPoints服务返回服务端支持的所有EndPoints和需要建立连接所需的信息，注意：<strong>这个服务不需要message security，也就是不需要加密，但是仍然需要传输层安全</strong><br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/getEndPoints.png"><br>服务端证书就在EndPointDescription中了，证书格式和上面的客户端证书是一样的，客户端和服务端也就完成了秘钥的交换</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>OPCUA中的CS连接是一个嵌套结构：</p>
+<ol>
+<li>原始连接：通过打开与响应主机名和端口的TCP连接以及相应的HEL&#x2F;ACK握手创建原始连接</li>
+<li>SecureChannnel：SecureChannels是在原始TCP连接之上创建的。使用OpenSecureChannel请求和响应消息对建立SecureChannel。Channel即有前文提到的3个mode</li>
+<li>Session：在OpenSecureChannel上创建，确保不以明文发送凭据。建立Session需要两个消息交换：CreateSession和ActicateSession</li>
+</ol>
+</li>
+<li><p>SecureChannel:</p>
+<ul>
+<li>一个SecureChannel是一个在单客户端和单服务器间长期运行的逻辑连接，包含一组仅有客户端和服务端知晓的秘钥。这些秘钥用于网络上信息的验证和加密。SecureChannelService保证了CS之间可以安全地协商秘钥。</li>
+<li>SecureChannel的开放和关闭是由客户使用 SecureChannel Service</li>
+</ul>
+</li>
+<li><p>OPCUA中的安全算法</p>
+<ol>
+<li>（非）对称加密算法：用（非）对称秘钥加密的算法</li>
+<li>非对称秘钥加密算法（秘钥封装，Key Encapsulation）：用于使用非对称密钥加密密钥的算法。类似的有对称秘钥加密算法（秘钥包装，Key Wrapping）。这个名称不重要，说法比较多，关键是有对称还是非对称的秘钥进行对另一个秘钥的加密</li>
+<li>对称签名算法：用对称秘钥为消息签名</li>
+<li>秘钥衍生算法：用于加密的密钥长度由对称加密算法（SymmetricEncryptionAlgorithm）决定。用于创建对称签名的密钥长度取决于对称签名算法（SymmetricSignatureAlgorithm），可能与加密密钥长度不同。</li>
+<li>证书签名算法：用于签署用于非对称加密的证书。该算法是最低要求算法。允许使用更强的算法</li>
+</ol>
+</li>
+<li><p>OPCUA中的证书<br>OPC UA 应用程序使用证书来存储非对称加密操作所需的公钥。</p>
+<ul>
+<li>服务端证书和客户端证书在OpenSecureChannel中使用，是ApplicationInstance Certificate Data</li>
+<li>服务端软件证书和客户端软件证书在CreateSession和ActicateSession中使用，是SignedSoftwareCertificate<br>Data Type</li>
+</ul>
+</li>
+<li><p>OPCUA中的消息块结构<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/message%20chunk.png"></p>
+<ol>
+<li>message header：包含该消息块的一些基本信息，例如消息类型、消息大小、是否是最后一个消息块等</li>
+<li>security header：说明对报文进行了哪些加密操作。安全标头有两个版本，取决于应用于报文的安全类型（对称or非对称）</li>
+<li>sequence header：序列头可确保通过信道发送的每个信息的第一个加密块都以不同的数据开始（就是一个序列号）</li>
+<li>padding</li>
+</ol>
+</li>
+<li><p>padding:</p>
+<ul>
+<li>如果使用能同时支持签名和加密的算法（认证加密），那就不需要padding，否则需要<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/OPCUA%E7%9A%84padding1.png"><br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/OPCUApadding2.png"><ul>
+<li>认证加密：AE（Authenticated Encryption，认证加密）算法结合了加密（Confidentiality）和认证（Authentication），确保数据在传输过程中不仅是加密的，而且没有被篡改。常见的AE算法包括：AES-GCM（Galois&#x2F;Counter Mode）AES-CCM（Counter with CBC-MAC）这些算法会在加密过程中生成消息认证码（MAC），从而提供认证和加密的双重保障。</li>
+</ul>
+</li>
+<li>PaddingSize &#x3D; PlainTextBlockSize – ((BytesToWrite + SignatureSize + 1) % PlainTextBlockSize);</li>
+<li></li>
+</ul>
+</li>
+</ul>
+<h3 id="对称与非对称加密，加密与签名，公钥安全"><a href="#对称与非对称加密，加密与签名，公钥安全" class="headerlink" title="对称与非对称加密，加密与签名，公钥安全"></a>对称与非对称加密，加密与签名，公钥安全</h3><p>参考：<br><a target="_blank" rel="noopener" href="https://thiscute.world/posts/practical-cryptography-basics-7-asymmetric-key-ciphers/">https://thiscute.world/posts/practical-cryptography-basics-7-asymmetric-key-ciphers/</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/boweiqiang/article/details/105737017">https://blog.csdn.net/boweiqiang/article/details/105737017</a></p>
+<h4 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h4><ul>
+<li>使用相同的秘钥进行加密和解密，也就是消息发出方和接受方需要持有相同的秘钥</li>
+<li>常见的对称加密算法：AES（AES-128、AES-192、AES-256）、ChaCha20、Twofish、IDEA、Serpent、Camelia、RC6、CAST </li>
+<li>对称加密往往是分组加密的，也就是每次只加密固定大小的块，只有少部分是流式加密，即将数据逐字节加密为密文流。</li>
+<li>单一使用对称加密往往不能满足全部的要求，例如真实性和完整性。一个完整的对称加密方案包括：秘钥派生算法，对称加密算法（分组密码工作模式（用于将分组密码转换为流密码，如 CBC 或 CTR）+ 消息填充算法（如 PKCS7） + 分组密码算法（如 AES）需要借助这两种算法，才能加密任意大小的数据）和消息认证算法等</li>
+</ul>
+<h4 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h4><ul>
+<li>非对称加密&#x2F;公钥密码学可以在不安全的信道上安全地进行密钥交换，第三方即使监听到通信过程，但是 （几乎）无法破解出密钥。每个人只需要公开自己的公钥，就可以跟其他任何人安全地通信。</li>
+<li>常见的非对称加密算法：RSA、ECC（椭圆曲线密码学）、ElGamal、Diffie-Hellman、ECDH、ECDSA 和 EdDSA。许多密码算法都是以这些密码系统为基础实现的，例如 RSA 签名、RSA 加密&#x2F;解密、ECDH 密钥交换以及 ECDSA 和 EdDSA 签名。</li>
+<li>非对称加密方案：<ol>
+<li>秘钥封装机制：KEM<br><img src="/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/KEM%E8%BF%87%E7%A8%8B.png"></li>
+<li>集成加密方案 (IES) 在密钥封装机制（KEM）的基础上，添加了密钥派生算法 KDF、消息认证算法 MAC 等其他密码学算法以达成更高的安全性。在 IES 方案中，非对称算法（如 RSA 或 ECC）跟 KEM 一样，都是用于加密或封装对称密钥，然后通过对称密钥（如 AES 或 Chacha20）来加密输入消息。</li>
+</ol>
+</li>
+</ul>
+<h2 id="签名：防止篡改-加密：防止泄密"><a href="#签名：防止篡改-加密：防止泄密" class="headerlink" title="签名：防止篡改 &amp; 加密：防止泄密"></a>签名：防止篡改 &amp; 加密：防止泄密</h2><ul>
+<li>同时使用加密和签名？当用公钥加密后，还需要对明文做以下操作（这套算法保证明文改动会使得被私钥签名后的结果改动）：<ol>
+<li>用哈希算法抽取明文摘要（非对称算法很耗时，对大量数据加密需要很大算力）</li>
+<li>对这个明文摘要用私钥签名</li>
+</ol>
+</li>
+<li>验签时，用私钥得到解密后的明文，用公钥得到解签后的摘要，从明文中抽取摘要对比即可</li>
+</ul>
+<h4 id="公钥获取-公钥安全：CA证书"><a href="#公钥获取-公钥安全：CA证书" class="headerlink" title="公钥获取 &amp; 公钥安全：CA证书"></a>公钥获取 &amp; 公钥安全：CA证书</h4><ul>
+<li>怎么获取到公钥？在公钥加密中，秘钥是可以明文传输或者直接通过公用储备库在硬件上存储的。但这是服务端公钥，客户端通过这些方法获取到服务端公钥之后，服务端如何获取到客户端公钥并进行回复呢？</li>
+<li>如何保证服务端公钥真实性？这就需要CA证书，证书是需要申请的，并由专门的数字证书认证机构(CA)通过非常严格的审核之后颁发的电子证书 (当然了是要钱的，安全级别越高价格越贵)。颁发证书的同时会产生一个私钥和公钥。私钥由服务端自己保存，不可泄漏。公钥则是附带在证书的信息中，可以公开的。证书本身也附带一个证书电子签名，这个签名用来验证证书的完整性和真实性，可以防止证书被篡改。<br><img src="/./OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/https%E7%9A%84%E5%8A%A0%E8%A7%A3%E5%AF%86%E8%BF%87%E7%A8%8B.png"></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/09/OPCUA%E5%AE%89%E5%85%A8%E6%9E%B6%E6%9E%84/" data-id="cm22znk0m0002dcvc3t9f5khw" data-title="OPCUA安全 &amp; HTTPS安全" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-OPCUA" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/09/OPCUA/" class="article-date">
@@ -796,67 +957,6 @@
 
 
   
-    <article id="post-Paper" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/22/Paper/" class="article-date">
-  <time class="dt-published" datetime="2024-05-22T14:43:56.000Z" itemprop="datePublished">2024-05-22</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a>►<a class="article-category-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/22/Paper/">Paper~</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey"><a href="#ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey" class="headerlink" title="ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey"></a>ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</h2><h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>不同场景下，有什么不同的图像匹配技术？<br>图像匹配（又称图像配准或配对）旨在从两幅以上的图像中识别出相同或相似的结构&#x2F;内容，然后将其对应起来。该技术可用于高维结构恢复以及信息识别和整合，如三维重建、视觉同步定位和地图绘制（VSLAM）、图像拼图、图像融合、图像检索、目标识别和跟踪以及变化检测等<br>一般来说，图像匹配包括两个部分，即匹配特征的性质和匹配策略，这两个部分分别说明了用什么进行匹配和如何进行匹配。匹配的最终目的是将感测图像以几何方式扭曲成参照图像的共同空间坐标系，并将它们的共同区域像素对像素对齐（即图像注册  image registration）。</p>
-<h4 id="area-based-method"><a href="#area-based-method" class="headerlink" title="area-based method"></a>area-based method</h4><ul>
-<li>一种直接的策略（也称为基于区域的方法）是通过在预定大小的滑动窗口甚至整个图像中使用像素域变换后的原始图像像素强度或信息的相似性测量值来注册两幅图像，而不试图检测任何突出的图像结构</li>
-<li>直接匹配图像的基于区域的方法通常依赖于适当的斑块相似性测量来创建图像之间像素级的匹配。这些方法的计算成本较高，而且对图像失真、噪声引起的外观变化、不同的光照和不同的成像传感器很敏感，这些都会对相似性测量和匹配搜索产生负面影响。因此，这些方法通常只能在较小的旋转、缩放和局部变形情况下有效。但是，这些方法基于特征检测和描述、特征匹配和几何模型估计，这也是一个挑战。一方面，在基于特征的图像匹配中，很难定义和提取现实世界中属于三维空间相同位置的高比例和大量特征，以确保匹配度。另一方面，将 N 个特征点与另一幅图像中检测到的 N 个特征点进行匹配，总共会产生 N! 种可能的匹配结果，而通常要从高分辨率图像中提取成千上万个特征点，且特征点集合中通常会包含主要的异常值和噪声，这给现有的匹配方法带来了明显的困难。 </li>
-<li>当应用于宽基线图像立体或复杂和严重变形情况下的配准时，从图像中学习直接配准或变换模型估计的选择是有限的。将卷积神经网络（CNN）应用于稀疏点数据的匹配、配准和变换模型估计也很困难，因为需要匹配的点由于其无序和分散的性质而被称为非结构化或非欧几里得数据，这使得使用深度卷积技术操作和提取两个或多个点之间的空间关系（例如相邻元素、相对位置以及多点之间的长度和角度信息）变得困难</li>
-</ul>
-<h4 id="feature-based-method"><a href="#feature-based-method" class="headerlink" title="feature based method"></a>feature based method</h4><ul>
-<li>基于特征的方法，即特征检测和描述、特征匹配、变换模型估计、图像重采样和变换。基于特征的图像匹配因其灵活性和鲁棒性以及广泛的应用能力而广受欢迎。其中，特征检测可以从图像中提取独特的结构，而特征描述可视为一种图像表示方法，被广泛应用于图像编码和相似性测量，如图像分类和检索。此外，由于深度特征获取和非线性表达能力强，将深度学习技术应用于图像信息表示和&#x2F;或相似性测量，以及图像对变换的参数回归，是当今图像匹配界的热门话题，与传统方法相比，已被证明能获得更好的匹配性能，并呈现出更大的潜力。</li>
-<li>检测到的特征代表了图像或现实世界中的特定语义结构，可分为<strong>角特征</strong>（Moravec，1977 年；Harrisetal，1988 年；Smith 和 Brady，1997 年；RostenandDrummond，2006 年；Rubleeetal，2011 年。 等人，2008 年；Yi 等人，2016 年）、<strong>线&#x2F;边</strong>（Harris 等人，1988 年；Smith 和 Brady，1997 年；Canny，1987 年；Perona 和 Malik，1990 年）以及<strong>形态逻辑区域特征</strong>（Matas 等人，2004 年；Mikolajczyk 等人，2005 年）。不过，<strong>最常用的匹配特征是点</strong>（又称关键点或兴趣点）。 与线条和区域特征相比，点易于提取和定义，其形式也比较简单，大致可分为角点和圆点。 一个好的兴趣点必须易于找到，而且最好能快速计算，因为一个好位置上的兴趣点对于进一步的特征描述和匹配至关重要。为了提高(i) 可匹配性，(ii) 后续应用能力，(iii) 匹配效率和减少存储需求，人们提出了许多可靠特征提取所需的属性（Zitova 和 Flusser，2003 年；Tuytelaars 和 Mikolajczyk，2008 年），包括重复性、不变性、鲁棒性和效率。特征检测的共同理念是构建特征响应，以区分突出的点、线和区域，以及平面和非突出的图像区域。这种思路可分为梯度检测、强度检测、二阶导数检测、轮廓曲率检测、区域分割检测和基于学习的检测。下面，我们将全面介绍这些方法中的特征检测器，重点介绍基于学习的方法，以指导研究人员了解传统检测器和可训练检测器是如何工作的，并深入分析它们的优势和不足。</li>
-</ul>
-<h5 id="corner-feature"><a href="#corner-feature" class="headerlink" title="corner feature"></a>corner feature</h5><ul>
-<li>拐角特征可定义为 “L”、”T”、”X “形两条直线的交叉点或轮廓线的高曲率点。拐角检测的共同理念是计算拐角响应，并将其与边缘、平面或其他不同的图像区域区分开来。传统的拐角搜索可以采用不同的策略，即基于梯度、基于强度和基于轮廓曲率的策略。 详情请参考 Zitova 和 Flusser (2003)、Li 等人 (2015)、Tuyte laars 和 Mikolajczyk (2008) 以及 Rosten 等人 (2010)。</li>
-</ul>
-<h6 id="梯度检测器"><a href="#梯度检测器" class="headerlink" title="梯度检测器"></a>梯度检测器</h6><ul>
-<li>该方法首先提出了 “兴趣点 “的概念来定义明显的特征点，这些特征点是根据局部强度的自相关关系提取的。该方法从八个方向的移动窗口中计算并搜索每个像素的最小强度变化，如果最小值优于给定的阈值，则检测到兴趣点。 然而，由于比较的方向和大小不连续，莫拉维克检测器对方向或图像旋转并不不变。著名的 Harris 角检测器（Harris 等人，1988 年）就是为了解决各向异性和计算复杂性问题而引入的。哈里斯方法的目标是利用二阶矩阵或自相关矩阵找到灰度值变化最快和最小的方向，因此它不受方向和光照的影响，具有可靠的重复性和独特性。Shi 和 Tomasi（1993 年）对 Harris 进行了进一步改进，使特征更加 “分散”，定位更加准确，从而提高了跟踪性能。</li>
-</ul>
-<h6 id="强度检测器"><a href="#强度检测器" class="headerlink" title="强度检测器"></a>强度检测器</h6><ul>
-<li>有几种基于模板或强度比较的拐角检测器是通过比较周围像素与中心像素的强度来简化图像梯度计算的。由于其二进制性质，它们被广泛应用于许多现代应用中，特别是一些有存储和实时性要求的应用中。 基于亮度的角检测器，即最小单值段同化核（SUSAN）（Smith 和 Brady，1997 年），是基于局部半径区域像素与核之间的亮度相似性。由于 SUSAN 不需要梯度计算，因此可以快速实现。基于亮度比较的概念，人们提出了许多类似的方法，其中最著名的是 FAST 检测器（Trajkovi´c 和 Hedley，1998 年）。FAST 使用二进制比较法，将沿圆圈图案的每个像素与中心像素进行比较，然后使用机器学习（即 ID3 树，Quinlan 1986 年）策略确定更可靠的角落特征。作为 SUSAN 的改进版，FAST 具有极高的效率和重复性，因此得到了更广泛的应用。为了在不降低效率的情况下改进 FAST，引入了 FAST-ER（Ros ten 等人，2010 年），通过进一步以原子核为中心的像素亮度比较，对探测器进行通用化，从而提高了重复性。另一项改进是 AGAST（Mair 等人，2010 年），该方法定义了另外两个像素亮度比较标准，然后在扩展的配置空间中训练出一棵最优化和专业化的决策树，从而使 FAST 检测器更具通用性和适应性。为了结合 FAST针对哈里斯检测器的可靠性问题，Rublee 等人（2011 年）提出了一种用于匹配的集成特征检测器和描述器，称为 ORB。ORB 使用 Harris 响应来选择一定数量的 FAST 角作为最终检测到的特征。局部斑块的灰度中心点和中心像素本身组成一个向量，代表 ORB 特征的主要方向，这有助于计算 ORB 中二元描述符的相似性。最近，有人提出了一种类似 Sadder 的检测器（Aldana-Iuit 等人，2016 年）来提取兴趣点。在该检测器中，通过在两个具有一定几何约束的同心圆上进行强度比较，可有效验证鞍形条件。与传统方法相比，即使是现代可训练方法，Sadder 检测器也能实现更高的重复性和更大的扩展性（Komorowski 等人，2018 年）</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/22/Paper/" data-id="clwlwacy00003qkvc8f3u9bmv" data-title="Paper~" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -872,7 +972,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -887,7 +987,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">November 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/12/">December 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">November 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
     </div>
   </div>
 
@@ -898,6 +998,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/12/01/Kafka/">Kafka</a>
+          </li>
         
           <li>
             <a href="/2024/11/30/RabbitMQ/">RabbitMQ</a>
@@ -913,10 +1017,6 @@
         
           <li>
             <a href="/2024/11/17/RocketMQ/">RocketMQ</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/16/Dubbo/">Dubbo</a>
           </li>
         
       </ul>
