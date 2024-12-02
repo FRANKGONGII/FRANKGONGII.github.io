@@ -404,19 +404,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="mt"><a href="#mt" class="headerlink" title="mt"></a>mt</h2><ol>
-<li>激励流水表写入优化：流水记录表状态不准确，影响到数据结果统计。一方面通过修改流水处理逻辑，细化资源发放状态和数据状态，添加分布式锁保证数据一致性，并根据场景做sql优化。对于回调信息，改为延迟消费5s并配置死信队列，保证系统的健壮性。</li>
-<li>激励流水单独迁移服务：通过kafka更新数据，流水服务通过rpc对外提供数据查询，实现系统解耦并提高了可拓展性。</li>
-<li>参与错误码治理及告警配置工作。采用AOP编程思想，通过优化错误码方案，设置告警维度，为告警配置添加动态阈值，同比环比对比，波动策略等方式，减少误报率50%以上。</li>
-<li>与跨部门团队协作，完成多个项目的需求分析和技术文档编写。</li>
-</ol>
-<h2 id="baosight"><a href="#baosight" class="headerlink" title="baosight"></a>baosight</h2><ol>
-<li>优化OPCUA服务器性能：通过..zip_tree，在多client订阅server上高频更新的多node的场景下，server cpu usage降低30%以上</li>
-<li>负责实现OPCUA服务器的加密通信：通过</li>
-<li>多订阅场景：<img src="/2024/11/01/%E7%AE%80%E5%8E%86%E5%86%85%E5%AE%B9/image-1.png" alt="alt text"><img src="/2024/11/01/%E7%AE%80%E5%8E%86%E5%86%85%E5%AE%B9/image.png" alt="alt text"></li>
-<li>用epoll代替select提高服务器IO的性能</li>
-</ol>
-
+        
       
     </div>
     <footer class="article-footer">
