@@ -314,7 +314,8 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><h2 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h2><ul>
+        <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><p><a href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86">并发的基础知识</a><br><a href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E5%8F%91">多线程并发</a><br><a href="#%E9%94%81%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">锁的基本概念</a><br><a href="#%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C">原子操作</a><br><a href="#%E5%B9%B6%E5%8F%91%E7%9A%84List">并发的List</a><br><a href="#%E5%B9%B6%E5%8F%91%E7%9A%84%E9%94%81">并发的锁</a></p>
+<h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><h2 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h2><ul>
 <li>实现线程安全的方式<ol>
 <li>使用原子操作：通过原子类（如 AtomicInteger）或底层原子操作（如 CAS）保证线程安全，但这些方式不涉及互斥。</li>
 <li>通过锁或同步机制：通过互斥（如 synchronized 或 ReentrantLock）确保线程安全，同时隐含保证了互斥。</li>
@@ -568,7 +569,7 @@
 </ul>
 </li>
 </ul>
-<h1 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h1><h2 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h2><ul>
+<h1 id="锁的基本概念"><a href="#锁的基本概念" class="headerlink" title="锁的基本概念"></a>锁的基本概念</h1><h2 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h2><ul>
 <li>悲观锁更新的方式认为：在更新数据的时候大概率会有其他线程去争夺共享资源<ul>
 <li>悲观锁的做法是：第一个获取资源的线程会将资源锁定起来，其他没争夺到资源的线程只能进入阻塞队列，等第一个获取资源的线程释放锁之后，这些线程才能有机会重新争夺资源。</li>
 <li>synchronized就是java中悲观锁的典型实现，synchronized使用起来非常简单方便，但是会使没争抢到资源的线程进入阻塞状态，线程在阻塞状态和Runnable状态之间切换效率较低（比较慢）。比如更新操作其实是非常快的，这种情况下还用synchronized将其他线程都锁住了，线程从Blocked状态切换回Runnable华的时间可能比更新操作的时间还要长。 </li>
@@ -634,7 +635,9 @@
 </ul>
 </li>
 </ul>
-<h1 id="并发List"><a href="#并发List" class="headerlink" title="并发List"></a>并发List</h1><p>java中只有CopyOnWriteList是并发的List，它是线程安全的，采用了写时复制策略，对其的修改都是在底层的一个复制的数组快照上面进行的。</p>
+<h1 id="并发的List"><a href="#并发的List" class="headerlink" title="并发的List"></a>并发的List</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>java中只有CopyOnWriteList是并发的List，它是线程安全的，采用了写时复制策略，对其的修改都是在底层的一个复制的数组快照上面进行的。</li>
+</ul>
 <h2 id="CopyOnWriteList"><a href="#CopyOnWriteList" class="headerlink" title="CopyOnWriteList"></a>CopyOnWriteList</h2><ul>
 <li>类图<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CopyOnWriteList</span> &#123;</span><br><span class="line">  ReentrantLock lock;</span><br><span class="line">  <span class="keyword">volatile</span> Object[] array;</span><br><span class="line">  <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(E e)</span>;</span><br><span class="line">  E <span class="title function_">set</span><span class="params">(<span class="type">int</span> index, E element)</span>;</span><br><span class="line">  <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span>;</span><br><span class="line">  <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span>;</span><br><span class="line">  E <span class="title function_">remove</span><span class="params">(<span class="type">int</span> index)</span>;</span><br><span class="line">  Iterator&lt;E&gt; <span class="title function_">iterator</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 array数组对象用于存放具体元素，独占锁对象保证只有一个线程可以修改array。ReentrantLock是独占锁</li>
@@ -649,6 +652,7 @@ array数组对象用于存放具体元素，独占锁对象保证只有一个线
 <li>从源码可以看出，不管是add也好，还是remove也好。都是通过ReentrantLock + volatile + 数组拷贝来实现线程安全的。</li>
 <li>CopyOnWriteArrayList的优点主要有两个：线程安全 &#x2F; 大大的提高了“读”操作的并发度（相比于Vector）。缺点也很明显：每次“写”操作都会开辟新的数组，浪费空间 &#x2F; 无法保证实时性，因为“读”和“写”不在同一个数组，且“读”操作没有加互斥锁，所以不能保证强一致性，只能保证最终一致性 &#x2F; add&#x2F;remove操作效率低，既要加锁，还要拷贝数组。所以CopyOnWriteArrayList比较适合读多写少的场景。</li>
 </ul>
+<h1 id="并发的锁"><a href="#并发的锁" class="headerlink" title="并发的锁"></a>并发的锁</h1><h2 id="LockSupport锁工具包"><a href="#LockSupport锁工具包" class="headerlink" title="LockSupport锁工具包"></a>LockSupport锁工具包</h2><p><a target="_blank" rel="noopener" href="https://javabetter.cn/thread/LockSupport.html">https://javabetter.cn/thread/LockSupport.html</a></p>
 
       
     </div>
