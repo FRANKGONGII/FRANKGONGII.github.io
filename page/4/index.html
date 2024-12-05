@@ -461,11 +461,14 @@
 <ul>
 <li><code>make -j x</code> x是允许同时进行的job数量，可以加快编译过程</li>
 </ul>
+<h2 id="声明子文件夹"><a href="#声明子文件夹" class="headerlink" title="声明子文件夹"></a>声明子文件夹</h2><ul>
+<li><code>add_subdirectory(test)</code>声明一个子文件夹内有一个test文件夹也是cmake构建的</li>
+</ul>
 <h2 id="生成库-使用库"><a href="#生成库-使用库" class="headerlink" title="生成库 + 使用库"></a>生成库 + 使用库</h2><ul>
 <li>在生成库的CMakeLists，需要做三件事：生成，连接依赖库，设置include文件夹<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">file</span>(GLOB SERVERSRC <span class="variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/SRC/ServerSrc/*.cpp)</span><br><span class="line"><span class="keyword">add_library</span>(Server SHARED <span class="variable">$&#123;SERVERSRC&#125;</span>)</span><br><span class="line">target_link_library(Server pthread ssl)</span><br><span class="line"><span class="keyword">target_link_directories</span>(Server PUBLIC <span class="variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/<span class="keyword">INCLUDE</span>)</span><br></pre></td></tr></table></figure></li>
 <li>在需要引入库的地方，如果使用处是子文件夹只需要link一下，否则要import<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># add_library(Server SHARED IMPORTED)</span></span><br><span class="line"><span class="comment"># set_target_properities(Server PROPERITIES IMPORTED_LOCATION $&#123;LIBDIR&#125;)</span></span><br><span class="line">target_link_library(Client Server)</span><br></pre></td></tr></table></figure></li>
 </ul>
-
+<h2 id><a href="#" class="headerlink" title></a></h2>
       
     </div>
     <footer class="article-footer">
