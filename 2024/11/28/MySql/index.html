@@ -6,15 +6,15 @@
   
   <title>MySql | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="常见问题连接不上数据库 账号密码数据库名 检查用的那个application.yml 时区，ssl设置：serverTimezone&#x3D;UTC&amp;useSSL&#x3D;false，连不上可以考虑关闭ssl">
+  <meta name="description" content="常见问题连接不上数据库 账号密码数据库名 检查用的那个application.yml 时区，ssl设置：serverTimezone&#x3D;UTC&amp;useSSL&#x3D;false，连不上可以考虑关闭ssl   本地可以使用的配置123456spring:datasource:    username: root    password: root    url: jdbc:mysq">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySql">
 <meta property="og:url" content="http://example.com/2024/11/28/MySql/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="常见问题连接不上数据库 账号密码数据库名 检查用的那个application.yml 时区，ssl设置：serverTimezone&#x3D;UTC&amp;useSSL&#x3D;false，连不上可以考虑关闭ssl">
+<meta property="og:description" content="常见问题连接不上数据库 账号密码数据库名 检查用的那个application.yml 时区，ssl设置：serverTimezone&#x3D;UTC&amp;useSSL&#x3D;false，连不上可以考虑关闭ssl   本地可以使用的配置123456spring:datasource:    username: root    password: root    url: jdbc:mysq">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-11-28T10:23:11.000Z">
-<meta property="article:modified_time" content="2024-11-28T10:25:23.859Z">
+<meta property="article:modified_time" content="2024-12-08T15:07:38.619Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -102,6 +102,9 @@
 <li>检查用的那个application.yml</li>
 <li>时区，ssl设置：serverTimezone&#x3D;UTC&amp;useSSL&#x3D;false，连不上可以考虑关闭ssl</li>
 </ol>
+<ul>
+<li>本地可以使用的配置<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">root</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mysql://127.0.0.1:3306/road_map?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull&amp;serverTimezone=UTC&amp;useSSL=false</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br></pre></td></tr></table></figure></li>
+</ul>
 
       
     </div>
