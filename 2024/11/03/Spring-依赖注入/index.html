@@ -17,7 +17,7 @@
 <meta property="og:image" content="http://example.com/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/@auto.png">
 <meta property="og:image" content="http://example.com/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/@resource.png">
 <meta property="article:published_time" content="2024-11-03T15:28:10.000Z">
-<meta property="article:modified_time" content="2024-11-05T16:09:42.053Z">
+<meta property="article:modified_time" content="2024-12-12T01:23:35.918Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/%E6%B3%A8%E5%85%A5%E5%AF%B9%E6%AF%94.png">
@@ -183,6 +183,15 @@
 <li><p>@Scope(“prototype”) 可以设定对象类型为原型对象，每次获得的对象都是一个新的实例化对象。</p>
 </li>
 <li><p>Map注入，key是bean的名称，值是对应类型的实例</p>
+</li>
+</ul>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><h3 id="Value"><a href="#Value" class="headerlink" title="@Value"></a>@Value</h3><ul>
+<li>如果希望通过@Value注入一个值，应该遵循一下几步<ol>
+<li>在要配置值的变量上用@Value修饰，且这个配置值不要为static  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value($&#123;server.port&#125;)</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> port; </span><br></pre></td></tr></table></figure></li>
+<li>在配置文件，如application.yml里面配置这个值  <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure></li>
+<li>配置值所在的类，也要用Spring注释修饰  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Config</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>使用配置值所在的类，要自动注入  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">public</span> Config mConfig</span><br></pre></td></tr></table></figure></li>
+</ol>
 </li>
 </ul>
 
