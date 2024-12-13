@@ -69,6 +69,205 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-数据库基础" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time class="dt-published" datetime="2024-11-14T16:37:44.000Z" itemprop="datePublished">2024-11-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/">数据库基础</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><h3 id="开发规范"><a href="#开发规范" class="headerlink" title="开发规范"></a>开发规范</h3><ul>
+<li>建表规范<ol>
+<li>库名、表名、字段名，使用小写和下划线 _ 分割</li>
+<li>库名、表名、字段名，不超过12个字符。默认支持64个字符。</li>
+<li>库名、表名、字段名，见名知意，建议使用名词而不是动词。</li>
+<li>使用 InnoDB 存储引擎。支持；事务、锁、高并发 性能好。</li>
+<li>推荐使用 utf8mb4 可以存emoji</li>
+<li>单表字段数，建议不超过40个</li>
+</ol>
+</li>
+<li>字段相关规范<ol>
+<li>整型定义中不显示设置长度，如使用 INT，而不是INT(4)</li>
+<li>存储精度浮点数，使用 DECIMAL 替代 FLOAT、DOUBLE</li>
+<li>所有字段，都要有 Comment 描述</li>
+<li>所有字段应定义为 NOT NULL</li>
+<li>超过2038年，用DATETIME存储</li>
+<li>短数据类型 0~80 选用 TINYINT 存储</li>
+<li>UUID 有全局唯一统一字段属性，适合做同步ES使用。</li>
+<li>IPV4，用无符号 INT 存储</li>
+<li>IPV6，用VARBINARY存储</li>
+<li>JSON MySql 8.x 新增特性</li>
+<li>update_time 设置 on update 更新属性</li>
+</ol>
+</li>
+<li>索引相关规范<ol>
+<li>要求有自增ID作为主键，不要使用随机性较强的 order_id 作为主键，会导致innodb内部page分裂和大量随机I&#x2F;O，性能下降。</li>
+<li>单表索引建议控制在5个以内，单索引字段数不超过5个。注意：已有idx(a, b)索引，又有idx(a)索引，可以把idx(a)删了，浪费空间，降低更新、写入性能。* 单个索引中，每个索引记录的长度不能超过64KB</li>
+<li>利用覆盖索引来进行查询操作，避免回表。另外建组合索引的时候，区分度最高的在最左边。</li>
+<li>select(count(distinct(字段)))&#x2F;count(id) &#x3D; 1 的区分度，更适合建索引。在一些低区分度的字段，例如type、status上建立独立索引几乎没意义，降低更新、写入性能。</li>
+<li>防止因字段不同造成的隐式转换，导致索引失效。</li>
+<li>更新频繁的字段，不要建索引。</li>
+</ol>
+</li>
+</ul>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/image.png" alt="alt text"></p>
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p><a target="_blank" rel="noopener" href="https://cloud.baidu.com/article/2873772">https://cloud.baidu.com/article/2873772</a></p>
+<ul>
+<li>数据结构：<ul>
+<li>B+树索引：<ul>
+<li>一种多路搜索树</li>
+<li>所有关键字都出现在叶子结点的链表中（稠密索引），且链表中的关键字恰好是有序的；非叶子结点相当于是叶子结点的索引（稀疏索引），叶子结点相当于是存储（关键字）数据的数据层；  </li>
+<li>好处<ul>
+<li>支持的查询方式多：全键值，键值范围，键值前缀</li>
+<li>支持顺序访问：B+树的叶子节点之间通过链表连接，支持顺序遍历操作，适合于按照顺序访问数据的场景。</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>查询速度较慢：相对于Hash索引，B+树索引的查询速度较慢，平均时间复杂度为O(logN)。</li>
+<li>不适合固定长度键值：B+树索引对于变长键值的存储需要使用额外的空间，不如Hash索引对于固定长度键值的存储节省空间。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>为什么用B+树而不是B树：<ul>
+<li>叶节点之间有指针且有序，能支持更多的查询方法</li>
+<li>内部节点没数据，数据存放更紧密，有更好的空间局部性</li>
+</ul>
+</li>
+<li>HASH索引<ul>
+<li>对每个索引值进行哈希运算，将结果作为键值存储在哈希表中。在执行查询操作时，数据库系统通过相同的哈希运算找到相应的键值，并返回对应的行数据。</li>
+<li>好处<ul>
+<li>能够快速直达目标数据位置，具有极高的查询速度，平均时间复杂度为O(1)。</li>
+<li>高度紧凑：哈希索引占用空间较小，适合存储大量数据。</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>不支持部分匹配查询：哈希索引只能处理精确匹配查询，无法进行范围查询和模糊查询等操作。</li>
+<li>不支持有序查询：由于哈希索引是基于键值存储的，无法按照数据的顺序进行检索。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>对于需要频繁进行范围查询、排序操作和高可靠性的场景，建议使用B+树索引。例如，在电商平台的商品筛选、社交网络的消息排序等场景中，使用B+树索引可以提供更好的查询性能和稳定性。<br>对于需要快速定位少量精确数据、数据量较大且分布均匀的场景，可以考虑使用哈希索引。例如，在日志分析、监控系统等场景中，可以使用哈希索引来快速定位关键信息。同时，由于哈希索引在MEMORY存储引擎中实现，对于临时表等一次性使用的场景也较为适用。</li>
+</ul>
+</li>
+<li>使用<ul>
+<li><img src="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/image-1.png" alt="alt text"></li>
+<li>频繁作为查询条件的字段应该创建索引</li>
+</ul>
+</li>
+<li>啥时候不用索引？<ul>
+<li>大量重复数据</li>
+<li>表大小</li>
+<li>更新频繁</li>
+</ul>
+</li>
+</ul>
+<h3 id="引擎–innoDB"><a href="#引擎–innoDB" class="headerlink" title="引擎–innoDB"></a>引擎–innoDB</h3><ul>
+<li>InnoDB 是 MySQL 上第一个提供外键约束的数据存储引擎，除了提供事务处理外，InnoDB 还支持行锁，提供和 Oracle 一样的一致性的不加锁读取，能增加并发读的用户数量并提高性能，不会增加锁的数量。InnoDB 的设计目标是处理大容量数据时最大化性能，它的 CPU 利用率是其他所有基于磁盘的关系数据库引擎中最有效率的。可以支持事务</li>
+</ul>
+<h3 id="事务处理"><a href="#事务处理" class="headerlink" title="事务处理"></a>事务处理</h3><ul>
+<li>数据库事务指的是一组数据操作，事务内的操作要么就是全部成功，要么就是全部失败，什么都不做，其实不是没做，是可能做了一部分但是只要有一步失败，就要回滚所有操作，有点一不做二不休的意思。</li>
+<li>特性：<ul>
+<li>原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持久性（Durability）四个特性，简称 ACID</li>
+</ul>
+</li>
+<li>概念：<ul>
+<li>脏读指的是读到了其他事务未提交的数据，未提交意味着这些数据可能会回滚，也就是可能最终不会存到数据库中，也就是不存在的数据。读到了并一定最终存在的数据，这就是脏读。</li>
+<li>幻读是针对数据插入（INSERT）操作来说的。假设事务A对某些行的内容作了更改，但是还未提交，此时事务B插入了与事务A更改前的记录相同的记录行，并且在事务A提交之前先提交了，而这时，在事务A中查询，会发现好像刚刚的更改对于某些数据未起作用，但其实是事务B刚插入进来的，让用户感觉很魔幻，感觉出现了幻觉，这就叫幻读。 </li>
+<li>不可重复读指的是在同一事务内，不同的时刻读到的同一批数据可能是不一样的，可能会受到其他事务的影响，比如其他事务改了这批数据并提交了。通常针对数据更新（UPDATE）操作。</li>
+<li>可重复读指的是在一个事务内，最开始读到的数据和事务结束前的任意时刻读到的同一批数据都是一致的。通常针对数据更新（UPDATE）操作。</li>
+</ul>
+</li>
+<li>SQL 标准定义了四种隔离级别，MySQL 全都支持。这四种隔离级别分别是：<img src="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/image-2.png" alt="alt text"><ol>
+<li>读未提交（READ UNCOMMITTED）</li>
+<li>读提交 （READ COMMITTED）</li>
+<li>可重复读 （REPEATABLE READ）</li>
+<li>串行化 （SERIALIZABLE）</li>
+</ol>
+<ul>
+<li>实现隔离：<ul>
+<li>我们在数据库表中看到的一行记录可能实际上有多个版本，每个版本的记录除了有数据本身外，还要有一个表示版本的字段，记为 row trx_id，而这个字段就是使其产生的事务的 id，事务 ID 记为 transaction id，它在事务开始的时候向事务系统申请，按时间先后顺序递增。可重复读是在事务开始的时候生成一个当前事务全局性的快照，而读提交则是每次执行语句的时候都重新生成一次快照。<img src="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/image-3.png" alt="alt text"></li>
+<li>当前事务内的更新，可以读到；版本未提交，不能读到；版本已提交，但是却在快照创建后提交的，不能读到；版本已提交，且是在快照创建前提交的，可以读到；</li>
+</ul>
+</li>
+<li>并发写：加锁</li>
+<li>幻读：间隙锁<ul>
+<li>间隙锁（Gap Locking）是MySQL中一种用于解决幻读问题的机制。当一个事务执行了一个范围查询操作时，MySQL会对查询范围内的间隙（两个值之间的空白区域）进行锁定，从而防止其他事务在这个范围内插入新的数据。</li>
+<li>为了使用间隙锁，你需要在事务中使用SELECT … FOR UPDATE语句，它会在读取数据的同时对查询的范围内的间隙进行锁定。这样一来，其他事务就无法在这个范围内插入新的数据，从而避免了幻读的发生。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="慢查询优化"><a href="#慢查询优化" class="headerlink" title="慢查询优化"></a>慢查询优化</h3><ul>
+<li>设备性能</li>
+<li>查询字段是不是太多了，查出来了多余数据</li>
+<li>数据库内数据是不是太多了，需要分表分库</li>
+<li>是不是走了索引，查询语句</li>
+<li>是不是最优的索引</li>
+</ul>
+<h3 id="锁的分类"><a href="#锁的分类" class="headerlink" title="锁的分类"></a>锁的分类</h3><ul>
+<li>粒度分类：<ul>
+<li>行锁：锁一行</li>
+<li>表锁：锁表</li>
+<li>间隙锁：区间</li>
+</ul>
+</li>
+<li>读写：<ul>
+<li>共享锁：可以读不可以写</li>
+<li>排他锁：不读不写</li>
+</ul>
+</li>
+<li>乐观锁：<ul>
+<li>乐观锁假设数据一般情况下不会造成冲突，所以在数据进行提交更新的时候，才会正式对数据的冲突与否进行检测，如果发现冲突了，则返回给用户错误的信息，让用户决定如何去做。</li>
+<li>一般使用数据版本（Version）记录机制实现，在数据库表中增加一个数字类型的“version”字段来实现。当读取数据时，将version字段的值一同读出，数据每更新一次，对此version值加一。如果发现版本不对，那么就不可以更新</li>
+<li>适合读多写少</li>
+</ul>
+</li>
+<li>悲观锁：<ul>
+<li>，每次去拿数据的时候都认为别人会修改，对数据被外界（包括本系统当前的其他事务，以及来自外部系统的事务处理）修改持保守态度，因此，在整个数据处理过程中，将数据处于锁定状态。</li>
+<li>在MySQL中使用悲观锁，必须关闭MySQL的自动提交，set autocommit&#x3D;0。共享锁和排它锁是悲观锁的不同的实现，它俩都属于悲观锁的范畴。</li>
+<li><img src="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/image-4.png" alt="alt text"></li>
+<li>适用于并发量不大、写入操作比较频繁、数据一致性比较高的场景。</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/" data-id="cm3hjg22v0000x4vcaws0echv" data-title="数据库基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Spring-事务" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/11/13/Spring-%E4%BA%8B%E5%8A%A1/" class="article-date">
@@ -441,7 +640,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="如果消息太大怎么处理？"><a href="#如果消息太大怎么处理？" class="headerlink" title="如果消息太大怎么处理？"></a>如果消息太大怎么处理？</h2><ul>
+        <h1 id="open62541的实现"><a href="#open62541的实现" class="headerlink" title="open62541的实现"></a>open62541的实现</h1><h2 id="如果消息太大怎么处理？"><a href="#如果消息太大怎么处理？" class="headerlink" title="如果消息太大怎么处理？"></a>如果消息太大怎么处理？</h2><ul>
 <li>调用流程：<ol>
 <li>sendResponse()：其余处理全部完毕，调用UA_MessageContext_finish(&amp;message_content);</li>
 <li>UA_MessageContext_finish()：返回sendSymmetricChunk(mc)</li>
@@ -481,6 +680,9 @@
 <li>问题定位到了，是没有处理粘包。。。</li>
 </ul>
 <h2 id="分包发送"><a href="#分包发送" class="headerlink" title="分包发送"></a>分包发送</h2><p>TCP_sendWithConnection</p>
+<h1 id="我的实现"><a href="#我的实现" class="headerlink" title="我的实现"></a>我的实现</h1><h2 id="分包接收"><a href="#分包接收" class="headerlink" title="分包接收"></a>分包接收</h2><ul>
+<li>TCPServer<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">ServerImpl::Listen</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> MAX_BUFFER = <span class="number">64</span> * <span class="number">1024</span>;</span><br><span class="line">    mListenFd = <span class="built_in">socket</span>(AF_INET, SOCK_STREAM, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (mListenFd == <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">sockaddr_in</span> serverAddr, clientAddr;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">bind</span>(mListenFd, (<span class="keyword">struct</span> socketaddr*)&amp;serverAddr, <span class="built_in">sizeof</span>(serverAddr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// bind fail</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">listen</span>(mListenFd, <span class="number">10</span>);</span><br><span class="line">    mEpollFd = <span class="built_in">epoll_create1</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (mEpollFd == <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">epoll_event</span> event, events[MAX_EVENT_NUM];</span><br><span class="line">    event.events = EPOLLIN | EPOLLET;</span><br><span class="line">    event.data.fd = mListenFd;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">epoll_ctl</span>(mEpollFd, EPOLL_CTL_ADD, mListenFd, &amp;event)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="keyword">auto</span> eventCounts = <span class="built_in">epoll_wait</span>(mEpollFd, events, MAX_EVENTS, <span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; eventCounts; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (events[i].data.fd == mListenFd) &#123;</span><br><span class="line">                <span class="comment">// 处理新链接</span></span><br><span class="line">                <span class="type">socklen_t</span> clientLen = <span class="built_in">sizeof</span>(clientAddr);</span><br><span class="line">                <span class="keyword">auto</span> clientFd = <span class="built_in">accept</span>(mListenFd, (<span class="keyword">struct</span> socketaddr*)&amp;clientAddr, &amp;clientLen);</span><br><span class="line">                event.events = EPOLLIN;</span><br><span class="line">                event.data.fd = clientFd;</span><br><span class="line">                <span class="built_in">epoll_ctl</span>(mEpollFd, EPOLL_CTL_ADD, clientFd, &amp;event);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 接收消息，此处省略timeManager的情况</span></span><br><span class="line">                <span class="keyword">auto</span> clientFd = events[i].data.fd;</span><br><span class="line">                <span class="type">char</span> buffer[MAX_BUFFER] = &#123;&#125;;</span><br><span class="line">                <span class="keyword">auto</span> bytes = <span class="built_in">recv</span>(clientFd, buffer, MAX_BUFFER, <span class="number">0</span>);</span><br><span class="line">                <span class="keyword">if</span> (bytes &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.<span class="built_in">DeleteFdByEpoll</span>(clientFd);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="built_in">processBuffer</span>(clientFd, bytes, buffer);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">TCPServerImpl::processBuffer</span><span class="params">(<span class="type">int</span> clientFd, <span class="type">int</span> bytes, <span class="type">char</span> *buffer)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (bytes &lt; <span class="number">8</span>) &#123;</span><br><span class="line">        <span class="comment">// 至少要8字节才能开始处理</span></span><br><span class="line">        <span class="built_in">getEnoughBytes</span>(buffer, clientFd, bytes, <span class="number">8</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// messageLength是这个报文的大小，bytes是当前缓冲区的字节数目</span></span><br><span class="line">        <span class="type">int</span> messageLength = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 前4个字节是MSG F，报文类型和isFinal</span></span><br><span class="line">        <span class="built_in">memcpy</span>(&amp;messageLength, buffer + <span class="number">4</span>, <span class="number">4</span>);</span><br><span class="line">        <span class="built_in">getEnoughBytes</span>(buffer, clientFd, bytes, messageLength);</span><br><span class="line">        <span class="type">bool</span> ifSubPack = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (buffer[<span class="number">3</span>] == <span class="string">&#x27;C&#x27;</span> &amp;&amp; buffer[<span class="number">0</span>] == <span class="string">&#x27;M&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// 中间包(都是完整的)放入待处理队列</span></span><br><span class="line">            UAChunk newChunk;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; MAX_BUFFER; i++) &#123;</span><br><span class="line">                newChunk.mbytes.<span class="built_in">push_back</span>(buffer[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">unPackLoadMSG</span>(newChunk, clientFd, buffer, messageLength);</span><br><span class="line">            completeChunks[client].<span class="built_in">push_back</span>(newChunk);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">processChunk</span>(buffer, messageLength, clientFd, bytes);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">endProcessBuffer</span>(clientFd, bytes, buffer, messageLength);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">TCPServerImpl::getEnoughBytes</span><span class="params">(<span class="type">char</span> *buffer, <span class="type">int</span> clientFd, <span class="type">int</span> &amp;nowBytes, <span class="type">int</span> requireBytes)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 已经可以满足要求</span></span><br><span class="line">    <span class="keyword">if</span> (nowBytes &gt;= requireBytes) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 一致循环读取直到满足数目要求</span></span><br><span class="line">    <span class="keyword">while</span> (nowBytes &lt; requireByes) &#123;</span><br><span class="line">        nowBytes += <span class="built_in">recv</span>(clientFd, buffer + nowBytes, reqiureBytes - nowBytes, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">TCPServerImpl::processChunk</span><span class="params">(<span class="type">char</span> *buffer, <span class="type">int</span> messageLength, <span class="type">int</span> clientFd, <span class="type">int</span> bytes)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取到了F包，开始处理一个完整包</span></span><br><span class="line">    UAChunk chunk;</span><br><span class="line">    chunk.mbytes.<span class="built_in">resize</span>(messageLength);</span><br><span class="line">    <span class="built_in">memcpy</span>(chunk.mbytes.<span class="built_in">data</span>(), buffer, messageLength);</span><br><span class="line">    <span class="keyword">if</span> (buffer[<span class="number">0</span>] == <span class="string">&#x27;M&#x27;</span>) &#123;</span><br><span class="line">        <span class="built_in">unPackLoadMSG</span>(chunk, clientFd, buffer, messageLength);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">assembleAndSendChunk</span>(chunk, clientFd, buffer, messageLength);</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">unPackLoadMSG</span><span class="params">(UAChunk &amp;chunk, <span class="type">int</span> clientFd, <span class="type">char</span> *buffer, <span class="type">int</span> bytes)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 解析MSG类型的消息</span></span><br><span class="line">    ChunkMessageHeader messageHeader;</span><br><span class="line">    <span class="keyword">auto</span> messageHeaderPtr = &amp;messageHeader;</span><br><span class="line">    <span class="built_in">Deserialize</span>(messageHeaderPtr, chunk.mbytes);</span><br><span class="line">    ChunkSequenceHeader sequenceHeader;</span><br><span class="line">    <span class="keyword">auto</span> sequenceHeaderPtr = &amp;sequenceHeader;</span><br><span class="line">    <span class="keyword">if</span> (channelType[messageHeaderPtr-&gt;<span class="built_in">GetSecureChannelId</span>()] &gt; NONE) &#123;</span><br><span class="line">        <span class="comment">// 没加密</span></span><br><span class="line">        <span class="built_in">Deserialize</span>(sequenceHeaderPtr, chunk.mbytes);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 有加密，需要用对称秘钥解密</span></span><br><span class="line">        std::vector&lt;<span class="type">uint8_t</span>&gt; <span class="built_in">input</span>(bytes, <span class="number">0</span>);</span><br><span class="line">        <span class="built_in">memcpy</span>(input.<span class="built_in">data</span>(), buffer, bytes);</span><br><span class="line">        <span class="comment">// 要提前加载秘钥</span></span><br><span class="line">        gChannelContext[clientFd]-&gt;<span class="built_in">DecryptAndVerifySign</span>(input);</span><br><span class="line">        chunk.mbytes.<span class="built_in">clear</span>();</span><br><span class="line">        <span class="comment">// 不要messageHeader了，前面已经拿出来了</span></span><br><span class="line">        chunk.mbytes.<span class="built_in">resize</span>(input.<span class="built_in">size</span>() - <span class="number">16</span>);</span><br><span class="line">        std::<span class="built_in">copy</span>(input.<span class="built_in">begin</span>() + <span class="number">16</span>, input.<span class="built_in">end</span>(), chunk.mbytes.<span class="built_in">begin</span>());</span><br><span class="line">        <span class="built_in">Deserialize</span>(sequenceHeaderPtr, chunk.mbytes);</span><br><span class="line">    &#125;</span><br><span class="line">    chunk.mMessageHeader = messageHeader;</span><br><span class="line">    chunk.mSequenceHeader = sequenceHeader;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">assembleAndSendChunk</span><span class="params">(UAChunk &amp;chunk, <span class="type">int</span> clientFd, <span class="type">char</span> *buffer, <span class="type">int</span> messageLength)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> sameMessageCount = <span class="number">0</span>;</span><br><span class="line">    std::vector&lt;<span class="type">uint8_t</span>&gt; mergechunk;</span><br><span class="line">    <span class="keyword">if</span> (chunk.mMessageHeader.<span class="built_in">GetType0</span>() == <span class="string">&#x27;M&#x27;</span>) &#123;</span><br><span class="line">        <span class="type">int</span> nowRequestId = chunk.mSequenceHeader.<span class="built_in">GetRequestId</span>();</span><br><span class="line">        <span class="comment">// 遍历完整包队列</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> it = completeChunks[clientFd].<span class="built_in">begin</span>(); it != completeChunks[clientFd].<span class="built_in">end</span>();) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nowRequestId == it-&gt;mSequenceHeader.<span class="built_in">GetRequestId</span>()) &#123;</span><br><span class="line">                sameMessageCount++;</span><br><span class="line">                decryptedChunks[clientFd].<span class="built_in">push_back</span>(*it);</span><br><span class="line">                completeChunks[clientFd].<span class="built_in">erase</span>(*it);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                it++;</span><br><span class="line">                <span class="keyword">break</span>;<span class="comment">// 这里是不是有点问题</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 合并分包数据</span></span><br><span class="line">        std::<span class="built_in">sort</span>(decryptedChunks[clientFd].<span class="built_in">begin</span>(), decryptedChunks[clientFd].<span class="built_in">end</span>(), compareChunk);</span><br><span class="line">        <span class="comment">// 加入以前的包</span></span><br><span class="line">        <span class="keyword">for</span> (UAChunk chunk : decryptedChunks[clientFd]) &#123;</span><br><span class="line">            mergechunk.<span class="built_in">insert</span>(mergechunk.<span class="built_in">end</span>(),  chunk.mbytes.<span class="built_in">begin</span>(), chunk.mbytes.<span class="built_in">end</span>());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 加入现在处理的最后这个包</span></span><br><span class="line">        mergechunk.<span class="built_in">insert</span>(mergechunk.<span class="built_in">end</span>(),  chunk.mbytes.<span class="built_in">begin</span>(), chunk.mbytes.<span class="built_in">end</span>());</span><br><span class="line">        <span class="comment">// 还原包头</span></span><br><span class="line">        <span class="built_in">Serialize</span>(&amp;chunk.mMessageHeader, mergeMessageHeader);</span><br><span class="line">        <span class="built_in">Serialize</span>(&amp;chunk.mMessageHeader, mergeMessageHeader);</span><br><span class="line">        mergeMessageHeader.<span class="built_in">insert</span>(mergeMessageHeader.<span class="built_in">end</span>(), mergeChunk.<span class="built_in">begin</span>(), mergeChunk.<span class="built_in">end</span>());</span><br><span class="line">        mergerChunk = std::<span class="built_in">move</span>(mergeMessageHeader);</span><br><span class="line">        <span class="comment">// 清空这个包对应的分包</span></span><br><span class="line">        decryptedChunks[clientFd].<span class="built_in">clear</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">uint8_t</span>&gt;&gt; buffs;</span><br><span class="line">    <span class="keyword">if</span> (buffer[<span class="number">0</span>] != <span class="string">&#x27;M&#x27;</span>) &#123;</span><br><span class="line">        <span class="comment">// 不是MSG，直接传入原始数据</span></span><br><span class="line">        buffs = std::<span class="built_in">move</span>(TCPServerImpl::<span class="built_in">ProcessRequest</span>(buffer, messageLength, clientFd));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        buffs = std::<span class="built_in">move</span>(TCPServerImpl::<span class="built_in">ProcessRequest</span>(mergeChunk.<span class="built_in">data</span>(), mergeChunk.<span class="built_in">size</span>(), clientFd));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送回复</span></span><br><span class="line">    <span class="keyword">if</span> (!buffs.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="keyword">for</span> (vector&lt;<span class="type">uint8_t</span>&gt; buff : buffs) &#123;</span><br><span class="line">            <span class="keyword">auto</span> writeBytes = <span class="built_in">send</span>(clientFd, buff.<span class="built_in">data</span>(), buff.<span class="built_in">size</span>(), MSG_ZEROCOPY);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">endProcessBuffer</span><span class="params">(<span class="type">int</span> clientFd, <span class="type">int</span> &amp;bytes, <span class="type">char</span> *buffer, <span class="type">int</span> processedBytes)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//后面没数据</span></span><br><span class="line">    <span class="keyword">if</span> (processedBytes &gt;= bytes) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 还有数据</span></span><br><span class="line">    bytes -= processedBytes;</span><br><span class="line">    <span class="built_in">memmove</span>(buffer, buffer + processedBytes, bytes);</span><br><span class="line">    <span class="built_in">processBuffer</span>(clientFd, bytes, buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
 
       
     </div>
@@ -953,62 +1155,6 @@
 
 
   
-    <article id="post-JVM" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/28/JVM/" class="article-date">
-  <time class="dt-published" datetime="2024-10-28T15:39:22.000Z" itemprop="datePublished">2024-10-28</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/JAVA/">JAVA</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/28/JVM/">JVM</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="JAVA与C-之间有一堵由内存动态分配和GC所围成的高墙，墙外面的人想进去，墙里面的人想出来"><a href="#JAVA与C-之间有一堵由内存动态分配和GC所围成的高墙，墙外面的人想进去，墙里面的人想出来" class="headerlink" title="JAVA与C++之间有一堵由内存动态分配和GC所围成的高墙，墙外面的人想进去，墙里面的人想出来"></a>JAVA与C++之间有一堵由内存动态分配和GC所围成的高墙，墙外面的人想进去，墙里面的人想出来</h1><h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><ul>
-<li>JAVA虚拟机管理的内存包括以下几个运行时数据区域：<ol>
-<li>方法区</li>
-<li>堆</li>
-<li>虚拟机栈</li>
-<li>程序计数器：当前线程所执行的字节码的行号指示器，是程序控制流的指示器。</li>
-<li>本地方法栈</li>
-</ol>
-</li>
-<li>程序计数器：由于JAVA虚拟机的多线程是通过线程轮流切换，分配处理器时间实现的，在任何一个时刻只会有一条线程中的指令被执行，因此每个线程要有一个独立的程序计数器（在线程私有的内存区域中存储）。如果执行的是Native方法（在Java中，native方法是一种特殊的方法，它允许Java调用非Java代码，通常是C或C++语言编写的本地方法。这些方法在Java类中声明，但不在Java代码中实现，而是在本地库中实现，并通过Java Native Interface（JNI）与Java代码交互。），那么计数器值应该为空，此内存区域没有规定OutOfMeomoryError错误、</li>
-<li>Java虚拟机栈：同样是线程私有的，描述的是Java方法执行的线程内存模型：每个方法被执行时，Java虚拟机栈会同步创建一个栈帧用于存储局部变量表（基础数据类型，对象引用），操作数栈，动态连接，方法出口等信息。数据类型在局部变量表中的存储以局部变量槽（Slot）表示。</li>
-<li>本地方法栈：和Java虚拟机栈类似，但是是为Native方法服务的，前者是为Java方法服务的。</li>
-<li>Java堆：<strong>所有线程共享</strong>。由垃圾收集器（几乎都基于分代设计，需要新老代收集器搭配工作）管理。从内存分配的角度上，可以分配出线程私有的分配缓冲区。Java堆可以在物理上不连续的内存空间中，但是逻辑上应该被看做连续的。</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/28/JVM/" data-id="cm2t8girt0000gcvcfgoihoiy" data-title="JVM" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -1024,7 +1170,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -1052,6 +1198,10 @@
       <ul>
         
           <li>
+            <a href="/2024/12/12/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a>
+          </li>
+        
+          <li>
             <a href="/2024/12/07/AI%E5%B0%8F%E8%AF%B4/">AI小说</a>
           </li>
         
@@ -1065,10 +1215,6 @@
         
           <li>
             <a href="/2024/12/01/Kafka/">Kafka</a>
-          </li>
-        
-          <li>
-            <a href="/2024/11/30/RabbitMQ/">RabbitMQ</a>
           </li>
         
       </ul>
