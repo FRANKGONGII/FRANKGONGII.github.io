@@ -6,15 +6,15 @@
   
   <title>JAVA基础特性 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="序列化过程当对象被序列化时，被该对象持有的实例变量也会被序列化，所有被引用的对象也会被实例化，这些操作都是自动进行的  要让类能被序列化，要实现Serializable接口 如果要让实例变量不被序列化，用transient关键字修饰  反射+">
+  <meta name="description" content="类路径 类路径可以理解为一系列目录或 JAR 包的集合，它告诉 JVM 在哪里可以找到 .class 文件、配置文件和其他资源。它通常包括： 项目的 src&#x2F;main&#x2F;resources 目录：用于存放配置文件、模板文件等资源。 项目的 target&#x2F;classes 目录：编译后的 .class 文件通常会存放在这里。 项目依赖的 JAR 包：通过 Maven、Gra">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JAVA基础特性">
 <meta property="og:url" content="http://example.com/2024/10/26/JAVA%E5%9F%BA%E7%A1%80%E7%89%B9%E6%80%A7/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="序列化过程当对象被序列化时，被该对象持有的实例变量也会被序列化，所有被引用的对象也会被实例化，这些操作都是自动进行的  要让类能被序列化，要实现Serializable接口 如果要让实例变量不被序列化，用transient关键字修饰  反射+">
+<meta property="og:description" content="类路径 类路径可以理解为一系列目录或 JAR 包的集合，它告诉 JVM 在哪里可以找到 .class 文件、配置文件和其他资源。它通常包括： 项目的 src&#x2F;main&#x2F;resources 目录：用于存放配置文件、模板文件等资源。 项目的 target&#x2F;classes 目录：编译后的 .class 文件通常会存放在这里。 项目依赖的 JAR 包：通过 Maven、Gra">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-10-26T10:16:50.000Z">
-<meta property="article:modified_time" content="2024-12-04T08:52:40.690Z">
+<meta property="article:modified_time" content="2024-12-17T08:42:26.960Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -97,7 +97,26 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p>当对象被序列化时，被该对象持有的实例变量也会被序列化，所有被引用的对象也会被实例化，这些操作都是自动进行的</p>
+        <h2 id="类路径"><a href="#类路径" class="headerlink" title="类路径"></a>类路径</h2><ul>
+<li>类路径可以理解为一系列目录或 JAR 包的集合，它告诉 JVM 在哪里可以找到 .class 文件、配置文件和其他资源。它通常包括：<ol>
+<li>项目的 src&#x2F;main&#x2F;resources 目录：用于存放配置文件、模板文件等资源。</li>
+<li>项目的 target&#x2F;classes 目录：编译后的 .class 文件通常会存放在这里。</li>
+<li>项目依赖的 JAR 包：通过 Maven、Gradle 或其他构建工具引入的外部库。</li>
+</ol>
+</li>
+<li>查看类路径：<ol>
+<li>启动JVM时添加参数：<code>java -verbose:class -jar myapp.jar</code></li>
+<li>打印：<code>System.out.println(System.getProperty(&quot;java.class.path&quot;));</code></li>
+<li>查看Spring Boot的日志输出</li>
+</ol>
+</li>
+<li>设置类路径<ol>
+<li>配置JVM参数：<code>java -cp &quot;target/classes:lib/*&quot; com.example.MainApplication</code></li>
+<li>IDEA配置：Project Structure（项目结构）-&gt; 选择 Modules &gt; Dependencies -&gt; 添加目录或 JAR 包到模块的类路径 -&gt; 通过右键模块的 src&#x2F;main&#x2F;resources 或其他目录，标记为 Resources Root。</li>
+</ol>
+</li>
+</ul>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p>当对象被序列化时，被该对象持有的实例变量也会被序列化，所有被引用的对象也会被实例化，这些操作都是自动进行的</p>
 <ul>
 <li>要让类能被序列化，要实现Serializable接口</li>
 <li>如果要让实例变量不被序列化，<strong>用transient关键字修饰</strong></li>
@@ -146,7 +165,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SpringBoot/">SpringBoot</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -174,23 +193,23 @@
       <ul>
         
           <li>
+            <a href="/2024/12/17/TCP-IP/">TCP/IP</a>
+          </li>
+        
+          <li>
+            <a href="/2024/12/17/SpringBoot-Web%E5%AE%B9%E5%99%A8%E4%B8%8E%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D/">SpringBoot-Web容器与自动装配</a>
+          </li>
+        
+          <li>
+            <a href="/2024/12/17/SpringBoot-%E5%88%9D%E8%A7%88/">SpringBoot-初览</a>
+          </li>
+        
+          <li>
+            <a href="/2024/12/16/%E5%8F%AF%E4%BB%A5%E5%8F%82%E5%8A%A0%E7%9A%84%E6%AF%94%E8%B5%9B/">timeLine</a>
+          </li>
+        
+          <li>
             <a href="/2024/12/12/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/07/AI%E5%B0%8F%E8%AF%B4/">AI小说</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/07/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/02/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">单元测试</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/01/Kafka/">Kafka</a>
           </li>
         
       </ul>

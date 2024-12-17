@@ -4,23 +4,23 @@
   <meta charset="utf-8">
   
   
-  <title>Spring-Bean&amp;依赖注入 | Hexo</title>
+  <title>SpringBoot-Bean&amp;依赖注入 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="参考：  https:&#x2F;&#x2F;springdoc.cn&#x2F;inversion-control-and-dependency-injection-in-spring&#x2F;#google_vignette https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;557140781 https:&#x2F;&#x2F;blog.csdn.net&#x2F;yuxiangdeming&#x2F;article&#x2F;details&#x2F;122876550 Spr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring-Bean&amp;依赖注入">
-<meta property="og:url" content="http://example.com/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:title" content="SpringBoot-Bean&amp;依赖注入">
+<meta property="og:url" content="http://example.com/2024/11/03/SpringBoot-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="参考：  https:&#x2F;&#x2F;springdoc.cn&#x2F;inversion-control-and-dependency-injection-in-spring&#x2F;#google_vignette https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;557140781 https:&#x2F;&#x2F;blog.csdn.net&#x2F;yuxiangdeming&#x2F;article&#x2F;details&#x2F;122876550 Spr">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/%E6%B3%A8%E5%85%A5%E5%AF%B9%E6%AF%94.png">
-<meta property="og:image" content="http://example.com/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/@auto.png">
-<meta property="og:image" content="http://example.com/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/@resource.png">
+<meta property="og:image" content="http://example.com/2024/11/03/SpringBoot-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/%E6%B3%A8%E5%85%A5%E5%AF%B9%E6%AF%94.png">
+<meta property="og:image" content="http://example.com/2024/11/03/SpringBoot-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/@auto.png">
+<meta property="og:image" content="http://example.com/2024/11/03/SpringBoot-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/@resource.png">
 <meta property="article:published_time" content="2024-11-03T15:28:10.000Z">
-<meta property="article:modified_time" content="2024-12-12T01:23:35.918Z">
+<meta property="article:modified_time" content="2024-12-17T08:54:42.285Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/%E6%B3%A8%E5%85%A5%E5%AF%B9%E6%AF%94.png">
+<meta name="twitter:image" content="http://example.com/2024/11/03/SpringBoot-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/%E6%B3%A8%E5%85%A5%E5%AF%B9%E6%AF%94.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -75,14 +75,14 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-Spring-依赖注入" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-SpringBoot-依赖注入" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" class="article-date">
+    <a href="/2024/11/03/SpringBoot-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" class="article-date">
   <time class="dt-published" datetime="2024-11-03T15:28:10.000Z" itemprop="datePublished">2024-11-03</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Spring/">Spring</a>
+    <a class="article-category-link" href="/categories/SpringBoot/">SpringBoot</a>
   </div>
 
   </div>
@@ -93,7 +93,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      Spring-Bean&amp;依赖注入
+      SpringBoot-Bean&amp;依赖注入
     </h1>
   
 
@@ -122,6 +122,13 @@
 <li>使用@Component,@Service,@Controler,@Repository注解。这几个注解都是同样的功能（ @controller控制器层@service服务层，@repositorydao持久层，@component标注一个类为Spring容器的Bean），被注解的类将会被Spring 容器创建单例对象。当用于Spring Boot应用时，被注解的类必须在启动类的根路径或者子路径下，否则不会生效。如果不在，可以使用@ComponentScan标注扫描的路径。</li>
 <li>使用@Bean注解。@Bean 注解作用在方法上，产生一个 Bean 对象，然后这个 Bean 对象交给 Spring 管理，剩下的你就不用管了。产生这个 Bean 对象的方法 Spring 只会调用一次，随后这个 Spring 将会将这个 Bean 对象放在自己的 IOC 容器中。@Bean 方法名与返回类名一致，首字母小写。一般和 @Component 或者 @Configuration 一起使用（@Configuration 标识这是一个Spring Boot 配置类，其将会扫描该类中是否存在@Bean 注解的方法）。</li>
 </ul>
+<h4 id="Import"><a href="#Import" class="headerlink" title="@Import"></a>@Import</h4><ul>
+<li>@Import只能用在类上 ，@Import通过快速导入的方式实现把实例加入spring的IOC容器中</li>
+<li>用法：<ol>
+<li></li>
+</ol>
+</li>
+</ul>
 <h4 id="Component-VS-Configuration"><a href="#Component-VS-Configuration" class="headerlink" title="@Component VS @Configuration"></a>@Component VS @Configuration</h4><ul>
 <li>使用习惯上：​@Configuration​注解常用于配置类中，用于定义一组相关的Bean配置；而​@Component​注解常用于普通的组件类中，用于标识该类为Spring管理的组件。</li>
 <li>代理上：<ol>
@@ -136,7 +143,7 @@
 <li>Spring内实现IOC的容器：ApplicationContext接口的实现，如用于独立应用的AnnotationConfigApplicationContext、ClassPathXmlApplicationContext 和 FileSystemXmlApplicationContext，以及用于 Web 应用的WebApplicationContext</li>
 </ul>
 <h3 id="依赖注入的方法"><a href="#依赖注入的方法" class="headerlink" title="依赖注入的方法"></a>依赖注入的方法</h3><ul>
-<li><p>对比：<img src="/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/%E6%B3%A8%E5%85%A5%E5%AF%B9%E6%AF%94.png" alt="alt text"></p>
+<li><p>对比：<img src="/2024/11/03/SpringBoot-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/%E6%B3%A8%E5%85%A5%E5%AF%B9%E6%AF%94.png" alt="alt text"></p>
 </li>
 <li><p>基于构造函数：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Item <span class="title function_">item1</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ItemImpl1</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Store <span class="title function_">store</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Store</span>(item1());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
@@ -144,7 +151,7 @@
 <ol>
 <li>按照type在上下文中查找匹配的bean，查找type为Svc的bean</li>
 <li>如果有多个bean，则按照name进行匹配</li>
-<li>如果有@Qualifier注解，则按照@Qualifier指定的name进行匹配，查找name为svcA的bean。如果没有，则按照变量名进行匹配，查找name为svcA的bean。匹配不到，则报错。（@Autowired(required&#x3D;false)，如果设置required为false(默认为true)，则注入失败时不会抛出异常<br><img src="/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/@auto.png" alt="alt text"><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span> </span><br><span class="line">    <span class="keyword">private</span> Lisi lisi;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getHello</span><span class="params">()</span>&#123;</span><br><span class="line">        lisi.say();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello world;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>如果有@Qualifier注解，则按照@Qualifier指定的name进行匹配，查找name为svcA的bean。如果没有，则按照变量名进行匹配，查找name为svcA的bean。匹配不到，则报错。（@Autowired(required&#x3D;false)，如果设置required为false(默认为true)，则注入失败时不会抛出异常<br><img src="/2024/11/03/SpringBoot-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/@auto.png" alt="alt text"><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span> </span><br><span class="line">    <span class="keyword">private</span> Lisi lisi;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getHello</span><span class="params">()</span>&#123;</span><br><span class="line">        lisi.say();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello world;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ol>
 </li>
 <li><p>利用lombok的注解@RequiredArgsConstructor实现构造器注入，需要注意的是要注入的属性需要加上final修饰</p>
@@ -153,7 +160,7 @@
 <li><p>@Resource注解：默认情况下@Resource按照名称注入，如果没有显式声明名称则按照变量名称或者方法中对应的参数名称进行注入。</p>
 <ol>
 <li>@Resource有两个重要的属性：name 和 type，而Spring将@Resource注解的name属性解析为bean的名字，而type属性则解析为bean的类型。如果没有指定name属性，当注解写在字段上时，默认取字段名，按照名称查找。当注解标注在属性的setter方法上，即默认取属性名作为bean名称寻找依赖对象。</li>
-<li>当找不到与名称匹配的bean时才按照类型进行装配。但是需要注意的是，如果name属性一旦指定，就只会按照名称进行装配。@Resource的作用相当于@Autowired，只不过@Autowired按照byType自动注入<br><img src="/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/@resource.png" alt="alt text"><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ResourceTest</span> &#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> ApplicationRunner applicationRunner;    </span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> ApplicationRunner runner;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>当找不到与名称匹配的bean时才按照类型进行装配。但是需要注意的是，如果name属性一旦指定，就只会按照名称进行装配。@Resource的作用相当于@Autowired，只不过@Autowired按照byType自动注入<br><img src="/2024/11/03/SpringBoot-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/@resource.png" alt="alt text"><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ResourceTest</span> &#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> ApplicationRunner applicationRunner;    </span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> ApplicationRunner runner;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ol>
 </li>
 <li><p>@Inject：大部分情况下该注解都可以代替@Autowired使用，但@Inject没有required属性，不过它也可以与java.util.Optional或使用@Nullable来达到同样的效果。</p>
@@ -198,7 +205,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2024/11/03/Spring-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" data-id="cm31tgkoz000cqovc76eu01qw" data-title="Spring-Bean&amp;依赖注入" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2024/11/03/SpringBoot-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" data-id="cm4s8hpvn000bacvc1ja51i2c" data-title="SpringBoot-Bean&amp;依赖注入" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -237,7 +244,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spring/">Spring</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SpringBoot/">SpringBoot</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -265,23 +272,23 @@
       <ul>
         
           <li>
+            <a href="/2024/12/17/TCP-IP/">TCP/IP</a>
+          </li>
+        
+          <li>
+            <a href="/2024/12/17/SpringBoot-Web%E5%AE%B9%E5%99%A8%E4%B8%8E%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D/">SpringBoot-Web容器与自动装配</a>
+          </li>
+        
+          <li>
+            <a href="/2024/12/17/SpringBoot-%E5%88%9D%E8%A7%88/">SpringBoot-初览</a>
+          </li>
+        
+          <li>
+            <a href="/2024/12/16/%E5%8F%AF%E4%BB%A5%E5%8F%82%E5%8A%A0%E7%9A%84%E6%AF%94%E8%B5%9B/">timeLine</a>
+          </li>
+        
+          <li>
             <a href="/2024/12/12/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/07/AI%E5%B0%8F%E8%AF%B4/">AI小说</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/07/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/02/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">单元测试</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/01/Kafka/">Kafka</a>
           </li>
         
       </ul>
