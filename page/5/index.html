@@ -69,6 +69,85 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-OPCUA" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/10/09/OPCUA/" class="article-date">
+  <time class="dt-published" datetime="2024-10-09T02:41:39.000Z" itemprop="datePublished">2024-10-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a>►<a class="article-category-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/10/09/OPCUA/">OPCUA简介</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="名词定义"><a href="#名词定义" class="headerlink" title="名词定义"></a>名词定义</h2><ul>
+<li>AddressSpace：地址空间，OPC_UA服务器向客户暴露的数据集合。OPC UA 地址空间将其内容表示为一组由引用连接的节点。</li>
+<li>Aggregate：计算原始数据派生值的函数</li>
+<li>Alarm：一种一般需要确认的事件</li>
+<li>Attribute：Node的原始数据</li>
+<li>Condition：通用术语，是一种扩展的一个事件</li>
+<li>Communication Stack：应用程序和硬件之间的一套分层软件模块，提供各种功能，对发送的信息进行编码、加密和格式化，并对接收的信息进行解码、解密和解包</li>
+<li>Complex Data：包含不止一种原始数据的数据结构，如结构体</li>
+<li>Discovery：OPC UA 客户端获取 OPC UA 服务器信息（包括端点和安全信息）的过程</li>
+<li>MoniteredItem: 服务器中由客户定义的实体，用于监控属性或事件提示器的新值或事件发生情况，并为其生成通知</li>
+<li>Node: 地址空间的重要组成部分</li>
+<li>Profile：配置文件的特定功能集，服务器可声称支持这些功能集</li>
+<li>Object：对象节点，代表系统的物理或抽象元素</li>
+</ul>
+<h2 id="什么是-OPC-UA-规范-开放式产品通信统一架构，Open-Platform-Communications-Unified-Architecture"><a href="#什么是-OPC-UA-规范-开放式产品通信统一架构，Open-Platform-Communications-Unified-Architecture" class="headerlink" title="什么是 OPC_UA 规范 (开放式产品通信统一架构，Open Platform Communications Unified Architecture)"></a>什么是 OPC_UA 规范 (开放式产品通信统一架构，Open Platform Communications Unified Architecture)</h2><ul>
+<li>OPC UA 适用于现场设备、控制系统、制造执行系统和企业资源规划系统等应用领域的制造软件。这些系统旨在为工业流程交换信息并使用指令和控制。OPC UA 定义了一个通用基础架构模型，以促进这种信息交换</li>
+<li><strong>OPC UA 定义了服务器可提供的服务集，各个服务器向客户端说明它们支持哪些服务集</strong>。信息使用 OPC UA 定义的和供应商定义的数据类型进行传递，服务器定义了客户端可以动态发现的对象模型。 服务器可提供对当前数据和历史数据的访问，以及通知客户端重要变化的警报和事件。OPC UA 可以映射到各种通信协议上，数据可以用不同的方式编码，以权衡可移植性和效率。OPC UA是独立于平台的协议</li>
+<li><strong>OPC UA 提供了一致、集成的地址空间和服务模型</strong>。这样，单个 OPC UA 服务器就能将数据、警报和事件以及历史记录集成到其地址空间中，并使用一套集成服务对其进行访问。这些服务还包括一个集成的安全模型。 OPC UA 还允许服务器为客户端提供从地址空间访问对象的类型定义。这就允许使用信息模型来描述地址空间的内容。OPC UA 允许以多种不同格式（包括二进制结构和 XML 文档）公开数据。数据格式可由 OPC、其他标准组织或供应商定义。通过地址空间，客户端可以向服务器查询描述数据格式的元数据。在许多情况下，对数据格式没有预先编程知识的客户端能够在运行时确定格式并正确使用数据。 OPC UA 增加了对节点间多种关系的支持，而不仅仅局限于单一的层次结构。这样，OPC UA 服务器就可以根据一组客户端通常希望查看数据的方式，以各种层次结构呈现数据。这种灵活性加上对类型定义的支持，使 OPC UA 适用于各种问题领域</li>
+<li><strong>OPC UA 旨在提供发布数据的稳健性</strong>。所有 OPC 服务器的一个主要特点是能够发布数据和事件通知。OPC UA 为客户端提供了快速检测和恢复与这些传输相关的通信故障的机制，而无需等待底层协议。</li>
+<li><strong>OPC UA 规范是分层的，将核心设计与底层计算技术和网络传输隔离开来</strong>。这使得 OPC UA 可以根据需要映射到未来的技术，而不会否定基本设计 – 多种数据格式和传输协议可以被支持</li>
+<li><img src="/2024/10/09/OPCUA/1.png" alt="OPC_UA Server的结构"></li>
+</ul>
+<h2 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h2><ul>
+<li>什么是节点：<ul>
+<li>节点是 OPC UA 信息模型中的实体，用来表示各种类型的信息和功能。</li>
+<li>每个节点有一个唯一标识符（NodeId），并通过引用（References）与其他节点建立关系，形成一个有向图。</li>
+</ul>
+</li>
+<li>类型：<br><img src="/2024/10/09/OPCUA/opcuaNodeClass.png" alt="alt text"></li>
+<li>组成：<br><img src="/2024/10/09/OPCUA/node%E7%BB%84%E6%88%90.png" alt="alt text"></li>
+<li>关系：<ul>
+<li>HasComponent：表示组成关系，例如对象与其变量。</li>
+<li>HasProperty：表示属性关系，例如对象与其属性。</li>
+<li>Organizes：表示组织关系，例如文件夹和文件。</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/10/09/OPCUA/" data-id="cm25l6xsw00007wvcd8fo66u7" data-title="OPCUA简介" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-vscode&amp;cmake配置c++项目构建环境" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/10/09/vscode&cmake%E9%85%8D%E7%BD%AEc++%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA%E7%8E%AF%E5%A2%83/" class="article-date">
@@ -785,53 +864,11 @@
 
 
   
-    <article id="post-再看动态规划" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="article-date">
-  <time class="dt-published" datetime="2024-05-21T06:53:02.000Z" itemprop="datePublished">2024-05-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>►<a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">再看动态规划</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/05/21/%E5%86%8D%E7%9C%8B%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" data-id="clwlwacyd000uqkvcg7pldtoh" data-title="再看动态规划" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -870,6 +907,10 @@
       <ul>
         
           <li>
+            <a href="/2024/12/18/MySql-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">MySql-分库分表</a>
+          </li>
+        
+          <li>
             <a href="/2024/12/17/TCP-IP/">TCP/IP</a>
           </li>
         
@@ -883,10 +924,6 @@
         
           <li>
             <a href="/2024/12/16/%E5%8F%AF%E4%BB%A5%E5%8F%82%E5%8A%A0%E7%9A%84%E6%AF%94%E8%B5%9B/">timeLine</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/12/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a>
           </li>
         
       </ul>
