@@ -13,10 +13,12 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="JAVA与C++之间有一堵由内存动态分配和GC所围成的高墙，墙外面的人想进去，墙里面的人想出来内存管理 JAVA虚拟机管理的内存包括以下几个运行时数据区域： 方法区 堆 虚拟机栈 程序计数器：当前线程所执行的字节码的行号指示器，是程序控制流的指示器。 本地方法栈   程序计数器：由于JAVA虚拟机的多线程是通过线程轮流切换，分配处理器时间实现的，在任何一个时刻只会有一条线程中的指令被执行，因此每个">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2024/10/28/JVM/mark-word.png">
 <meta property="article:published_time" content="2024-10-28T15:39:22.000Z">
-<meta property="article:modified_time" content="2024-10-28T16:28:17.118Z">
+<meta property="article:modified_time" content="2025-01-06T09:24:55.882Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/10/28/JVM/mark-word.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -109,7 +111,47 @@
 <li>程序计数器：由于JAVA虚拟机的多线程是通过线程轮流切换，分配处理器时间实现的，在任何一个时刻只会有一条线程中的指令被执行，因此每个线程要有一个独立的程序计数器（在线程私有的内存区域中存储）。如果执行的是Native方法（在Java中，native方法是一种特殊的方法，它允许Java调用非Java代码，通常是C或C++语言编写的本地方法。这些方法在Java类中声明，但不在Java代码中实现，而是在本地库中实现，并通过Java Native Interface（JNI）与Java代码交互。），那么计数器值应该为空，此内存区域没有规定OutOfMeomoryError错误、</li>
 <li>Java虚拟机栈：同样是线程私有的，描述的是Java方法执行的线程内存模型：每个方法被执行时，Java虚拟机栈会同步创建一个栈帧用于存储局部变量表（基础数据类型，对象引用），操作数栈，动态连接，方法出口等信息。数据类型在局部变量表中的存储以局部变量槽（Slot）表示。</li>
 <li>本地方法栈：和Java虚拟机栈类似，但是是为Native方法服务的，前者是为Java方法服务的。</li>
-<li>Java堆：<strong>所有线程共享</strong>。由垃圾收集器（几乎都基于分代设计，需要新老代收集器搭配工作）管理。从内存分配的角度上，可以分配出线程私有的分配缓冲区。Java堆可以在物理上不连续的内存空间中，但是逻辑上应该被看做连续的。</li>
+<li>Java堆：<strong>所有线程共享</strong>。由垃圾收集器（几乎都基于分代设计，需要新老代收集器搭配工作）管理。从内存分配的角度上，可以分配出线程私有的分配缓冲区（TLAB）。Java堆可以在物理上不连续的内存空间中，但是逻辑上应该被看做连续的。</li>
+<li>方法区：和堆一样是<strong>线程共享的</strong>，存储已经被加载的类型信息，常量，静态变量，即时编译器编译后的代码缓存等数据（JDK8之后在本地内存中实现–元空间）。和堆一样需要物理连续内存，大小可以固定或拓展，甚至可以不用GC，但是并非是方法区内的数据就是永久存在的了，这部分区域的内存回收主要是针对常量池的回收和类型的卸载。</li>
+<li>运行时常量池：它是方法区中的一部分，class中的常量池表在类被加载后存放到运行时常量池中，内容就是各种字面量和符号引用，以及由符号引用翻译的直接引用。其另一个特征是动态性，运行期间的常量也可以放入常量池，例如String的intern方法</li>
+<li>直接内存：并不是虚拟机运行时数据区的一部分，但是也是被频繁使用的，所以可以加入讨论。它是NIO（基于Channel与缓存区的IO方式），使用Native函数库直接分配堆外内存，通过一个存储在Java堆内的对象作为内存的引用进行操作，避免在Java堆和Native堆间的数据复制</li>
+</ul>
+<h2 id="对象创建、分配、布局与访问"><a href="#对象创建、分配、布局与访问" class="headerlink" title="对象创建、分配、布局与访问"></a>对象创建、分配、布局与访问</h2><ul>
+<li>对象创建（通过new创建普通对象）<ol>
+<li>当Java虚拟机遇到一个new指令的时候，先检查这个指令的参数能不能定位到一个类的符号引用，并检查这个符号引用对应的类是不是已经被加载、解析和初始化过。如没有，要执行相应的过程</li>
+<li>类加载检查通过后，就开始分配对应大小的内存，具体大小数值在检查之后就能完全确认，实际上等同于从堆上划分确定大小的内存块。</li>
+</ol>
+<ul>
+<li>内存的划分方法有两种：<ol>
+<li>指针碰撞：如果内存是规整的，也就是一边是使用过的，一边是没有使用的，中间是一个分界指针，那么分方法就只是移动这个指针一段指定距离</li>
+<li>空闲列表：内存不是规整的，那么就是维护一个记录空闲的内存块在哪里的列表</li>
+</ol>
+</li>
+<li>内存是否规整，取决于GC是不是带有空间压缩整理能力，如果有，那么使用的方法就会倾向于指针碰撞，反之就是空闲列表</li>
+<li>对象创建的并发问题：可能出现多个线程同时请求分配内存：通过CAS操作保证原子性，或者先在本地线程分配缓存中分配（TLAB）</li>
+<li>分配后，内存空间要先初始化为0，保证对象实例字段不需要初始值</li>
+</ul>
+<ol start="3">
+<li>对对象进行必要的设置，如是那个类的实例、如何找元信息，哈希码、GC分代年龄信息等，存放在<strong>对象头</strong>中</li>
+<li>至此从虚拟机角度对象创建已经完成，下面是Java程序视角的创建开始，也就是执行构造函数(Class文件中的init方法)</li>
+</ol>
+</li>
+<li>对象内存布局<ul>
+<li>划分为三个部分：对象头（Header），实例数据，和padding</li>
+<li>对象头包含两类数据：<ol>
+<li>对象自身的运行数据：也被称为mark word<br>  <img src="/2024/10/28/JVM/mark-word.png"></li>
+<li>类型指针，即对象指向他类型元数据的指针，通过这个指针来确定该对象是那个类的实例。</li>
+<li>如果是数组对象，还有数组长度的数据</li>
+</ol>
+</li>
+<li>实例数据部分是有效信息，也就是定义的字段内容，存储顺序收到分配策略和源码顺序影响，默认分配策略上相同长度的字段会被一起存放</li>
+<li>对齐填充：HotSpot默认长度应该是8的倍数</li>
+</ul>
+</li>
+<li>对象访问定位<ul>
+<li></li>
+</ul>
+</li>
 </ul>
 
       
@@ -154,7 +196,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SpringBoot/">SpringBoot</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode%E5%88%B7%E9%A2%98/">LeetCode刷题</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode%E5%88%B7%E9%A2%98/Hot100/">Hot100</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode%E5%88%B7%E9%A2%98/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">滑动窗口</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SpringBoot/">SpringBoot</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -169,7 +211,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/12/">December 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">November 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/02/">February 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/12/">December 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">November 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
     </div>
   </div>
 
@@ -182,23 +224,23 @@
       <ul>
         
           <li>
+            <a href="/2025/02/27/LeetCodeHot100/">LeetCodeHot100</a>
+          </li>
+        
+          <li>
+            <a href="/2025/02/27/LeetCode%E5%88%B7%E9%A2%98-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">LeetCode刷题-滑动窗口</a>
+          </li>
+        
+          <li>
+            <a href="/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/">Debian包构建</a>
+          </li>
+        
+          <li>
             <a href="/2024/12/18/MySql-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">MySql-分库分表</a>
           </li>
         
           <li>
             <a href="/2024/12/17/TCP-IP/">TCP/IP</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/17/SpringBoot-Web%E5%AE%B9%E5%99%A8%E4%B8%8E%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D/">SpringBoot-Web容器与自动装配</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/17/SpringBoot-%E5%88%9D%E8%A7%88/">SpringBoot-初览</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/16/%E5%8F%AF%E4%BB%A5%E5%8F%82%E5%8A%A0%E7%9A%84%E6%AF%94%E8%B5%9B/">timeLine</a>
           </li>
         
       </ul>
@@ -214,7 +256,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2024 John Doe<br>
+      &copy; 2025 John Doe<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

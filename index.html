@@ -69,6 +69,209 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-LeetCodeHot100" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/02/27/LeetCodeHot100/" class="article-date">
+  <time class="dt-published" datetime="2025-02-27T13:46:25.000Z" itemprop="datePublished">2025-02-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/LeetCode%E5%88%B7%E9%A2%98/">LeetCode刷题</a>►<a class="article-category-link" href="/categories/LeetCode%E5%88%B7%E9%A2%98/Hot100/">Hot100</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/02/27/LeetCodeHot100/">LeetCodeHot100</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="3-无重复字符的最长子串"><a href="#3-无重复字符的最长子串" class="headerlink" title="3 无重复字符的最长子串"></a>3 无重复字符的最长子串</h1><ul>
+<li>给定一个字符串 s ，请你找出其中不含有重复字符的最长子串的长度。</li>
+<li>思路：常见的右扩左缩类型  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">lengthOfLongestSubstring</span><span class="params">(String s)</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] cnt = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">128</span>];</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">ret</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cnt[s.charAt(i)] != <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// 有重复</span></span><br><span class="line">                <span class="keyword">while</span> (cnt[s.charAt(i)] != <span class="number">0</span>) &#123;</span><br><span class="line">                    cnt[s.charAt(i - len)]--;</span><br><span class="line">                    len--;</span><br><span class="line">                &#125;</span><br><span class="line">                len++;</span><br><span class="line">                cnt[s.charAt(i)]++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 没重复</span></span><br><span class="line">                cnt[s.charAt(i)]++;</span><br><span class="line">                len++;</span><br><span class="line">                ret = Math.max(ret, len);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;    </span><br><span class="line">        <span class="keyword">return</span> ret;   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="128-最长连续序列"><a href="#128-最长连续序列" class="headerlink" title="128 最长连续序列"></a>128 最长连续序列</h1><ul>
+<li>给定一个未排序的整数数组nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。</li>
+<li>思路：用不存在num - 1作为最关键的判断，这样每次进入循环都是保证这个元素是序列的开始<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">longestConsecutive</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        Set&lt;Integer&gt; num_set = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;Integer&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : nums) &#123;</span><br><span class="line">            num_set.add(num);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">longestStreak</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> num : num_set) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!num_set.contains(num - <span class="number">1</span>)) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">currentNum</span> <span class="operator">=</span> num;</span><br><span class="line">                <span class="type">int</span> <span class="variable">currentStreak</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">while</span> (num_set.contains(currentNum + <span class="number">1</span>)) &#123;</span><br><span class="line">                    currentNum++;</span><br><span class="line">                    currentStreak++;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                longestStreak = Math.max(longestStreak, currentStreak);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> longestStreak;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/02/27/LeetCodeHot100/" data-id="cm7qdvwz50001jsvcbjoh5zut" data-title="LeetCodeHot100" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LeetCode刷题-滑动窗口" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/02/27/LeetCode%E5%88%B7%E9%A2%98-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="article-date">
+  <time class="dt-published" datetime="2025-02-27T03:34:44.000Z" itemprop="datePublished">2025-02-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/LeetCode%E5%88%B7%E9%A2%98/">LeetCode刷题</a>►<a class="article-category-link" href="/categories/LeetCode%E5%88%B7%E9%A2%98/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">滑动窗口</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/02/27/LeetCode%E5%88%B7%E9%A2%98-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">LeetCode刷题-滑动窗口</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="定长窗口"><a href="#定长窗口" class="headerlink" title="定长窗口"></a>定长窗口</h1><p>什么时候可以用定长窗口？“长度”至少为k的情况下满足最少最小，或者指定“长度”为k</p>
+<h2 id="1456-定长子串中元音的最大数目"><a href="#1456-定长子串中元音的最大数目" class="headerlink" title="1456 定长子串中元音的最大数目"></a>1456 定长子串中元音的最大数目</h2><ul>
+<li><p>给你字符串 s 和整数 k 。<br>请返回字符串 s 中长度为 k 的单个子字符串中可能包含的最大元音字母数。<br>英文中的 元音字母 为（a, e, i, o, u）。</p>
+</li>
+<li><p>思路：<strong>经典的(初始化) - 入 - 更新 - 出</strong>，需要注意的是不要忘了窗口长度等于整个数组长度的情况，可能要在这种情况下及时更新结果</p>
+</li>
+<li><p>一个有意思的小技巧是把string转成char[]更快一点，取出下标比charAt快</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxVowels</span><span class="params">(String S, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="type">char</span>[] s = S.toCharArray();</span><br><span class="line">        <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">vowel</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; s.length; i++) &#123;</span><br><span class="line">            <span class="comment">// 1. 进入窗口</span></span><br><span class="line">            <span class="keyword">if</span> (s[i] == <span class="string">&#x27;a&#x27;</span> || s[i] == <span class="string">&#x27;e&#x27;</span> || s[i] == <span class="string">&#x27;i&#x27;</span> || s[i] == <span class="string">&#x27;o&#x27;</span> || s[i] == <span class="string">&#x27;u&#x27;</span>) &#123;</span><br><span class="line">                vowel++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (i &lt; k - <span class="number">1</span>) &#123; <span class="comment">// 窗口大小不足 k</span></span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 2. 更新答案</span></span><br><span class="line">            ans = Math.max(ans, vowel);</span><br><span class="line">            <span class="comment">// 3. 离开窗口</span></span><br><span class="line">            <span class="type">char</span> <span class="variable">out</span> <span class="operator">=</span> s[i - k + <span class="number">1</span>];</span><br><span class="line">            <span class="keyword">if</span> (out == <span class="string">&#x27;a&#x27;</span> || out == <span class="string">&#x27;e&#x27;</span> || out == <span class="string">&#x27;i&#x27;</span> || out == <span class="string">&#x27;o&#x27;</span> || out == <span class="string">&#x27;u&#x27;</span>) &#123;</span><br><span class="line">                vowel--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="2841-几乎唯一数组的最大和"><a href="#2841-几乎唯一数组的最大和" class="headerlink" title="2841 几乎唯一数组的最大和"></a>2841 几乎唯一数组的最大和</h2><ul>
+<li>给你一个整数数组 nums 和两个正整数 m 和 k 。请你返回 nums 中长度为 k 的 几乎唯一 子数组的 最大和 ，如果不存在几乎唯一子数组，请你返回 0 。如果 nums 的一个子数组有至少 m 个互不相同的元素，我们称它是几乎唯一子数组。子数组指的是一个数组中一段连续 非空 的元素序列。</li>
+<li>思路：结合了经典定长窗口模式和map操作<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">maxSum</span><span class="params">(List&lt;Integer&gt; nums, <span class="type">int</span> m, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">now_sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">ret</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        Map&lt;Integer, Integer&gt; cnt = <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums.size(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &lt; k) &#123;</span><br><span class="line">                now_sum += nums.get(i);</span><br><span class="line">                cnt.put(nums.get(i), cnt.getOrDefault(nums.get(i), <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">outIndex</span> <span class="operator">=</span> i - k;</span><br><span class="line">                <span class="keyword">if</span> (cnt.keySet().size() &gt;= m) &#123;</span><br><span class="line">                    ret = Math.max(ret, now_sum);</span><br><span class="line">                &#125; </span><br><span class="line">                <span class="keyword">if</span> (cnt.get(nums.get(outIndex)) == <span class="number">1</span>) &#123;</span><br><span class="line">                    cnt.remove(nums.get(outIndex));</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    cnt.put(nums.get(outIndex), cnt.get(nums.get(outIndex)) - <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                cnt.put(nums.get(i), cnt.getOrDefault(nums.get(i), <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">                now_sum -= nums.get(outIndex);</span><br><span class="line">                now_sum += nums.get(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (cnt.keySet().size() &gt;= m) &#123;</span><br><span class="line">            ret = Math.max(ret, now_sum);</span><br><span class="line">        &#125; </span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id><a href="#" class="headerlink" title></a></h2><ul>
+<li>交换定义为选中一个数组中的两个互不相同的位置并交换二者的值。环形数组是一个数组，可以认为第一个元素和最后一个元素相邻。给你一个二进制环形数组nums ，返回在任意位置将数组中的所有1聚集在一起需要的最少交换次数。</li>
+<li>思路：比较好想的是直接拓展3倍，然后用1个数的滑动窗口。当然也可以不扩大数组：当起始位置从 i−1 增加到 i 时，nums[i−1] 被从区间内移除，而 nums[(i+cnt−1) mod n] 被加入区间内。因此如果前者为 0，就将 0 的个数减少 1；如果后者为 0，就将 0 的个数增加 1。  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">minSwaps</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="comment">// 00001111000111100000</span></span><br><span class="line">        <span class="comment">// 3 + 4 + 5 + 6</span></span><br><span class="line">        <span class="comment">// 先找到包含所有1的最短</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> nums.length;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">one_cnt</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span>[] new_nums = <span class="keyword">new</span> <span class="title class_">int</span>[len * <span class="number">3</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; len; j++) &#123;</span><br><span class="line">                new_nums[len * i + j] = nums[j];</span><br><span class="line">                <span class="keyword">if</span> (nums[j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    one_cnt++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//System.out.println(Arrays.toString(new_nums) + &quot; &quot; + one_cnt/3);</span></span><br><span class="line">        one_cnt /= <span class="number">3</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">now_sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">max_sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; new_nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &lt; one_cnt) &#123;</span><br><span class="line">                now_sum += new_nums[i];</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;   </span><br><span class="line">            <span class="type">int</span> <span class="variable">outIndex</span> <span class="operator">=</span> i - one_cnt;</span><br><span class="line">            max_sum = Math.max(max_sum, now_sum);</span><br><span class="line">            now_sum -= new_nums[outIndex];</span><br><span class="line">            now_sum += new_nums[i];</span><br><span class="line">            max_sum = Math.max(max_sum, now_sum);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//System.out.println(max_sum);</span></span><br><span class="line">        <span class="keyword">if</span> (max_sum == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 1 0 0 1 1 0 1 0 1</span></span><br><span class="line">        <span class="keyword">return</span> one_cnt - max_sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minSwaps</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> cnt = <span class="built_in">accumulate</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>(), <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (cnt == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> cur = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; cnt; ++i) &#123;</span><br><span class="line">            cur += (<span class="number">1</span> - nums[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> ans = cur;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums[i - <span class="number">1</span>] == <span class="number">0</span>) &#123;</span><br><span class="line">                --cur;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (nums[(i + cnt - <span class="number">1</span>) % n] == <span class="number">0</span>) &#123;</span><br><span class="line">                ++cur;</span><br><span class="line">            &#125;</span><br><span class="line">            ans = <span class="built_in">min</span>(ans, cur);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/02/27/LeetCode%E5%88%B7%E9%A2%98-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" data-id="cm7qdvwzg0007jsvc0ozzad98" data-title="LeetCode刷题-滑动窗口" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Debian包构建" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/" class="article-date">
+  <time class="dt-published" datetime="2024-12-23T06:41:29.000Z" itemprop="datePublished">2024-12-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/">Debian包构建</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ubuntu系统的包构建，ubuntu是基于debian开发的<br><a target="_blank" rel="noopener" href="https://ubuntu.com/server/docs/package-management">https://ubuntu.com/server/docs/package-management</a> </p>
+<p>debain的包构建<br><a target="_blank" rel="noopener" href="https://www.debian.org/doc/manuals/debmake-doc/ch05.zh-cn.html#packaging-tarball">https://www.debian.org/doc/manuals/debmake-doc/ch05.zh-cn.html#packaging-tarball</a></p>
+<h2 id="打包流程"><a href="#打包流程" class="headerlink" title="打包流程"></a>打包流程</h2><h3 id="非系统文件的安装"><a href="#非系统文件的安装" class="headerlink" title="非系统文件的安装"></a>非系统文件的安装</h3><ul>
+<li>假设一个c项目，使用makefile构建，最后被打包为一个tar.gz压缩包</li>
+<li>我们可以这样安装它<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -xzmf debhello-0.0.tar.gz</span><br><span class="line">cd debhello-0.0</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<ul>
+<li>其中make命令编译了源代码，生成二进制文件或库（.a、.so）</li>
+<li>make install命令把生成好的文件和程序复制到系统目录，使得其可以全局访问。install的规则当然需要开发者自己编写makefile</li>
+</ul>
+</li>
+</ul>
+<h3 id="构建非原生debian包"><a href="#构建非原生debian包" class="headerlink" title="构建非原生debian包"></a>构建非原生debian包</h3><ul>
+<li>流程：<ol>
+<li>解压源码压缩包</li>
+<li>debmake，对上游源码树debian化，创建一个debian目录并添加模版文件：名为 debhello_0.0.orig.tar.gz 的符号链接被创建并指向 debhello-0.0.tar.gz文件。维护者须自行编辑修改模板文件。</li>
+<li>debuild，基于已经debian化的源码树构建二进制软件包：debhello-0.0-1.debian.tar.xz 将被创建，它包含了 debian 目录。</li>
+</ol>
+</li>
+<li>debmake会在项目源码内添加一些模版文件<br><img src="/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/debmake.png" alt="alt text"><ul>
+<li>比较重要的两个文件是rules和control，前者是由软件包提供者维护的构建脚本，后者包含了软件包的主要元信息</li>
+<li>作为软件包开发者，应该维护这些模版文件</li>
+<li>control内包含依赖（构建&amp;运行时）：<ul>
+<li>运行时依赖：<code>Depends: $&#123;misc:Depends&#125;, $&#123;shlibs:Depends&#125;</code><ul>
+<li><code>$&#123;misc:Depends&#125;</code> 是一个占位符，它代表了通常用于任何 Debian 软件包的通用依赖。这些依赖通常是由 debhelper 或其他工具自动管理的。具体来说，它通常包括一些和包构建、安装及管理相关的基本工具和库，但它的实际内容取决于使用的构建工具和配置。<code>$&#123;shlibs:Depends&#125;</code> 是另一个占位符，用于指定软件包所依赖的共享库（shared libraries）。shlibs 是 “shared libraries” 的缩写，它会根据包中链接的共享库来自动生成相应的依赖项。例如，如果你的软件包链接到某个库（如 libc），那么 shlibs:Depends 会自动处理这些依赖关系。</li>
+</ul>
+</li>
+<li>构建依赖：<code>Build-Depends: debhelper-compat (= 12) </code><ul>
+<li>这代表我们在构建软件包，也就是打包生成可执行文件的时候需要的依赖</li>
+</ul>
+</li>
+<li>一个例子，例如我们include了stdio，它可能就在Debian的通用依赖里面（libc），以动态形式链接</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>debuild会执行构建过程，构建产物如下<br><img src="/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/debuild%E4%BA%A7%E7%89%A9.png" alt="alt text"><br><img src="/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/debuild%E4%BA%A7%E7%89%A9-2.png" alt="alt text"><br>deb文件内就是软件包内容了，包含了将要安装至目标系统中的文件。<br><img src="/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/deb%E5%8C%85%E5%86%85%E5%AE%B9.png" alt="alt text"></li>
+<li>生成需要的依赖：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dpkg -f debhello_0.0-1_amd64.deb pre-depends \</span><br><span class="line">        depends recommends conflicts breaks</span><br></pre></td></tr></table></figure></li>
+<li>可能的问题：<ul>
+<li>如果你复制makefile，注意tab和空格，如果使用了空格作为分隔，要改为tab（注意编辑器可能直接把tab设置为了空格）</li>
+<li>注意整个过程中不要再改源文件了</li>
+</ul>
+</li>
+</ul>
+<h3 id="打包工作流"><a href="#打包工作流" class="headerlink" title="打包工作流"></a>打包工作流</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.debian.org/doc/manuals/debmake-doc/ch06.zh-cn.html">https://www.debian.org/doc/manuals/debmake-doc/ch06.zh-cn.html</a></li>
+</ul>
+<h3 id="安装与运行"><a href="#安装与运行" class="headerlink" title="安装与运行"></a>安装与运行</h3><ul>
+<li>安装：<code>sudo apt install xx.deb</code></li>
+<li>运行：<code>dkpg -L xx</code>，可以直接找到bin内这个软件包的目录</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/" data-id="cm7qdvwz10000jsvcga4vedfi" data-title="Debian包构建" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-MySql-分库分表" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/12/18/MySql-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" class="article-date">
@@ -476,156 +679,6 @@
 
 
   
-    <article id="post-任务调度" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/12/07/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/" class="article-date">
-  <time class="dt-published" datetime="2024-12-07T11:26:39.000Z" itemprop="datePublished">2024-12-07</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>►<a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/12/07/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="什么是任务调度"><a href="#什么是任务调度" class="headerlink" title="什么是任务调度"></a>什么是任务调度</h2><ul>
-<li>任务调度是一个非常重要的功能组件，常作用于：定时清理数据 - 冷数据迁移、活动状态扫描 - 过期活动关闭、消息发送补偿 - MQ失败重发、支付掉单补偿 - 支付幂等重试，等各类场景都会用到任务调度组件。它可以帮我们执行确定规则的业务或功能流程。</li>
-<li>当你的微服务应用是一组较小的模型结构时，其实任务与服务结合在一起即可，让它与自己的领域绑定。但如果微服务的体量很大，那么这组微服务所对应的任务也会较多，同时需要一些分布式的能力，让调度的算力可以更快更好的运用起来。所以一般这个时候就需要引入把任务单独拆分出一个微服务系统，一般可以叫做 xxx-worker 系统，他们就是专门处理任务的一个个执行器。把这些执行器注册到任务调度中心，由任务调度中心统一管理各项任务的执行。这样如果有一个任务在一个算力执行器上失败或者说执行器宕机了，那么可以把任务迁移到其他算力执行器上执行。这就是分布式的好处。<br><img src="/2024/12/07/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6.png" alt="alt text"></li>
-</ul>
-<h2 id="jobrunr"><a href="#jobrunr" class="headerlink" title="jobrunr"></a>jobrunr</h2><p><a target="_blank" rel="noopener" href="https://github.com/jobrunr/jobrunr">https://github.com/jobrunr/jobrunr</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/12/07/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/" data-id="cm4earrxy0001bkvc7a3e3e71" data-title="任务调度" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-单元测试" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/12/02/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="article-date">
-  <time class="dt-published" datetime="2024-12-02T02:13:13.000Z" itemprop="datePublished">2024-12-02</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/12/02/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">单元测试</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="C-C-单元测试"><a href="#C-C-单元测试" class="headerlink" title="C&#x2F;C++单元测试"></a>C&#x2F;C++单元测试</h1><h2 id="Check框架"><a href="#Check框架" class="headerlink" title="Check框架"></a>Check框架</h2>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/12/02/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" data-id="cm479bwus00009cvc7r3145jj" data-title="单元测试" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Kafka" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/12/01/Kafka/" class="article-date">
-  <time class="dt-published" datetime="2024-12-01T07:00:38.000Z" itemprop="datePublished">2024-12-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>►<a class="article-category-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/12/01/Kafka/">Kafka</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><ul>
-<li>yml配置文件<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kafka:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">bitnami/kafka:3.7.0</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">kafka</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/etc/localtime:/etc/localtime</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;9092:9092&quot;</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">    <span class="attr">KAFKA_BROKER_ID:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">KAFKA_CFG_LISTENERS:</span> <span class="string">PLAINTEXT://:9092</span></span><br><span class="line">    <span class="attr">KAFKA_CFG_ADVERTISED_LISTENERS:</span> <span class="string">PLAINTEXT://kafka:9092</span></span><br><span class="line">    <span class="attr">KAFKA_CFG_ZOOKEEPER_CONNECT:</span> <span class="string">zookeeper:2181</span></span><br><span class="line">    <span class="attr">KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">ALLOW_PLAINTEXT_LISTENER:</span> <span class="literal">yes</span></span><br><span class="line">    <span class="attr">KAFKA_MESSAGE_MAX_BYTES:</span> <span class="string">&quot;2000000&quot;</span></span><br><span class="line">    <span class="attr">KAFKA_ENABLE_KRAFT:</span> <span class="literal">no</span></span><br><span class="line">    <span class="attr">JMX_PORT:</span> <span class="number">9999</span></span><br><span class="line">    <span class="attr">TZ:</span> <span class="string">Asia/Shanghai</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">zookeeper</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">my-network</span></span><br></pre></td></tr></table></figure>
-如果是在docker内运行kafka，那么需要在hosts文件内配置一下，前者是你的IP或者云服务器的IP，例如<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.0.24 kafka</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h2><ul>
-<li><p>添加topic，这里使用的是kafka-eagle带的efak<br><img src="/2024/12/01/Kafka/addtopic.png" alt="alt text"></p>
-</li>
-<li><p>基础层：发送消息的模版</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EventPublisher</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> KafkaTemplate&lt;String, String&gt; kafkaTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">publish</span><span class="params">(String topic, BaseEvent.EventMessage&lt;?&gt; eventMessage)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">messageJson</span> <span class="operator">=</span> JSON.toJSONString(eventMessage);</span><br><span class="line">            kafkaTemplate.send(topic, messageJson);</span><br><span class="line">            log.info(<span class="string">&quot;发送MQ消息 topic:&#123;&#125; message:&#123;&#125;&quot;</span>, topic, messageJson);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;发送MQ消息失败 topic:&#123;&#125; message:&#123;&#125;&quot;</span>, topic, JSON.toJSONString(eventMessage), e);</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>领域层，定义事件类型</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserMessageEvent</span> <span class="keyword">extends</span> <span class="title class_">BaseEvent</span>&lt;UserMessageEvent.UserMessage&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;kafka.topic.user&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String topic;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> EventMessage&lt;UserMessage&gt; <span class="title function_">buildEventMessage</span><span class="params">(UserMessage data)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> EventMessage.&lt;UserMessage&gt;builder()</span><br><span class="line">                .id(RandomStringUtils.randomNumeric(<span class="number">11</span>))</span><br><span class="line">                .timestamp(<span class="keyword">new</span> <span class="title class_">Date</span>())</span><br><span class="line">                .data(data)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">topic</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> topic;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 要推送的事件消息，聚合到当前类下。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="meta">@Data</span></span><br><span class="line">    <span class="meta">@Builder</span></span><br><span class="line">    <span class="meta">@AllArgsConstructor</span></span><br><span class="line">    <span class="meta">@NoArgsConstructor</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">UserMessage</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> String userId;</span><br><span class="line">        <span class="keyword">private</span> String userName;</span><br><span class="line">        <span class="keyword">private</span> String userType;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>仓储层，业务使用，在完成数据的操作后，推送消息。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserRepository</span> <span class="keyword">extends</span> <span class="title class_">UserMessageEvent</span> <span class="keyword">implements</span> <span class="title class_">IUserRepository</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> EventPublisher publisher;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doSaveUser</span><span class="params">(UserEntity userEntity)</span> &#123;</span><br><span class="line">        <span class="comment">// 推送消息</span></span><br><span class="line">        publisher.publish(<span class="built_in">this</span>.topic(), <span class="built_in">this</span>.buildEventMessage(UserMessageEvent.UserMessage.builder()</span><br><span class="line">                .userId(userEntity.getUserId())</span><br><span class="line">                .userName(userEntity.getUserName())</span><br><span class="line">                .userType(userEntity.getUserTypeVO().getDesc())</span><br><span class="line">                .build()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>触发层，解耦消息。<br>Topic是需要先定义的，group不需要。Kafka 的消费者组是动态创建的，当消费者以某个 groupId 连接到 Kafka 集群时，Kafka 会自动注册该组。如果你没有在 Kafka 集群中预定义这个消费者组，不会有问题，Kafka 会自动创建。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">KafkaMessageListener</span> &#123;</span><br><span class="line">    <span class="meta">@KafkaListener(topics = &quot;$&#123;kafka.topic.user&#125;&quot;, groupId = &quot;$&#123;kafka.topic.group&#125;&quot;, concurrency = &quot;1&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">topic_test</span><span class="params">(ConsumerRecord&lt;?, ?&gt; record, Acknowledgment ack, <span class="meta">@Header(KafkaHeaders.RECEIVED_TOPIC)</span> String topic)</span> &#123;</span><br><span class="line">        Optional&lt;?&gt; message = Optional.ofNullable(record.value());</span><br><span class="line">        <span class="keyword">if</span> (message.isPresent()) &#123;</span><br><span class="line">            <span class="type">Object</span> <span class="variable">msg</span> <span class="operator">=</span> message.get();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 逻辑处理</span></span><br><span class="line"></span><br><span class="line">                <span class="comment">// 确认消息消费完成，如果抛异常消息会进入重试</span></span><br><span class="line">                ack.acknowledge();</span><br><span class="line">                log.info(<span class="string">&quot;Kafka消费成功! Topic:&quot;</span> + topic + <span class="string">&quot;,Message:&quot;</span> + msg);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">                log.error(<span class="string">&quot;Kafka消费失败！Topic:&quot;</span> + topic + <span class="string">&quot;,Message:&quot;</span> + msg, e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/12/01/Kafka/" data-id="cm45d8nzr0000h4vc2w6w7j4l" data-title="Kafka" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -641,7 +694,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SpringBoot/">SpringBoot</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JAVA/">JAVA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LCR119/">LCR119</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/">LeetCode101</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E5%9B%9E%E6%BA%AF/">回溯</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode101/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/">深度优先搜索</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode%E5%88%B7%E9%A2%98/">LeetCode刷题</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode%E5%88%B7%E9%A2%98/Hot100/">Hot100</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode%E5%88%B7%E9%A2%98/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">滑动窗口</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Makefile/">Makefile</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/REDIS/">REDIS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/SpringBoot/">SpringBoot</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Dubbo/">Dubbo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/Kafka/">Kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/MIT-6824/">MIT-6824</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RabbitMQ/">RabbitMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/RocketMQ/">RocketMQ</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">任务调度</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/CSS/">CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/HTML/">HTML</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/TypeScript/">TypeScript</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/">实习</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/">baosight</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AE%9E%E4%B9%A0/baosight/OPC-UA/">OPC_UA</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E7%BD%91%E7%BB%9C%E7%B3%BB%E7%BB%9F/">网络系统</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL/">SQL</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/">科研</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%A7%91%E7%A0%94/ImageMatchingfromHandcraftedtoDeepFeatures-ASurvey/">ImageMatchingfromHandcraftedtoDeepFeatures:ASurvey</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%88%86%E6%B2%BB/">分治</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%8D%95%E8%B0%83%E6%A0%88/">单调栈</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/">常用算法</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/">课程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BE%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1/">软件设计</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A1%B9%E7%9B%AE/%E6%8F%8F%E8%BF%B0%E4%B8%8E%E9%9D%A2%E8%AF%95/">描述与面试</a></li></ul></li></ul>
     </div>
   </div>
 
@@ -656,7 +709,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/12/">December 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">November 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/02/">February 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/12/">December 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">November 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
     </div>
   </div>
 
@@ -669,23 +722,23 @@
       <ul>
         
           <li>
+            <a href="/2025/02/27/LeetCodeHot100/">LeetCodeHot100</a>
+          </li>
+        
+          <li>
+            <a href="/2025/02/27/LeetCode%E5%88%B7%E9%A2%98-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/">LeetCode刷题-滑动窗口</a>
+          </li>
+        
+          <li>
+            <a href="/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/">Debian包构建</a>
+          </li>
+        
+          <li>
             <a href="/2024/12/18/MySql-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">MySql-分库分表</a>
           </li>
         
           <li>
             <a href="/2024/12/17/TCP-IP/">TCP/IP</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/17/SpringBoot-Web%E5%AE%B9%E5%99%A8%E4%B8%8E%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D/">SpringBoot-Web容器与自动装配</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/17/SpringBoot-%E5%88%9D%E8%A7%88/">SpringBoot-初览</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/16/%E5%8F%AF%E4%BB%A5%E5%8F%82%E5%8A%A0%E7%9A%84%E6%AF%94%E8%B5%9B/">timeLine</a>
           </li>
         
       </ul>
@@ -701,7 +754,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2024 John Doe<br>
+      &copy; 2025 John Doe<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
