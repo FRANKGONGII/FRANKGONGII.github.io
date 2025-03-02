@@ -69,6 +69,102 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Mysql-锁机制" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/03/02/Mysql-%E9%94%81%E6%9C%BA%E5%88%B6/" class="article-date">
+  <time class="dt-published" datetime="2025-03-02T13:38:56.000Z" itemprop="datePublished">2025-03-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>►<a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Mysql/">Mysql</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/03/02/Mysql-%E9%94%81%E6%9C%BA%E5%88%B6/">Mysql-锁机制</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="表锁"><a href="#表锁" class="headerlink" title="表锁"></a>表锁</h2><ul>
+<li>表锁是针对整个表进行加锁，当一个事务对表加锁后，其他事务不能对该表进行任何操作，直到锁被释放。表锁的粒度较粗，适合低并发的场景，或者在对整个表进行操作时使用。MyISAM 存储引擎只支持表锁。</li>
+<li>应用场景：<ul>
+<li>批量操作：当需要对整个表进行批量插入、更新或删除时，表锁可以确保操作的原子性。</li>
+<li>数据迁移：在数据迁移或备份时，表锁可以防止其他事务对表进行修改，确保数据的一致性。</li>
+</ul>
+</li>
+<li>实现方式：在事务中添加LOCK TABLES命令即可显示地添加表锁<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">-- 对 group_buy_activity 表加写锁</span></span><br><span class="line">    LOCK TABLES group_buy_activity WRITE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 对表进行批量插入</span></span><br><span class="line">    <span class="keyword">INSERT</span> <span class="keyword">INTO</span> group_buy_activity (activity_id, source, channel, goods_id, discount_id, group_type, take_limit_count, target, valid_time, status, start_time, end_time, tag_id, tag_scope, create_time, update_time)</span><br><span class="line">    <span class="keyword">VALUES</span></span><br><span class="line">    (<span class="number">100124</span>, <span class="string">&#x27;s02&#x27;</span>, <span class="string">&#x27;c02&#x27;</span>, <span class="string">&#x27;9890002&#x27;</span>, <span class="string">&#x27;25120208&#x27;</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">30</span>, <span class="number">1</span>, <span class="string">&#x27;2024-12-08 10:19:40&#x27;</span>, <span class="string">&#x27;2024-12-08 10:19:40&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;2024-12-08 10:19:40&#x27;</span>, <span class="string">&#x27;2024-12-08 10:19:40&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 解锁表</span></span><br><span class="line">    UNLOCK TABLES;</span><br><span class="line">  ```  </span><br><span class="line"></span><br><span class="line">## 行锁</span><br><span class="line"><span class="operator">+</span> 行锁 是针对表中的某一行数据进行加锁，其他事务可以访问表中的其他行，但不能访问被锁定的行。行锁的粒度更细，适合高并发的场景，能够减少锁冲突，提高并发性能。</span><br><span class="line"><span class="operator">+</span> 应用场景：</span><br><span class="line">  <span class="operator">+</span> 高并发读写：当多个事务需要同时读写表中的不同行时，行锁可以避免锁冲突，提高并发性能。</span><br><span class="line">  <span class="operator">+</span> 事务处理：在需要保证事务的原子性和一致性时，行锁可以确保事务中的操作不会被其他事务干扰。</span><br><span class="line"><span class="operator">+</span> 实现方式：在 InnoDB 存储引擎中，行锁是默认的锁机制。你可以在事务中使用 <span class="keyword">SELECT</span> ... <span class="keyword">FOR</span> <span class="keyword">UPDATE</span> 或 <span class="keyword">SELECT</span> ... LOCK <span class="keyword">IN</span> SHARE MODE 来显式地加行锁</span><br><span class="line">  ```<span class="keyword">sql</span></span><br><span class="line">    <span class="keyword">START</span> TRANSACTION;</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 对 id = 1 的行加写锁</span></span><br><span class="line">    <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> group_buy_activity <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 对 id = 1 的行进行更新</span></span><br><span class="line">    <span class="keyword">UPDATE</span> group_buy_activity <span class="keyword">SET</span> status <span class="operator">=</span> <span class="number">1</span> <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/03/02/Mysql-%E9%94%81%E6%9C%BA%E5%88%B6/" data-id="cm7rs41uo0001lkvc4f83cfji" data-title="Mysql-锁机制" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Maven" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2025/03/02/Maven/" class="article-date">
+  <time class="dt-published" datetime="2025-03-02T13:32:52.000Z" itemprop="datePublished">2025-03-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91/">日常开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2025/03/02/Maven/">Maven</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Maven-Archetype"><a href="#Maven-Archetype" class="headerlink" title="Maven Archetype"></a>Maven Archetype</h2><ul>
+<li>什么是Maven Archetype：Archetype即是项目骨架，在老版本IDEA中创建Maven项目时，每次都会选择⼀个项目骨架，每个骨架对应特定的原型，在项目开发中，总会需要自定义自己项目的骨架，统⼀项目骨架，在创建新的服务时就会减少很多不必要的麻烦。2022.1版本的IDEA将入口收敛至Maven Archetype，使用项目骨架均从该入口创建新项目。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2025/03/02/Maven/" data-id="cm7rs41um0000lkvchrmjclb7" data-title="Maven" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-LeetCodeHot100" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2025/02/27/LeetCodeHot100/" class="article-date">
@@ -158,11 +254,23 @@
 <li>给你一个整数数组 nums 和两个正整数 m 和 k 。请你返回 nums 中长度为 k 的 几乎唯一 子数组的 最大和 ，如果不存在几乎唯一子数组，请你返回 0 。如果 nums 的一个子数组有至少 m 个互不相同的元素，我们称它是几乎唯一子数组。子数组指的是一个数组中一段连续 非空 的元素序列。</li>
 <li>思路：结合了经典定长窗口模式和map操作<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> <span class="title function_">maxSum</span><span class="params">(List&lt;Integer&gt; nums, <span class="type">int</span> m, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">now_sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">ret</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        Map&lt;Integer, Integer&gt; cnt = <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums.size(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &lt; k) &#123;</span><br><span class="line">                now_sum += nums.get(i);</span><br><span class="line">                cnt.put(nums.get(i), cnt.getOrDefault(nums.get(i), <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">outIndex</span> <span class="operator">=</span> i - k;</span><br><span class="line">                <span class="keyword">if</span> (cnt.keySet().size() &gt;= m) &#123;</span><br><span class="line">                    ret = Math.max(ret, now_sum);</span><br><span class="line">                &#125; </span><br><span class="line">                <span class="keyword">if</span> (cnt.get(nums.get(outIndex)) == <span class="number">1</span>) &#123;</span><br><span class="line">                    cnt.remove(nums.get(outIndex));</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    cnt.put(nums.get(outIndex), cnt.get(nums.get(outIndex)) - <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                cnt.put(nums.get(i), cnt.getOrDefault(nums.get(i), <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">                now_sum -= nums.get(outIndex);</span><br><span class="line">                now_sum += nums.get(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (cnt.keySet().size() &gt;= m) &#123;</span><br><span class="line">            ret = Math.max(ret, now_sum);</span><br><span class="line">        &#125; </span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
-<h2 id><a href="#" class="headerlink" title></a></h2><ul>
+<h2 id="2134-最少次数交换所有1"><a href="#2134-最少次数交换所有1" class="headerlink" title="2134 最少次数交换所有1"></a>2134 最少次数交换所有1</h2><ul>
 <li>交换定义为选中一个数组中的两个互不相同的位置并交换二者的值。环形数组是一个数组，可以认为第一个元素和最后一个元素相邻。给你一个二进制环形数组nums ，返回在任意位置将数组中的所有1聚集在一起需要的最少交换次数。</li>
 <li>思路：比较好想的是直接拓展3倍，然后用1个数的滑动窗口。当然也可以不扩大数组：当起始位置从 i−1 增加到 i 时，nums[i−1] 被从区间内移除，而 nums[(i+cnt−1) mod n] 被加入区间内。因此如果前者为 0，就将 0 的个数减少 1；如果后者为 0，就将 0 的个数增加 1。  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">minSwaps</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="comment">// 00001111000111100000</span></span><br><span class="line">        <span class="comment">// 3 + 4 + 5 + 6</span></span><br><span class="line">        <span class="comment">// 先找到包含所有1的最短</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> nums.length;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">one_cnt</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span>[] new_nums = <span class="keyword">new</span> <span class="title class_">int</span>[len * <span class="number">3</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; len; j++) &#123;</span><br><span class="line">                new_nums[len * i + j] = nums[j];</span><br><span class="line">                <span class="keyword">if</span> (nums[j] == <span class="number">1</span>) &#123;</span><br><span class="line">                    one_cnt++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//System.out.println(Arrays.toString(new_nums) + &quot; &quot; + one_cnt/3);</span></span><br><span class="line">        one_cnt /= <span class="number">3</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">now_sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">max_sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; new_nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &lt; one_cnt) &#123;</span><br><span class="line">                now_sum += new_nums[i];</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;   </span><br><span class="line">            <span class="type">int</span> <span class="variable">outIndex</span> <span class="operator">=</span> i - one_cnt;</span><br><span class="line">            max_sum = Math.max(max_sum, now_sum);</span><br><span class="line">            now_sum -= new_nums[outIndex];</span><br><span class="line">            now_sum += new_nums[i];</span><br><span class="line">            max_sum = Math.max(max_sum, now_sum);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//System.out.println(max_sum);</span></span><br><span class="line">        <span class="keyword">if</span> (max_sum == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 1 0 0 1 1 0 1 0 1</span></span><br><span class="line">        <span class="keyword">return</span> one_cnt - max_sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minSwaps</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> cnt = <span class="built_in">accumulate</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>(), <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (cnt == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="type">int</span> cur = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; cnt; ++i) &#123;</span><br><span class="line">            cur += (<span class="number">1</span> - nums[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> ans = cur;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span> (nums[i - <span class="number">1</span>] == <span class="number">0</span>) &#123;</span><br><span class="line">                --cur;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (nums[(i + cnt - <span class="number">1</span>) % n] == <span class="number">0</span>) &#123;</span><br><span class="line">                ++cur;</span><br><span class="line">            &#125;</span><br><span class="line">            ans = <span class="built_in">min</span>(ans, cur);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="1297-子串的最大出现次数"><a href="#1297-子串的最大出现次数" class="headerlink" title="1297 子串的最大出现次数"></a>1297 子串的最大出现次数</h2><ul>
+<li>给你一个字符串 s ，请你返回满足以下条件且出现次数最大的 任意 子串的出现次数：<br>子串中不同字母的数目必须小于等于 maxLetters 。<br>子串的长度必须大于等于 minSize 且小于等于 maxSize 。</li>
+<li>思路：关键是想到只需要考虑minSize的子串：假设字符串 T 在给定的字符串 S 中出现的次数为 k，那么 T 的任意一个子串出现的次数至少也为 k，即 T 的任意一个子串在 S 中出现的次数不会少于 T 本身。这样我们就可以断定，在所有满足条件且出现次数最多的的字符串中，一定有一个的长度恰好为 minSize。我们可以使用反证法证明上述的结论：假设所有满足条件且出现次数最多的字符串中没有长度为 minSize 的，不妨任取其中的一个长度为 l 的字符串，根据假设，有 l &gt; minSize。此时我们再任取该字符串的一个长度为 minSize 的子串，子串出现的次数不会少于原字符串出现的次数，与假设相矛盾。  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxFreq</span><span class="params">(String s, <span class="type">int</span> maxLetters, <span class="type">int</span> minSize, <span class="type">int</span> maxSize)</span> &#123;</span><br><span class="line">        Map&lt;Character, Integer&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">        Map&lt;String, Integer&gt; cntString = <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> s.length();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">tarLen</span> <span class="operator">=</span> minSize; tarLen &lt;= minSize; tarLen++) &#123;</span><br><span class="line">            map = <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (i &lt; tarLen) &#123;</span><br><span class="line">                    map.put(s.charAt(i), map.getOrDefault(s.charAt(i), <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">                    <span class="keyword">if</span> (i == tarLen - <span class="number">1</span>) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (map.keySet().size() &lt;= maxLetters) &#123;</span><br><span class="line">                            cntString.put(s.substring(<span class="number">0</span>, tarLen), <span class="number">1</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="type">char</span> <span class="variable">outChar</span> <span class="operator">=</span> s.charAt(i - tarLen);</span><br><span class="line">                <span class="keyword">if</span> (map.get(outChar) == <span class="number">1</span>) &#123;</span><br><span class="line">                    map.remove(outChar);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    map.put(outChar, map.get(outChar) - <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                map.put(s.charAt(i), map.getOrDefault(s.charAt(i), <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">                <span class="keyword">if</span> (map.keySet().size() &lt;= maxLetters) &#123;</span><br><span class="line">                    cntString.put(s.substring(i - tarLen + <span class="number">1</span>, i + <span class="number">1</span>), </span><br><span class="line">                    cntString.getOrDefault(s.substring(i - tarLen + <span class="number">1</span>, i + <span class="number">1</span>), <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">max</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">ret</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">for</span> (String k : cntString.keySet()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cntString.get(k) &gt; max) &#123;</span><br><span class="line">                max = cntString.get(k);</span><br><span class="line">                ret = k;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="2653-滑动子数组的美丽值"><a href="#2653-滑动子数组的美丽值" class="headerlink" title="2653 滑动子数组的美丽值"></a>2653 滑动子数组的美丽值</h2><ul>
+<li>给你一个长度为 n 的整数数组 nums ，请你求出每个长度为 k 的子数组的 美丽值 。<br>一个子数组的 美丽值 定义为：如果子数组中第 x 小整数 是 负数 ，那么美丽值为第 x 小的数，否则美丽值为 0 。<br>请你返回一个包含 n - k + 1 个整数的数组，依次 表示数组中从第一个下标开始，每个长度为 k 的子数组的 美丽值 。<br>子数组指的是数组中一段连续 非空 的元素序列。</li>
+<li>思路：一个关键点是数有范围，在-50-50，也就是说在子数组内查看数组内元素的出现情况是常数级别时间<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span>[] getSubarrayBeauty(<span class="type">int</span>[] nums, <span class="type">int</span> k, <span class="type">int</span> x) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> <span class="variable">BIAS</span> <span class="operator">=</span> <span class="number">50</span>;</span><br><span class="line">        <span class="type">int</span>[] cnt = <span class="keyword">new</span> <span class="title class_">int</span>[BIAS * <span class="number">2</span> + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; k - <span class="number">1</span>; i++) &#123; <span class="comment">// 先往窗口内添加 k-1 个数</span></span><br><span class="line">            cnt[nums[i] + BIAS]++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> nums.length;</span><br><span class="line">        <span class="type">int</span>[] ans = <span class="keyword">new</span> <span class="title class_">int</span>[n - k + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> k - <span class="number">1</span>; i &lt; n; i++) &#123;</span><br><span class="line">            cnt[nums[i] + BIAS]++; <span class="comment">// 进入窗口（保证窗口有恰好 k 个数）</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> x;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; BIAS; j++) &#123; <span class="comment">// 暴力枚举负数范围 [-50,-1]</span></span><br><span class="line">                left -= cnt[j];</span><br><span class="line">                <span class="keyword">if</span> (left &lt;= <span class="number">0</span>) &#123; <span class="comment">// 找到美丽值</span></span><br><span class="line">                    ans[i - k + <span class="number">1</span>] = j - BIAS;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            cnt[nums[i - k + <span class="number">1</span>] + BIAS]--; <span class="comment">// 离开窗口</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="3439-重新安排会议得到最多时间"><a href="#3439-重新安排会议得到最多时间" class="headerlink" title="3439 重新安排会议得到最多时间"></a>3439 重新安排会议得到最多时间</h2><ul>
+<li>给你一个整数 eventTime 表示一个活动的总时长，这个活动开始于 t &#x3D; 0 ，结束于 t &#x3D; eventTime 。<br>同时给你两个长度为 n 的整数数组 startTime 和 endTime 。它们表示这次活动中 n 个时间 没有重叠 的会议，其中第 i 个会议的时间为 [startTime[i], endTime[i]] 。<br>你可以重新安排 至多 k 个会议，安排的规则是将会议时间平移，且保持原来的 会议时长 ，你的目的是移动会议后 最大化 相邻两个会议之间的 最长 连续空余时间。<br>移动前后所有会议之间的 相对 顺序需要保持不变，而且会议时间也需要保持互不重叠。<br>请你返回重新安排会议以后，可以得到的 最大 空余时间。<br>注意，会议 不能 安排到整个活动的时间以外。</li>
+<li>思路：详见注释<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxFreeTime</span><span class="params">(<span class="type">int</span> eventTime, <span class="type">int</span> k, <span class="type">int</span>[] startTime, <span class="type">int</span>[] endTime)</span> &#123;</span><br><span class="line">        <span class="comment">// 在移动k个会议的情况下获取最长的空闲时间</span></span><br><span class="line">        <span class="comment">// 会议之间不会重叠</span></span><br><span class="line">        <span class="comment">// 移动会议本质上是把一个会议左右的空闲时间合并，可以理解为把右侧加到了左侧</span></span><br><span class="line">        <span class="comment">// 那么显然应该尝试连续移动，连续移动k个</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">nowTime</span> <span class="operator">=</span> startTime[<span class="number">0</span>] - <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">maxTime</span> <span class="operator">=</span> startTime[<span class="number">0</span>] - <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">meetNum</span> <span class="operator">=</span> startTime.length;</span><br><span class="line">        <span class="comment">// 头尾加上两个节点</span></span><br><span class="line">        <span class="type">int</span>[] newStart = <span class="keyword">new</span> <span class="title class_">int</span>[meetNum + <span class="number">2</span>];</span><br><span class="line">        <span class="type">int</span>[] newEnd = <span class="keyword">new</span> <span class="title class_">int</span>[meetNum + <span class="number">2</span>];</span><br><span class="line">        newStart[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        newEnd[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        newStart[meetNum + <span class="number">1</span>] = eventTime;</span><br><span class="line">        newEnd[meetNum + <span class="number">1</span>] = eventTime;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= meetNum; i++) &#123;</span><br><span class="line">            newStart[i] = startTime[i - <span class="number">1</span>];</span><br><span class="line">            newEnd[i] = endTime[i - <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 先移动k-1个, 也有可能不需要移动那么多</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= k; i++) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">addTime</span> <span class="operator">=</span> i &lt;= meetNum ? newStart[i + <span class="number">1</span>] - newEnd[i] : <span class="number">0</span>;</span><br><span class="line">            nowTime += addTime;</span><br><span class="line">        &#125;</span><br><span class="line">        maxTime = Math.max(maxTime, nowTime);</span><br><span class="line">        <span class="comment">// 开始满足窗口</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> k + <span class="number">1</span>; i &lt;= meetNum ; i++) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">addTime</span> <span class="operator">=</span> newStart[i + <span class="number">1</span>] - newEnd[i];</span><br><span class="line">            <span class="type">int</span> <span class="variable">outTime</span> <span class="operator">=</span> newStart[i - k] - newEnd[i - k - <span class="number">1</span>];</span><br><span class="line">            nowTime += addTime;</span><br><span class="line">            nowTime -= outTime;</span><br><span class="line">            maxTime = Math.max(maxTime, nowTime);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxTime;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
 
       
@@ -591,94 +699,6 @@
 
 
   
-    <article id="post-开源社区" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/12/12/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/" class="article-date">
-  <time class="dt-published" datetime="2024-12-12T08:50:54.000Z" itemprop="datePublished">2024-12-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/12/12/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/">开源社区</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h2><ul>
-<li>介绍<br>  <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/24487169">https://zhuanlan.zhihu.com/p/24487169</a><br>  <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/93334196">https://zhuanlan.zhihu.com/p/93334196</a></li>
-<li>怎么联系社区<br>  <a target="_blank" rel="noopener" href="https://zookeeper.apache.org/lists.html">https://zookeeper.apache.org/lists.html</a><br>  我们应该订阅社区的邮箱，apache社区通过邮件联系，而不是类似github上面的issue</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/12/12/%E5%BC%80%E6%BA%90%E7%A4%BE%E5%8C%BA/" data-id="cm4miovab0000povc6zhg5bqb" data-title="开源社区" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-AI小说" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/12/07/AI%E5%B0%8F%E8%AF%B4/" class="article-date">
-  <time class="dt-published" datetime="2024-12-07T13:14:18.000Z" itemprop="datePublished">2024-12-07</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%A1%B9%E7%9B%AE/">项目</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/12/07/AI%E5%B0%8F%E8%AF%B4/">AI小说</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/12/07/AI%E5%B0%8F%E8%AF%B4/" data-id="cm4earrxv0000bkvc9tlkdwpy" data-title="AI小说" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -709,7 +729,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/02/">February 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/12/">December 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">November 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">March 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/02/">February 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/12/">December 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">November 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
     </div>
   </div>
 
@@ -722,6 +742,14 @@
       <ul>
         
           <li>
+            <a href="/2025/03/02/Mysql-%E9%94%81%E6%9C%BA%E5%88%B6/">Mysql-锁机制</a>
+          </li>
+        
+          <li>
+            <a href="/2025/03/02/Maven/">Maven</a>
+          </li>
+        
+          <li>
             <a href="/2025/02/27/LeetCodeHot100/">LeetCodeHot100</a>
           </li>
         
@@ -731,14 +759,6 @@
         
           <li>
             <a href="/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/">Debian包构建</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/18/MySql-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">MySql-分库分表</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/17/TCP-IP/">TCP/IP</a>
           </li>
         
       </ul>

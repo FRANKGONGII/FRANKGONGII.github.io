@@ -69,6 +69,313 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-数据库基础" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time class="dt-published" datetime="2024-11-14T16:37:44.000Z" itemprop="datePublished">2024-11-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/">数据库基础</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h2><h3 id="开发规范"><a href="#开发规范" class="headerlink" title="开发规范"></a>开发规范</h3><ul>
+<li>建表规范<ol>
+<li>库名、表名、字段名，使用小写和下划线 _ 分割</li>
+<li>库名、表名、字段名，不超过12个字符。默认支持64个字符。</li>
+<li>库名、表名、字段名，见名知意，建议使用名词而不是动词。</li>
+<li>使用 InnoDB 存储引擎。支持；事务、锁、高并发 性能好。</li>
+<li>推荐使用 utf8mb4 可以存emoji</li>
+<li>单表字段数，建议不超过40个</li>
+</ol>
+</li>
+<li>字段相关规范<ol>
+<li>整型定义中不显示设置长度，如使用 INT，而不是INT(4)</li>
+<li>存储精度浮点数，使用 DECIMAL 替代 FLOAT、DOUBLE</li>
+<li>所有字段，都要有 Comment 描述</li>
+<li>所有字段应定义为 NOT NULL</li>
+<li>超过2038年，用DATETIME存储</li>
+<li>短数据类型 0~80 选用 TINYINT 存储</li>
+<li>UUID 有全局唯一统一字段属性，适合做同步ES使用。</li>
+<li>IPV4，用无符号 INT 存储</li>
+<li>IPV6，用VARBINARY存储</li>
+<li>JSON MySql 8.x 新增特性</li>
+<li>update_time 设置 on update 更新属性</li>
+</ol>
+</li>
+<li>索引相关规范<ol>
+<li>要求有自增ID作为主键，不要使用随机性较强的 order_id 作为主键，会导致innodb内部page分裂和大量随机I&#x2F;O，性能下降。</li>
+<li>单表索引建议控制在5个以内，单索引字段数不超过5个。注意：已有idx(a, b)索引，又有idx(a)索引，可以把idx(a)删了，浪费空间，降低更新、写入性能。* 单个索引中，每个索引记录的长度不能超过64KB</li>
+<li>利用覆盖索引来进行查询操作，避免回表。另外建组合索引的时候，区分度最高的在最左边。</li>
+<li>select(count(distinct(字段)))&#x2F;count(id) &#x3D; 1 的区分度，更适合建索引。在一些低区分度的字段，例如type、status上建立独立索引几乎没意义，降低更新、写入性能。</li>
+<li>防止因字段不同造成的隐式转换，导致索引失效。</li>
+<li>更新频繁的字段，不要建索引。</li>
+</ol>
+</li>
+</ul>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p><img src="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/image.png" alt="alt text"></p>
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p><a target="_blank" rel="noopener" href="https://cloud.baidu.com/article/2873772">https://cloud.baidu.com/article/2873772</a></p>
+<ul>
+<li>数据结构：<ul>
+<li>B+树索引：<ul>
+<li>一种多路搜索树</li>
+<li>所有关键字都出现在叶子结点的链表中（稠密索引），且链表中的关键字恰好是有序的；非叶子结点相当于是叶子结点的索引（稀疏索引），叶子结点相当于是存储（关键字）数据的数据层；  </li>
+<li>好处<ul>
+<li>支持的查询方式多：全键值，键值范围，键值前缀</li>
+<li>支持顺序访问：B+树的叶子节点之间通过链表连接，支持顺序遍历操作，适合于按照顺序访问数据的场景。</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>查询速度较慢：相对于Hash索引，B+树索引的查询速度较慢，平均时间复杂度为O(logN)。</li>
+<li>不适合固定长度键值：B+树索引对于变长键值的存储需要使用额外的空间，不如Hash索引对于固定长度键值的存储节省空间。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>为什么用B+树而不是B树：<ul>
+<li>叶节点之间有指针且有序，能支持更多的查询方法</li>
+<li>内部节点没数据，数据存放更紧密，有更好的空间局部性</li>
+</ul>
+</li>
+<li>HASH索引<ul>
+<li>对每个索引值进行哈希运算，将结果作为键值存储在哈希表中。在执行查询操作时，数据库系统通过相同的哈希运算找到相应的键值，并返回对应的行数据。</li>
+<li>好处<ul>
+<li>能够快速直达目标数据位置，具有极高的查询速度，平均时间复杂度为O(1)。</li>
+<li>高度紧凑：哈希索引占用空间较小，适合存储大量数据。</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>不支持部分匹配查询：哈希索引只能处理精确匹配查询，无法进行范围查询和模糊查询等操作。</li>
+<li>不支持有序查询：由于哈希索引是基于键值存储的，无法按照数据的顺序进行检索。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>对于需要频繁进行范围查询、排序操作和高可靠性的场景，建议使用B+树索引。例如，在电商平台的商品筛选、社交网络的消息排序等场景中，使用B+树索引可以提供更好的查询性能和稳定性。<br>对于需要快速定位少量精确数据、数据量较大且分布均匀的场景，可以考虑使用哈希索引。例如，在日志分析、监控系统等场景中，可以使用哈希索引来快速定位关键信息。同时，由于哈希索引在MEMORY存储引擎中实现，对于临时表等一次性使用的场景也较为适用。</li>
+</ul>
+</li>
+<li>使用<ul>
+<li><img src="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/image-1.png" alt="alt text"></li>
+<li>频繁作为查询条件的字段应该创建索引</li>
+</ul>
+</li>
+<li>啥时候不用索引？<ul>
+<li>大量重复数据</li>
+<li>表大小</li>
+<li>更新频繁</li>
+</ul>
+</li>
+</ul>
+<h3 id="引擎–innoDB"><a href="#引擎–innoDB" class="headerlink" title="引擎–innoDB"></a>引擎–innoDB</h3><ul>
+<li>InnoDB 是 MySQL 上第一个提供外键约束的数据存储引擎，除了提供事务处理外，InnoDB 还支持行锁，提供和 Oracle 一样的一致性的不加锁读取，能增加并发读的用户数量并提高性能，不会增加锁的数量。InnoDB 的设计目标是处理大容量数据时最大化性能，它的 CPU 利用率是其他所有基于磁盘的关系数据库引擎中最有效率的。可以支持事务</li>
+</ul>
+<h3 id="事务处理"><a href="#事务处理" class="headerlink" title="事务处理"></a>事务处理</h3><ul>
+<li>数据库事务指的是一组数据操作，事务内的操作要么就是全部成功，要么就是全部失败，什么都不做，其实不是没做，是可能做了一部分但是只要有一步失败，就要回滚所有操作，有点一不做二不休的意思。</li>
+<li>特性：<ul>
+<li>原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持久性（Durability）四个特性，简称 ACID</li>
+</ul>
+</li>
+<li>概念：<ul>
+<li>脏读指的是读到了其他事务未提交的数据，未提交意味着这些数据可能会回滚，也就是可能最终不会存到数据库中，也就是不存在的数据。读到了并一定最终存在的数据，这就是脏读。</li>
+<li>幻读是针对数据插入（INSERT）操作来说的。假设事务A对某些行的内容作了更改，但是还未提交，此时事务B插入了与事务A更改前的记录相同的记录行，并且在事务A提交之前先提交了，而这时，在事务A中查询，会发现好像刚刚的更改对于某些数据未起作用，但其实是事务B刚插入进来的，让用户感觉很魔幻，感觉出现了幻觉，这就叫幻读。 </li>
+<li>不可重复读指的是在同一事务内，不同的时刻读到的同一批数据可能是不一样的，可能会受到其他事务的影响，比如其他事务改了这批数据并提交了。通常针对数据更新（UPDATE）操作。</li>
+<li>可重复读指的是在一个事务内，最开始读到的数据和事务结束前的任意时刻读到的同一批数据都是一致的。通常针对数据更新（UPDATE）操作。</li>
+</ul>
+</li>
+<li>SQL 标准定义了四种隔离级别，MySQL 全都支持。这四种隔离级别分别是：<img src="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/image-2.png" alt="alt text"><ol>
+<li>读未提交（READ UNCOMMITTED）</li>
+<li>读提交 （READ COMMITTED）</li>
+<li>可重复读 （REPEATABLE READ）</li>
+<li>串行化 （SERIALIZABLE）</li>
+</ol>
+<ul>
+<li>实现隔离：<ul>
+<li>我们在数据库表中看到的一行记录可能实际上有多个版本，每个版本的记录除了有数据本身外，还要有一个表示版本的字段，记为 row trx_id，而这个字段就是使其产生的事务的 id，事务 ID 记为 transaction id，它在事务开始的时候向事务系统申请，按时间先后顺序递增。可重复读是在事务开始的时候生成一个当前事务全局性的快照，而读提交则是每次执行语句的时候都重新生成一次快照。<img src="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/image-3.png" alt="alt text"></li>
+<li>当前事务内的更新，可以读到；版本未提交，不能读到；版本已提交，但是却在快照创建后提交的，不能读到；版本已提交，且是在快照创建前提交的，可以读到；</li>
+</ul>
+</li>
+<li>并发写：加锁</li>
+<li>幻读：间隙锁<ul>
+<li>间隙锁（Gap Locking）是MySQL中一种用于解决幻读问题的机制。当一个事务执行了一个范围查询操作时，MySQL会对查询范围内的间隙（两个值之间的空白区域）进行锁定，从而防止其他事务在这个范围内插入新的数据。</li>
+<li>为了使用间隙锁，你需要在事务中使用SELECT … FOR UPDATE语句，它会在读取数据的同时对查询的范围内的间隙进行锁定。这样一来，其他事务就无法在这个范围内插入新的数据，从而避免了幻读的发生。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="慢查询优化"><a href="#慢查询优化" class="headerlink" title="慢查询优化"></a>慢查询优化</h3><ul>
+<li>设备性能</li>
+<li>查询字段是不是太多了，查出来了多余数据</li>
+<li>数据库内数据是不是太多了，需要分表分库</li>
+<li>是不是走了索引，查询语句</li>
+<li>是不是最优的索引</li>
+</ul>
+<h3 id="锁的分类"><a href="#锁的分类" class="headerlink" title="锁的分类"></a>锁的分类</h3><ul>
+<li>粒度分类：<ul>
+<li>行锁：锁一行</li>
+<li>表锁：锁表</li>
+<li>间隙锁：区间</li>
+</ul>
+</li>
+<li>读写：<ul>
+<li>共享锁：可以读不可以写</li>
+<li>排他锁：不读不写</li>
+</ul>
+</li>
+<li>乐观锁：<ul>
+<li>乐观锁假设数据一般情况下不会造成冲突，所以在数据进行提交更新的时候，才会正式对数据的冲突与否进行检测，如果发现冲突了，则返回给用户错误的信息，让用户决定如何去做。</li>
+<li>一般使用数据版本（Version）记录机制实现，在数据库表中增加一个数字类型的“version”字段来实现。当读取数据时，将version字段的值一同读出，数据每更新一次，对此version值加一。如果发现版本不对，那么就不可以更新</li>
+<li>适合读多写少</li>
+</ul>
+</li>
+<li>悲观锁：<ul>
+<li>，每次去拿数据的时候都认为别人会修改，对数据被外界（包括本系统当前的其他事务，以及来自外部系统的事务处理）修改持保守态度，因此，在整个数据处理过程中，将数据处于锁定状态。</li>
+<li>在MySQL中使用悲观锁，必须关闭MySQL的自动提交，set autocommit&#x3D;0。共享锁和排它锁是悲观锁的不同的实现，它俩都属于悲观锁的范畴。</li>
+<li><img src="/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/image-4.png" alt="alt text"></li>
+<li>适用于并发量不大、写入操作比较频繁、数据一致性比较高的场景。</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/11/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/" data-id="cm3hjg22v0000x4vcaws0echv" data-title="数据库基础" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-SpringBoot-事务" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/11/13/SpringBoot-%E4%BA%8B%E5%8A%A1/" class="article-date">
+  <time class="dt-published" datetime="2024-11-13T01:26:57.000Z" itemprop="datePublished">2024-11-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SpringBoot/">SpringBoot</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/11/13/SpringBoot-%E4%BA%8B%E5%8A%A1/">SpringBoot-事务</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Spring事务"><a href="#Spring事务" class="headerlink" title="Spring事务"></a>Spring事务</h2><ul>
+<li>ACID：原子性，一致性，隔离性，持久性</li>
+<li>Spring事务指的是，在数据库支持事务的基础上，Spring可以通过简单的配置来控制事务的各个方面，最终达到我们业务上需要的效果。如果你把Spring去掉，手工使用jdbc去对接数据库，也能达到相同的效果，但是就需要大量额外的控制代码了。<br>在 Spring 中将一个方法声明为事务性（Transactional），意味着这个方法中的操作会被纳入一个数据库事（Transaction）中，并根据事务的定义规则来管理。事务在操作完成后会提交（commit），若发生异常则回滚（rollback），确保数据一致性和完整性。</li>
+<li>事务处理可以详见“数据库基础”</li>
+</ul>
+<h2 id="Transactional注解-–-注解事务"><a href="#Transactional注解-–-注解事务" class="headerlink" title="@Transactional注解 – 注解事务"></a>@Transactional注解 – 注解事务</h2><ul>
+<li>如果使用springboot，由于其自动配置机制，引用了starter-jdbc等包的情况下，会自动向容器中添加事务管理器，所以允许不在主类上标注 @EnableTransactionManagement</li>
+<li>使用场景：<ol>
+<li>用在方法上此方法具有事务属性，只有public修饰的方法才生效。其余不生效也不抛出异常</li>
+<li>当作用于类上时，该类的所有 public 方法将都具有该类型的事务属性</li>
+</ol>
+</li>
+<li>属性：<ol>
+<li>value 和 transactionManager：可以指定事务管理器</li>
+<li>propagation：事务的传播行为。</li>
+</ol>
+<ul>
+<li>Propagation.REQUIRED：<strong>默认的传播行为</strong>，如果当前存在事务，则加入该事务，否则新建一个事务；</li>
+<li>Propagation.SUPPORTS：如果当前存在事务，则加入该事务，否则以非事务的方式执行；</li>
+<li>Propagation.MANDATORY：如果当前存在事务，则加入该事务，否则抛出异常；</li>
+<li>Propagation.REQUIRES_NEW：无论当前是否存在事务，都会新建一个事务，如果当前存在事务，则将当前事务挂起；</li>
+<li>Propagation.NOT_SUPPORTED：以非事务的方式执行操作，如果当前存在事务，则将当前事务挂起；</li>
+<li>Propagation.NEVER：以非事务的方式执行操作，如果当前存在事务，则抛出异常；</li>
+<li>Propagation.NESTED：如果当前存在事务，则在该事务的嵌套事务中执行，否则新建一个事务。嵌套事务是独立于外部事务的，但是如果外部事务回滚，则嵌套事务也会回滚。</li>
+</ul>
+<ol start="3">
+<li>isolation：事务的隔离级别。</li>
+</ol>
+<ul>
+<li>DEFAULT：使用底层数据库的默认隔离级别。MySQL 默认为 REPEATABLE READ，Oracle 默认为 READ COMMITTED </li>
+<li>READ_UNCOMMITTED：最低的隔离级别，允许读取未提交的数据变更，可能会导致脏读、不可重复读和幻读问题。</li>
+<li>READ_COMMITTED：允许读取已经提交的数据变更，可以避免脏读问题，但可能会出现不可重复读和幻读问题。</li>
+<li>REPEATABLE_READ：保证同一事务中多次读取同一数据时，结果始终一致，可以避免脏读和不可重复读问题，但可能会出现幻读问题。</li>
+<li>SERIALIZABLE：最高的隔离级别，可以避免脏读、不可重复读和幻读问题，但会影响并发性能。</li>
+</ul>
+<ol start="4">
+<li>timeout：事务的超时时间，默认为-1</li>
+</ol>
+<ul>
+<li>注意超时时间只适用于REQUIRED 和 REQUIRES_NEW，其他传播规则只能设置超时时间为-1（永不超时），否则会抛出异常</li>
+<li>超时原理：事务开启时，会读取当前时间 和 timeout 的值，并将其相加得到事务“过期时间”，而在每次执行sql前则会获取到statement，此时才会判断当前时间是否已超期，超期才会抛出超时异常。也就是说，通俗的理解，只有在每次执行SQL前，才会判断下是否已超过事务限时。<strong>也就是判断最后一个SQL执行前是否超时</strong></li>
+</ul>
+<ol start="5">
+<li>readOnly：是否只读：</li>
+</ol>
+<ul>
+<li>这里的只读是对开发者的提示，并不意味着你标注只读就真的不能写更新语句。</li>
+</ul>
+<ol start="6">
+<li>rollBackFor、noRollBackFor：用于指定能&#x2F;不能够触发事务回滚的异常类型，可以指定多个异常类型。</li>
+</ol>
+<ul>
+<li>显式地指定什么异常需要回滚，什么异常不需要回滚。比方说我们有一种邮件通知异常，代表通知邮件发送失败，但这种异常无伤大雅，只是非核心功能，失败了不需要导致整个业务失败。此时我们可以指定这种异常不需要回滚事务。</li>
+</ul>
+</li>
+</ul>
+<h2 id="事务模版-–-编程事务"><a href="#事务模版-–-编程事务" class="headerlink" title="事务模版 – 编程事务"></a>事务模版 – 编程事务</h2><ul>
+<li>事务模版<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TransactionManagerAutoConfiguration</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> PlatformTransactionManager <span class="title function_">transactionManager</span><span class="params">(DataSource dataSource)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DataSourceTransactionManager</span>(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> TransactionTemplate <span class="title function_">transactionTemplate</span><span class="params">(PlatformTransactionManager transactionManager)</span> &#123;</span><br><span class="line">        <span class="type">TransactionTemplate</span> <span class="variable">transactionTemplate</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TransactionTemplate</span>(transactionManager);</span><br><span class="line">        transactionTemplate.setPropagationBehaviorName(<span class="string">&quot;PROPAGATION_REQUIRED&quot;</span>);</span><br><span class="line">        transactionTemplate.setTimeout(<span class="number">350</span>);</span><br><span class="line">        transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_DEFAULT);</span><br><span class="line">        <span class="keyword">return</span> transactionTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>使用事务模版<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> TransactionTemplate transactionTemplate;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insertEmployeeInfo</span><span class="params">(EmployeeInfoEntity employeeInfoEntity)</span> &#123;</span><br><span class="line">    transactionTemplate.execute(<span class="keyword">new</span> <span class="title class_">TransactionCallbackWithoutResult</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doInTransactionWithoutResult</span><span class="params">(TransactionStatus status)</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="type">EmployeePO</span> <span class="variable">employeePO</span> <span class="operator">=</span> EmployeePO.builder()</span><br><span class="line">                        .employeeNumber(employeeInfoEntity.getEmployeeNumber())</span><br><span class="line">                        .employeeName(employeeInfoEntity.getEmployeeName())</span><br><span class="line">                        .employeeLevel(employeeInfoEntity.getEmployeeLevel())</span><br><span class="line">                        .employeeTitle(employeeInfoEntity.getEmployeeTitle())</span><br><span class="line">                        .build();</span><br><span class="line">                employeeDAO.insert(employeePO);</span><br><span class="line">                <span class="type">EmployeeSalaryPO</span> <span class="variable">employeeSalaryPO</span> <span class="operator">=</span> EmployeeSalaryPO.builder()</span><br><span class="line">                        .employeeNumber(employeeInfoEntity.getEmployeeNumber())</span><br><span class="line">                        .salaryTotalAmount(employeeInfoEntity.getSalaryTotalAmount())</span><br><span class="line">                        .salaryMeritAmount(employeeInfoEntity.getSalaryMeritAmount())</span><br><span class="line">                        .salaryBaseAmount(employeeInfoEntity.getSalaryBaseAmount())</span><br><span class="line">                        .build();</span><br><span class="line">                employeeSalaryDAO.insert(employeeSalaryPO);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                status.setRollbackOnly();</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a>注意事项：</h2><ul>
+<li>将@Transactional放置在类级的声明中要慎重。放在类声明，会使得所有public方法都有事务。故@Transactional应该放在方法级别，不需要使用事务的方法，就不要放置事务，比如查询方法。否则对性能是有影响的。</li>
+<li>类外调用方法必须保证被调用的方法有@Transactional注解，也就是这个注解不是传递的，如果A方法调用B，B有注解而A没有，那么B的事务不会起作用</li>
+<li>spring的事务在抛异常的时候会回滚，如果是catch捕获了，事务无效。可以在catch里面加上throw new RuntimeException()</li>
+<li>由于Spring事务是通过AOP实现的，所以在方法执行之前会开启事务，之后会提交事务逻辑。而synchronized代码块执行是在事务之内执行的，可以推断在synchronized代码块执行完时，事务还未提交，其他线程进入synchronized代码块后，读取的数据不是最新的。<strong>所以必须使synchronized锁的范围大于事务控制的范围，把synchronized加到Controller层或者大于事务边界的调用层</strong></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/11/13/SpringBoot-%E4%BA%8B%E5%8A%A1/" data-id="cm4s8hpv50001acvch1jp5pds" data-title="SpringBoot-事务" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-单调栈" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/11/12/%E5%8D%95%E8%B0%83%E6%A0%88/" class="article-date">
@@ -863,169 +1170,6 @@
 
 
   
-    <article id="post-JVM" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/28/JVM/" class="article-date">
-  <time class="dt-published" datetime="2024-10-28T15:39:22.000Z" itemprop="datePublished">2024-10-28</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/JAVA/">JAVA</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/28/JVM/">JVM</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="JAVA与C-之间有一堵由内存动态分配和GC所围成的高墙，墙外面的人想进去，墙里面的人想出来"><a href="#JAVA与C-之间有一堵由内存动态分配和GC所围成的高墙，墙外面的人想进去，墙里面的人想出来" class="headerlink" title="JAVA与C++之间有一堵由内存动态分配和GC所围成的高墙，墙外面的人想进去，墙里面的人想出来"></a>JAVA与C++之间有一堵由内存动态分配和GC所围成的高墙，墙外面的人想进去，墙里面的人想出来</h1><h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><ul>
-<li>JAVA虚拟机管理的内存包括以下几个运行时数据区域：<ol>
-<li>方法区</li>
-<li>堆</li>
-<li>虚拟机栈</li>
-<li>程序计数器：当前线程所执行的字节码的行号指示器，是程序控制流的指示器。</li>
-<li>本地方法栈</li>
-</ol>
-</li>
-<li>程序计数器：由于JAVA虚拟机的多线程是通过线程轮流切换，分配处理器时间实现的，在任何一个时刻只会有一条线程中的指令被执行，因此每个线程要有一个独立的程序计数器（在线程私有的内存区域中存储）。如果执行的是Native方法（在Java中，native方法是一种特殊的方法，它允许Java调用非Java代码，通常是C或C++语言编写的本地方法。这些方法在Java类中声明，但不在Java代码中实现，而是在本地库中实现，并通过Java Native Interface（JNI）与Java代码交互。），那么计数器值应该为空，此内存区域没有规定OutOfMeomoryError错误、</li>
-<li>Java虚拟机栈：同样是线程私有的，描述的是Java方法执行的线程内存模型：每个方法被执行时，Java虚拟机栈会同步创建一个栈帧用于存储局部变量表（基础数据类型，对象引用），操作数栈，动态连接，方法出口等信息。数据类型在局部变量表中的存储以局部变量槽（Slot）表示。</li>
-<li>本地方法栈：和Java虚拟机栈类似，但是是为Native方法服务的，前者是为Java方法服务的。</li>
-<li>Java堆：<strong>所有线程共享</strong>。由垃圾收集器（几乎都基于分代设计，需要新老代收集器搭配工作）管理。从内存分配的角度上，可以分配出线程私有的分配缓冲区（TLAB）。Java堆可以在物理上不连续的内存空间中，但是逻辑上应该被看做连续的。</li>
-<li>方法区：和堆一样是<strong>线程共享的</strong>，存储已经被加载的类型信息，常量，静态变量，即时编译器编译后的代码缓存等数据（JDK8之后在本地内存中实现–元空间）。和堆一样需要物理连续内存，大小可以固定或拓展，甚至可以不用GC，但是并非是方法区内的数据就是永久存在的了，这部分区域的内存回收主要是针对常量池的回收和类型的卸载。</li>
-<li>运行时常量池：它是方法区中的一部分，class中的常量池表在类被加载后存放到运行时常量池中，内容就是各种字面量和符号引用，以及由符号引用翻译的直接引用。其另一个特征是动态性，运行期间的常量也可以放入常量池，例如String的intern方法</li>
-<li>直接内存：并不是虚拟机运行时数据区的一部分，但是也是被频繁使用的，所以可以加入讨论。它是NIO（基于Channel与缓存区的IO方式），使用Native函数库直接分配堆外内存，通过一个存储在Java堆内的对象作为内存的引用进行操作，避免在Java堆和Native堆间的数据复制</li>
-</ul>
-<h2 id="对象创建、分配、布局与访问"><a href="#对象创建、分配、布局与访问" class="headerlink" title="对象创建、分配、布局与访问"></a>对象创建、分配、布局与访问</h2><ul>
-<li>对象创建（通过new创建普通对象）<ol>
-<li>当Java虚拟机遇到一个new指令的时候，先检查这个指令的参数能不能定位到一个类的符号引用，并检查这个符号引用对应的类是不是已经被加载、解析和初始化过。如没有，要执行相应的过程</li>
-<li>类加载检查通过后，就开始分配对应大小的内存，具体大小数值在检查之后就能完全确认，实际上等同于从堆上划分确定大小的内存块。</li>
-</ol>
-<ul>
-<li>内存的划分方法有两种：<ol>
-<li>指针碰撞：如果内存是规整的，也就是一边是使用过的，一边是没有使用的，中间是一个分界指针，那么分方法就只是移动这个指针一段指定距离</li>
-<li>空闲列表：内存不是规整的，那么就是维护一个记录空闲的内存块在哪里的列表</li>
-</ol>
-</li>
-<li>内存是否规整，取决于GC是不是带有空间压缩整理能力，如果有，那么使用的方法就会倾向于指针碰撞，反之就是空闲列表</li>
-<li>对象创建的并发问题：可能出现多个线程同时请求分配内存：通过CAS操作保证原子性，或者先在本地线程分配缓存中分配（TLAB）</li>
-<li>分配后，内存空间要先初始化为0，保证对象实例字段不需要初始值</li>
-</ul>
-<ol start="3">
-<li>对对象进行必要的设置，如是那个类的实例、如何找元信息，哈希码、GC分代年龄信息等，存放在<strong>对象头</strong>中</li>
-<li>至此从虚拟机角度对象创建已经完成，下面是Java程序视角的创建开始，也就是执行构造函数(Class文件中的init方法)</li>
-</ol>
-</li>
-<li>对象内存布局<ul>
-<li>划分为三个部分：对象头（Header），实例数据，和padding</li>
-<li>对象头包含两类数据：<ol>
-<li>对象自身的运行数据：也被称为mark word<br>  <img src="/2024/10/28/JVM/mark-word.png"></li>
-<li>类型指针，即对象指向他类型元数据的指针，通过这个指针来确定该对象是那个类的实例。</li>
-<li>如果是数组对象，还有数组长度的数据</li>
-</ol>
-</li>
-<li>实例数据部分是有效信息，也就是定义的字段内容，存储顺序收到分配策略和源码顺序影响，默认分配策略上相同长度的字段会被一起存放</li>
-<li>对齐填充：HotSpot默认长度应该是8的倍数</li>
-</ul>
-</li>
-<li>对象访问定位<ul>
-<li></li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/28/JVM/" data-id="cm2t8girt0000gcvcfgoihoiy" data-title="JVM" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-JAVA基础特性" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/10/26/JAVA%E5%9F%BA%E7%A1%80%E7%89%B9%E6%80%A7/" class="article-date">
-  <time class="dt-published" datetime="2024-10-26T10:16:50.000Z" itemprop="datePublished">2024-10-26</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/JAVA/">JAVA</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/10/26/JAVA%E5%9F%BA%E7%A1%80%E7%89%B9%E6%80%A7/">JAVA基础特性</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="类路径"><a href="#类路径" class="headerlink" title="类路径"></a>类路径</h2><ul>
-<li>类路径可以理解为一系列目录或 JAR 包的集合，它告诉 JVM 在哪里可以找到 .class 文件、配置文件和其他资源。它通常包括：<ol>
-<li>项目的 src&#x2F;main&#x2F;resources 目录：用于存放配置文件、模板文件等资源。</li>
-<li>项目的 target&#x2F;classes 目录：编译后的 .class 文件通常会存放在这里。</li>
-<li>项目依赖的 JAR 包：通过 Maven、Gradle 或其他构建工具引入的外部库。</li>
-</ol>
-</li>
-<li>查看类路径：<ol>
-<li>启动JVM时添加参数：<code>java -verbose:class -jar myapp.jar</code></li>
-<li>打印：<code>System.out.println(System.getProperty(&quot;java.class.path&quot;));</code></li>
-<li>查看Spring Boot的日志输出</li>
-</ol>
-</li>
-<li>设置类路径<ol>
-<li>配置JVM参数：<code>java -cp &quot;target/classes:lib/*&quot; com.example.MainApplication</code></li>
-<li>IDEA配置：Project Structure（项目结构）-&gt; 选择 Modules &gt; Dependencies -&gt; 添加目录或 JAR 包到模块的类路径 -&gt; 通过右键模块的 src&#x2F;main&#x2F;resources 或其他目录，标记为 Resources Root。</li>
-</ol>
-</li>
-</ul>
-<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p>当对象被序列化时，被该对象持有的实例变量也会被序列化，所有被引用的对象也会被实例化，这些操作都是自动进行的</p>
-<ul>
-<li>要让类能被序列化，要实现Serializable接口</li>
-<li>如果要让实例变量不被序列化，<strong>用transient关键字修饰</strong></li>
-</ul>
-<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><p>+ </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2024/10/26/JAVA%E5%9F%BA%E7%A1%80%E7%89%B9%E6%80%A7/" data-id="cm3x62vdw0000yovc66mb9c2c" data-title="JAVA基础特性" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -1056,7 +1200,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/02/">February 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/12/">December 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">November 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/03/">March 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/02/">February 2025</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/12/">December 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/11/">November 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/10/">October 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li></ul>
     </div>
   </div>
 
@@ -1069,6 +1213,14 @@
       <ul>
         
           <li>
+            <a href="/2025/03/02/Mysql-%E9%94%81%E6%9C%BA%E5%88%B6/">Mysql-锁机制</a>
+          </li>
+        
+          <li>
+            <a href="/2025/03/02/Maven/">Maven</a>
+          </li>
+        
+          <li>
             <a href="/2025/02/27/LeetCodeHot100/">LeetCodeHot100</a>
           </li>
         
@@ -1078,14 +1230,6 @@
         
           <li>
             <a href="/2024/12/23/Debian%E5%8C%85%E6%9E%84%E5%BB%BA/">Debian包构建</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/18/MySql-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">MySql-分库分表</a>
-          </li>
-        
-          <li>
-            <a href="/2024/12/17/TCP-IP/">TCP/IP</a>
           </li>
         
       </ul>
